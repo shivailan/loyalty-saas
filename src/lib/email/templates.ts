@@ -3,8 +3,8 @@ function emailLayout(bodyHtml: string): string {
     <div style="font-family: -apple-system, sans-serif; background: #f9fafb; padding: 32px;">
       <div style="max-width: 420px; margin: 0 auto; background: #ffffff; border-radius: 16px; padding: 32px; border: 1px solid #e5e7eb;">
         <div style="display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px;">
-          <span style="display: inline-flex; width: 28px; height: 28px; align-items: center; justify-content: center; background: #facc15; border-radius: 8px; font-weight: 700; color: #171717;">F</span>
-          <span style="font-weight: 600; color: #171717; font-size: 16px;">Fidelio</span>
+          <span style="display: inline-flex; width: 28px; height: 28px; align-items: center; justify-content: center; background: #facc15; border-radius: 8px; font-weight: 700; color: #171717;">K</span>
+          <span style="font-weight: 600; color: #171717; font-size: 16px;">KeepMe</span>
         </div>
         ${bodyHtml}
       </div>

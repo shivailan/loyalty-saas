@@ -1,11 +1,8 @@
 import Link from "next/link";
 import { requireAdmin } from "@/lib/auth/require-admin";
 import { logout } from "@/app/dashboard/actions";
-
-const navLinks = [
-  { href: "/admin", label: "Vue d'ensemble" },
-  { href: "/admin/merchants", label: "Commerçants" },
-];
+import { SidebarNav, MobileNav } from "@/components/ui/SidebarNav";
+import { navGroups } from "./nav-items";
 
 export default async function AdminLayout({
   children,
@@ -15,46 +12,71 @@ export default async function AdminLayout({
   await requireAdmin();
 
   return (
-    <div className="min-h-screen bg-neutral-50">
-      <header className="border-b border-neutral-800 bg-neutral-900">
-        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-6 py-4">
-          <Link href="/admin" className="flex items-center gap-2">
+    <div className="min-h-screen bg-neutral-50 md:flex">
+      <aside className="hidden border-r border-neutral-200 bg-white md:flex md:w-64 md:shrink-0 md:flex-col md:justify-between md:px-4 md:py-6">
+        <div>
+          <Link href="/admin" className="flex items-center gap-2 px-2">
             <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-yellow-400 font-bold text-neutral-900">
-              F
+              K
             </span>
-            <span className="text-lg font-semibold text-white">Fidelio</span>
-            <span className="rounded-full bg-neutral-700 px-2 py-0.5 text-xs font-medium text-neutral-200">
+            <span className="text-lg font-semibold text-neutral-900">
+              KeepMe
+            </span>
+            <span className="rounded-full bg-neutral-900 px-2 py-0.5 text-xs font-medium text-white">
               Admin
             </span>
           </Link>
-
-          <nav className="flex flex-wrap items-center gap-5 text-sm text-neutral-300">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="hover:text-white"
-              >
-                {link.label}
-              </Link>
-            ))}
-            <Link href="/dashboard" className="hover:text-white">
-              Espace commerçant
-            </Link>
-          </nav>
-
+          <div className="mt-8">
+            <SidebarNav groups={navGroups} />
+          </div>
+        </div>
+        <div className="flex flex-col gap-0.5">
+          <Link
+            href="/dashboard"
+            className="rounded-lg px-3 py-2 text-sm font-medium text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-900"
+          >
+            Espace commerçant
+          </Link>
           <form action={logout}>
             <button
               type="submit"
-              className="text-sm font-medium text-neutral-300 hover:text-white"
+              className="w-full rounded-lg px-3 py-2 text-left text-sm font-medium text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-900"
             >
               Se déconnecter
             </button>
           </form>
         </div>
-      </header>
+      </aside>
 
-      <main className="mx-auto max-w-5xl px-6 py-10">{children}</main>
+      <div className="min-w-0 flex-1">
+        <header className="flex items-center justify-between border-b border-neutral-200 bg-white px-6 py-4 md:hidden">
+          <Link href="/admin" className="flex items-center gap-2">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-yellow-400 font-bold text-neutral-900">
+              K
+            </span>
+            <span className="text-lg font-semibold text-neutral-900">
+              KeepMe
+            </span>
+            <span className="rounded-full bg-neutral-900 px-2 py-0.5 text-xs font-medium text-white">
+              Admin
+            </span>
+          </Link>
+          <form action={logout}>
+            <button
+              type="submit"
+              className="text-sm font-medium text-neutral-600 hover:text-neutral-900"
+            >
+              Se déconnecter
+            </button>
+          </form>
+        </header>
+
+        <div className="px-6 py-4 md:hidden">
+          <MobileNav groups={navGroups} />
+        </div>
+
+        <main className="mx-auto max-w-5xl px-6 py-10">{children}</main>
+      </div>
     </div>
   );
 }

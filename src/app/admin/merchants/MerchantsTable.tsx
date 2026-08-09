@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Store } from "lucide-react";
 import { setMerchantSuspended, deleteMerchant } from "./actions";
 import { Button } from "@/components/ui/Button";
 
@@ -38,12 +39,19 @@ export function MerchantsTable({ merchants }: { merchants: Merchant[] }) {
 
   if (merchants.length === 0) {
     return (
-      <p className="text-sm text-neutral-600">Aucun commerçant pour l&apos;instant.</p>
+      <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-neutral-200 bg-white py-16 text-center">
+        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-neutral-100">
+          <Store className="h-6 w-6 text-neutral-400" />
+        </div>
+        <p className="text-sm text-neutral-600">
+          Aucun commerçant pour l&apos;instant.
+        </p>
+      </div>
     );
   }
 
   return (
-    <div className="overflow-x-auto rounded-2xl border border-neutral-200 bg-white">
+    <div className="overflow-x-auto rounded-2xl border border-neutral-200 bg-white shadow-sm">
       <table className="w-full text-left text-sm">
         <thead className="border-b border-neutral-200 text-neutral-500">
           <tr>
@@ -57,9 +65,18 @@ export function MerchantsTable({ merchants }: { merchants: Merchant[] }) {
           {merchants.map((merchant) => (
             <tr
               key={merchant.id}
-              className="border-b border-neutral-100 last:border-0"
+              className="border-b border-neutral-100 transition-colors last:border-0 hover:bg-neutral-50"
             >
-              <td className="px-4 py-3 text-neutral-900">{merchant.name}</td>
+              <td className="px-4 py-3">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-yellow-100 text-xs font-semibold text-yellow-800">
+                    {merchant.name.slice(0, 2).toUpperCase()}
+                  </span>
+                  <span className="font-medium text-neutral-900">
+                    {merchant.name}
+                  </span>
+                </div>
+              </td>
               <td className="px-4 py-3 text-neutral-600">
                 {new Date(merchant.created_at).toLocaleDateString("fr-FR")}
               </td>

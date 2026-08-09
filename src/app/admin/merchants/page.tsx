@@ -13,7 +13,15 @@ export default async function AdminMerchantsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-neutral-900">Commerçants</h1>
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <h1 className="font-heading text-2xl font-bold text-neutral-900">
+          Commerçants
+        </h1>
+        <p className="text-sm font-medium text-neutral-500">
+          {(merchants ?? []).length} inscrit
+          {(merchants ?? []).length > 1 ? "s" : ""}
+        </p>
+      </div>
       <p className="mt-1 text-sm text-neutral-600">
         Suspendre bloque immédiatement l&apos;accès au dashboard du
         commerçant. Supprimer efface aussi ses clients, cartes et passages —

@@ -58,6 +58,12 @@ export default function LoginPage() {
           {errors.password && (
             <p className={errorClass}>{errors.password.message}</p>
           )}
+          <Link
+            href="/forgot-password"
+            className="mt-1 inline-block text-xs font-medium text-neutral-500 underline hover:text-neutral-700"
+          >
+            Mot de passe oublié ?
+          </Link>
         </div>
         {serverError && <p className={errorClass}>{serverError}</p>}
         <Button type="submit" disabled={isSubmitting} className="mt-2">

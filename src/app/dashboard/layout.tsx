@@ -2,16 +2,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { logout } from "./actions";
-
-const navLinks = [
-  { href: "/dashboard", label: "Vue d'ensemble" },
-  { href: "/dashboard/program", label: "Programme" },
-  { href: "/dashboard/branding", label: "Apparence" },
-  { href: "/dashboard/qr-code", label: "QR code" },
-  { href: "/dashboard/scan", label: "Scanner" },
-  { href: "/dashboard/stats", label: "Statistiques" },
-  { href: "/dashboard/notifications", label: "Notifications" },
-];
+import { SidebarNav, MobileNav } from "@/components/ui/SidebarNav";
+import { navGroups } from "./nav-items";
 
 export default async function DashboardLayout({
   children,
@@ -57,30 +49,41 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="min-h-screen bg-neutral-50">
-      <header className="border-b border-neutral-200 bg-white">
-        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-6 py-4">
-          <Link href="/dashboard" className="flex items-center gap-2">
+    <div className="min-h-screen bg-neutral-50 md:flex">
+      <aside className="hidden border-r border-neutral-200 bg-white md:flex md:w-64 md:shrink-0 md:flex-col md:justify-between md:px-4 md:py-6">
+        <div>
+          <Link href="/dashboard" className="flex items-center gap-2 px-2">
             <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-yellow-400 font-bold text-neutral-900">
-              F
+              K
             </span>
             <span className="text-lg font-semibold text-neutral-900">
-              Fidelio
+              KeepMe
             </span>
           </Link>
+          <div className="mt-8">
+            <SidebarNav groups={navGroups} />
+          </div>
+        </div>
+        <form action={logout}>
+          <button
+            type="submit"
+            className="w-full rounded-lg px-3 py-2 text-left text-sm font-medium text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-900"
+          >
+            Se déconnecter
+          </button>
+        </form>
+      </aside>
 
-          <nav className="flex flex-wrap items-center gap-5 text-sm text-neutral-600">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="hover:text-neutral-900"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-
+      <div className="min-w-0 flex-1">
+        <header className="flex items-center justify-between border-b border-neutral-200 bg-white px-6 py-4 md:hidden">
+          <Link href="/dashboard" className="flex items-center gap-2">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-yellow-400 font-bold text-neutral-900">
+              K
+            </span>
+            <span className="text-lg font-semibold text-neutral-900">
+              KeepMe
+            </span>
+          </Link>
           <form action={logout}>
             <button
               type="submit"
@@ -89,10 +92,14 @@ export default async function DashboardLayout({
               Se déconnecter
             </button>
           </form>
-        </div>
-      </header>
+        </header>
 
-      <main className="mx-auto max-w-5xl px-6 py-10">{children}</main>
+        <div className="px-6 py-4 md:hidden">
+          <MobileNav groups={navGroups} />
+        </div>
+
+        <main className="mx-auto max-w-5xl px-6 py-10">{children}</main>
+      </div>
     </div>
   );
 }

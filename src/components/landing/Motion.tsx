@@ -186,7 +186,7 @@ export function RotatingWord({ words }: { words: string[] }) {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -24, opacity: 0 }}
           transition={{ duration: 0.4, ease: [0.21, 0.47, 0.32, 0.98] }}
-          className="inline-block whitespace-nowrap text-yellow-300"
+          className="inline-block whitespace-nowrap text-amber-500"
         >
           {words[index]}
         </motion.span>

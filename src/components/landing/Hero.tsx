@@ -1,13 +1,14 @@
+import { ArrowRight, QrCode, Smartphone } from "lucide-react";
 import Link from "next/link";
+import { HeroCardStack } from "./HeroCardStack";
 import {
+  FloatingCard,
+  Reveal,
   RevealGroup,
   RevealItem,
-  Reveal,
-  FloatingCard,
-  TiltCard,
   RotatingWord,
+  TiltCard,
 } from "./Motion";
-import { PhoneWalletMockup } from "./PhoneWalletMockup";
 
 const businessTypes = [
   "restaurants",
@@ -19,84 +20,101 @@ const businessTypes = [
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden bg-neutral-900">
+    <section className="relative overflow-hidden bg-gradient-to-b from-yellow-50/60 via-background to-background">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute right-[-4rem] top-1/2 h-[36rem] w-[36rem] -translate-y-1/2 rounded-full bg-gradient-to-br from-yellow-400/30 via-amber-500/15 to-transparent blur-3xl"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(23,23,23,0.05)_1px,transparent_0)] [background-size:26px_26px]"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -left-24 bottom-0 h-72 w-72 rounded-full bg-yellow-500/10 blur-3xl"
+        className="pointer-events-none absolute -top-24 -right-24 h-[26rem] w-[26rem] rounded-full bg-[radial-gradient(circle,rgba(250,204,21,0.18),transparent_70%)] blur-3xl"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.06)_1px,transparent_0)] [background-size:24px_24px]"
+        className="pointer-events-none absolute -bottom-32 -left-32 h-[26rem] w-[26rem] rounded-full bg-[radial-gradient(circle,rgba(23,23,23,0.06),transparent_70%)] blur-3xl"
       />
 
-      <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-32">
-        <div className="grid items-center gap-16 md:grid-cols-[1.05fr_1fr]">
-          <RevealGroup>
-            <RevealItem>
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium text-neutral-300">
-                100% digital, zéro papier
-              </span>
-            </RevealItem>
-            <RevealItem>
-              <h1 className="mt-6 font-heading text-5xl font-extrabold leading-[1.05] tracking-tight text-white md:text-6xl">
-                La carte de fidélité
-                <br />
-                digitale pour vos{" "}
-                <RotatingWord words={businessTypes} />
-              </h1>
-            </RevealItem>
-            <RevealItem>
-              <p className="mt-6 max-w-lg text-lg text-neutral-300">
-                Fini les cartes en papier qu&apos;on froisse et qu&apos;on
-                perd. Vos clients scannent un QR code, s&apos;inscrivent en
-                10 secondes, et gardent leur carte dans leur poche — comme
-                une carte Wallet.
-              </p>
-            </RevealItem>
-            <RevealItem className="mt-9 flex flex-wrap items-center gap-4">
-              <Link
-                href="/signup"
-                className="rounded-full bg-yellow-400 px-7 py-3.5 text-sm font-semibold text-neutral-900 transition-transform hover:scale-[1.03] hover:bg-yellow-300 active:scale-[0.98]"
-              >
-                Essayer gratuitement
-              </Link>
-              <a
-                href="#comment-ca-marche"
-                className="rounded-full border border-white/20 px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:border-white/40 hover:bg-white/5"
-              >
-                Voir comment ça marche
-              </a>
-            </RevealItem>
-          </RevealGroup>
+      <div
+        className="pointer-events-none absolute -left-6 hidden lg:block"
+        style={{ bottom: "6rem" }}
+      >
+        <FloatingCard>
+          <div className="flex items-center gap-2.5 rounded-full border border-neutral-200 bg-white py-2.5 pl-2.5 pr-4 shadow-lg">
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-yellow-400/15 text-yellow-600">
+              <QrCode className="h-4 w-4" />
+            </span>
+            <span className="text-sm font-medium text-neutral-700">
+              QR code unique
+            </span>
+          </div>
+        </FloatingCard>
+      </div>
+      <div
+        className="pointer-events-none absolute -right-6 hidden lg:block"
+        style={{ bottom: "10rem" }}
+      >
+        <FloatingCard>
+          <div className="flex items-center gap-2.5 rounded-full border border-neutral-200 bg-white py-2.5 pl-2.5 pr-4 shadow-lg">
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-yellow-400/15 text-yellow-600">
+              <Smartphone className="h-4 w-4" />
+            </span>
+            <span className="text-sm font-medium text-neutral-700">
+              Sans application
+            </span>
+          </div>
+        </FloatingCard>
+      </div>
 
-          <Reveal
-            delay={0.15}
-            className="relative flex justify-center md:justify-end"
-          >
-            <TiltCard className="relative [transform-style:preserve-3d]">
-              {/* Carte fantôme flottante derrière le téléphone */}
-              <div
-                aria-hidden="true"
-                className="absolute -right-6 -top-8 hidden h-32 w-48 rotate-[18deg] rounded-2xl border border-white/10 bg-gradient-to-br from-neutral-700 to-neutral-800 shadow-xl sm:block"
-              >
-                <div className="p-4">
-                  <div className="h-2 w-16 rounded-full bg-white/15" />
-                  <div className="mt-2 h-2 w-10 rounded-full bg-white/10" />
-                </div>
-              </div>
+      <div className="flex flex-col items-center px-6 pt-16 text-center sm:pt-10">
+        <RevealGroup className="flex flex-col items-center">
+          <RevealItem>
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-neutral-400">
+              100% digital · Zéro papier
+            </span>
+          </RevealItem>
+          <RevealItem>
+            <h1 className="mx-auto mt-6 max-w-4xl font-heading text-6xl font-semibold leading-[0.98] tracking-tight text-neutral-900 sm:text-7xl lg:text-8xl">
+              La carte de fidélité pour vos{" "}
+              <RotatingWord words={businessTypes} />
+            </h1>
+          </RevealItem>
+          <RevealItem>
+            <p className="mx-auto mt-7 max-w-xl text-xl leading-relaxed text-neutral-500">
+              Fini les cartes en papier qu&apos;on froisse et qu&apos;on
+              perd. Une carte digitale que vos clients gardent dans leur
+              poche, comme dans Wallet.
+            </p>
+          </RevealItem>
+          <RevealItem className="mt-9 flex items-center justify-center gap-8">
+            <Link
+              href="/signup"
+              className="rounded-full bg-yellow-400 px-8 py-4 text-sm font-semibold text-neutral-900 transition-transform hover:scale-[1.03] hover:bg-yellow-300 active:scale-[0.98]"
+            >
+              Essayer gratuitement
+            </Link>
+            <a
+              href="#comment-ca-marche"
+              className="group flex items-center gap-1.5 text-sm font-semibold text-neutral-900"
+            >
+              Voir comment ça marche
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </a>
+          </RevealItem>
+        </RevealGroup>
+      </div>
 
-              <FloatingCard>
-                <div className="relative rotate-3">
-                  <PhoneWalletMockup />
-                </div>
-              </FloatingCard>
-            </TiltCard>
-          </Reveal>
-        </div>
+      <div className="relative mt-12 flex justify-center pb-16 sm:mt-16">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute left-1/2 top-10 h-[30rem] w-[30rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(250,204,21,0.35),transparent_70%)] blur-3xl sm:h-[38rem] sm:w-[38rem]"
+        />
+        <Reveal delay={0.2} className="relative">
+          <TiltCard className="[transform-style:preserve-3d]">
+            <FloatingCard>
+              <HeroCardStack />
+            </FloatingCard>
+          </TiltCard>
+        </Reveal>
       </div>
     </section>
   );

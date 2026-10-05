@@ -8,6 +8,12 @@ export const signupSchema = z.object({
   password: z
     .string()
     .min(8, "Le mot de passe doit contenir au moins 8 caractères"),
+  acceptTerms: z
+    .boolean()
+    .refine(
+      (value) => value,
+      "Vous devez accepter les conditions d'utilisation pour créer un compte",
+    ),
 });
 
 export type SignupInput = z.infer<typeof signupSchema>;

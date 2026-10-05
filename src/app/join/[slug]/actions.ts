@@ -3,6 +3,12 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { joinSchema, type JoinInput } from "@/lib/validations/join";
 import { sendWelcomeEmail } from "@/lib/email/send";
+import { allowAction, getClientFingerprint } from "@/lib/rate-limit";
+
+// Limites par heure : large pour ne jamais gêner un vrai commerce (tous les
+// clients peuvent s'inscrire depuis le même wifi), mais bloquante pour un robot.
+const MAX_SIGNUPS_PER_IP_PER_HOUR = 30;
+const MAX_SIGNUPS_PER_MERCHANT_PER_HOUR = 200;
 
 export async function joinLoyaltyProgram(
   slug: string,
@@ -11,6 +17,22 @@ export async function joinLoyaltyProgram(
   const parsed = joinSchema.safeParse(input);
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Données invalides" };
+  }
+
+  if (parsed.data.website) {
+    return { error: "Une erreur est survenue." };
+  }
+
+  const ipAllowed = await allowAction(
+    `join:ip:${await getClientFingerprint()}`,
+    MAX_SIGNUPS_PER_IP_PER_HOUR,
+    3600,
+  );
+  if (!ipAllowed) {
+    return {
+      error:
+        "Trop d'inscriptions depuis votre connexion. Réessayez dans un moment.",
+    };
   }
 
   const supabase = createAdminClient();
@@ -26,6 +48,18 @@ export async function joinLoyaltyProgram(
   if (merchant.is_suspended) {
     return {
       error: "Ce commerçant n'accepte plus de nouvelles inscriptions pour le moment.",
+    };
+  }
+
+  const merchantAllowed = await allowAction(
+    `join:merchant:${merchant.id}`,
+    MAX_SIGNUPS_PER_MERCHANT_PER_HOUR,
+    3600,
+  );
+  if (!merchantAllowed) {
+    return {
+      error:
+        "Ce commerce reçoit beaucoup d'inscriptions en ce moment. Réessayez dans quelques minutes.",
     };
   }
 
@@ -60,6 +94,10 @@ export async function joinLoyaltyProgram(
         last_name: parsed.data.lastName,
         email: parsed.data.email,
         phone: parsed.data.phone || null,
+        marketing_consent: parsed.data.marketingConsent,
+        marketing_consent_at: parsed.data.marketingConsent
+          ? new Date().toISOString()
+          : null,
       })
       .select("id")
       .single();

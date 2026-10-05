@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,7 +17,10 @@ export function JoinForm({ slug }: { slug: string }) {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<JoinInput>({ resolver: zodResolver(joinSchema) });
+  } = useForm<JoinInput>({
+    resolver: zodResolver(joinSchema),
+    defaultValues: { marketingConsent: false },
+  });
 
   async function onSubmit(data: JoinInput) {
     setServerError(null);
@@ -82,10 +86,39 @@ export function JoinForm({ slug }: { slug: string }) {
           {...register("phone")}
         />
       </div>
+      <div className="absolute -left-[9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
+        <label htmlFor="website">Ne pas remplir ce champ</label>
+        <input
+          id="website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          {...register("website")}
+        />
+      </div>
+      <label className="flex items-start gap-2 text-sm text-neutral-600">
+        <input
+          type="checkbox"
+          className="mt-0.5 h-4 w-4 shrink-0 rounded border-neutral-300"
+          {...register("marketingConsent")}
+        />
+        <span>
+          J&apos;accepte de recevoir les offres et actualités de ce commerce
+          (facultatif).
+        </span>
+      </label>
       {serverError && <p className={errorClass}>{serverError}</p>}
       <Button type="submit" disabled={isSubmitting} className="mt-2">
         {isSubmitting ? "Création..." : "Créer ma carte de fidélité"}
       </Button>
+      <p className="text-xs leading-relaxed text-neutral-500">
+        Vos données servent uniquement à gérer votre carte de fidélité. Pour
+        en savoir plus ou exercer vos droits, consultez la{" "}
+        <Link href="/confidentialite" className="underline">
+          politique de confidentialité
+        </Link>
+        .
+      </p>
     </form>
   );
 }

@@ -1,4 +1,4 @@
-import { ArrowRight, QrCode, Smartphone } from "lucide-react";
+import { ArrowRight, BarChart3, Gift, QrCode, Smartphone } from "lucide-react";
 import Link from "next/link";
 import { HeroCardStack } from "./HeroCardStack";
 import {
@@ -60,6 +60,36 @@ export function Hero() {
             </span>
             <span className="text-sm font-medium text-neutral-700">
               Sans application
+            </span>
+          </div>
+        </FloatingCard>
+      </div>
+      <div
+        className="pointer-events-none absolute -left-10 hidden lg:block"
+        style={{ top: "9rem" }}
+      >
+        <FloatingCard>
+          <div className="flex items-center gap-2.5 rounded-full border border-neutral-200 bg-white py-2.5 pl-2.5 pr-4 shadow-lg">
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-yellow-400/15 text-yellow-600">
+              <Gift className="h-4 w-4" />
+            </span>
+            <span className="text-sm font-medium text-neutral-700">
+              Récompenses auto
+            </span>
+          </div>
+        </FloatingCard>
+      </div>
+      <div
+        className="pointer-events-none absolute -right-10 hidden lg:block"
+        style={{ top: "15rem" }}
+      >
+        <FloatingCard>
+          <div className="flex items-center gap-2.5 rounded-full border border-neutral-200 bg-white py-2.5 pl-2.5 pr-4 shadow-lg">
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-yellow-400/15 text-yellow-600">
+              <BarChart3 className="h-4 w-4" />
+            </span>
+            <span className="text-sm font-medium text-neutral-700">
+              Stats en temps réel
             </span>
           </div>
         </FloatingCard>

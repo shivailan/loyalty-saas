@@ -4,8 +4,18 @@ import { createClient } from "@/lib/supabase/server";
 import { scanSchema } from "@/lib/validations/scan";
 import { sendRewardEmail } from "@/lib/email/send";
 
+// Délai minimum entre deux passages d'une même carte (anti double scan) et
+// durée pendant laquelle le dernier passage peut être annulé.
+const SCAN_COOLDOWN_SECONDS = 120;
+const UNDO_WINDOW_SECONDS = 600;
+
+const NOT_FOUND_MESSAGE =
+  "Carte introuvable ou n'appartenant pas à votre établissement.";
+const GENERIC_ERROR_MESSAGE = "Une erreur est survenue, veuillez réessayer.";
+
 export type AddVisitResult = {
   error: string | null;
+  tooSoon?: boolean;
   customerName?: string;
   currentStamps?: number;
   visitsRequired?: number;
@@ -26,17 +36,40 @@ export async function addVisit(cardIdInput: string): Promise<AddVisitResult> {
     return { error: "Vous devez être connecté." };
   }
 
-  const { data: card, error: fetchError } = await supabase
+  const { data, error: rpcError } = await supabase.rpc("add_visit", {
+    p_card_id: parsed.data.cardId,
+    p_cooldown_seconds: SCAN_COOLDOWN_SECONDS,
+  });
+  const visit = data?.[0];
+  if (rpcError || !visit) {
+    return { error: GENERIC_ERROR_MESSAGE };
+  }
+
+  if (visit.status === "not_found") {
+    return { error: NOT_FOUND_MESSAGE };
+  }
+  if (visit.status === "inactive") {
+    return { error: "Ce programme de fidélité est actuellement désactivé." };
+  }
+  if (visit.status === "too_soon") {
+    return {
+      error: `Ce client vient déjà d'être tamponné. Nouveau passage possible dans ${visit.seconds_remaining} seconde${visit.seconds_remaining > 1 ? "s" : ""}.`,
+      tooSoon: true,
+    };
+  }
+
+  const previousStampCount = visit.previous_stamps;
+  const newStampCount = visit.new_stamps;
+
+  const { data: card } = await supabase
     .from("loyalty_cards")
     .select(
       `
       id,
-      current_stamps,
       customers ( first_name, last_name, email ),
       loyalty_programs (
         visits_required,
         reward_description,
-        is_active,
         merchants ( name, send_reward_email )
       )
     `,
@@ -44,48 +77,20 @@ export async function addVisit(cardIdInput: string): Promise<AddVisitResult> {
     .eq("id", parsed.data.cardId)
     .maybeSingle();
 
-  if (fetchError || !card) {
-    return {
-      error: "Carte introuvable ou n'appartenant pas à votre établissement.",
-    };
-  }
-
-  if (card.loyalty_programs?.is_active === false) {
-    return { error: "Ce programme de fidélité est actuellement désactivé." };
-  }
-
-  const { error: insertError } = await supabase
-    .from("visits")
-    .insert({ card_id: card.id });
-  if (insertError) {
-    return { error: insertError.message };
-  }
-
-  const previousStampCount = card.current_stamps;
-  const newStampCount = previousStampCount + 1;
-
-  const { error: updateError } = await supabase
-    .from("loyalty_cards")
-    .update({ current_stamps: newStampCount })
-    .eq("id", card.id);
-  if (updateError) {
-    return { error: updateError.message };
-  }
-
-  const visitsRequired = card.loyalty_programs?.visits_required ?? 0;
+  const visitsRequired = card?.loyalty_programs?.visits_required ?? 0;
   const customerName = [
-    card.customers?.first_name,
-    card.customers?.last_name,
+    card?.customers?.first_name,
+    card?.customers?.last_name,
   ]
     .filter(Boolean)
     .join(" ");
-  const rewardReached =
-    visitsRequired > 0 && newStampCount >= visitsRequired;
+  const rewardReached = visitsRequired > 0 && newStampCount >= visitsRequired;
   const justCrossedThreshold =
     rewardReached && previousStampCount < visitsRequired;
 
-  const merchant = card.loyalty_programs?.merchants;
+  const merchant = card?.loyalty_programs?.merchants;
   if (
+    card &&
     justCrossedThreshold &&
     merchant?.send_reward_email &&
     card.customers?.email
@@ -110,6 +115,57 @@ export async function addVisit(cardIdInput: string): Promise<AddVisitResult> {
   };
 }
 
+export type UndoVisitResult = {
+  error: string | null;
+  currentStamps?: number;
+};
+
+export async function undoLastVisit(
+  cardIdInput: string,
+): Promise<UndoVisitResult> {
+  const parsed = scanSchema.safeParse({ cardId: cardIdInput });
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Code invalide" };
+  }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return { error: "Vous devez être connecté." };
+  }
+
+  const { data, error: rpcError } = await supabase.rpc("undo_last_visit", {
+    p_card_id: parsed.data.cardId,
+    p_window_seconds: UNDO_WINDOW_SECONDS,
+  });
+  const result = data?.[0];
+  if (rpcError || !result) {
+    return { error: GENERIC_ERROR_MESSAGE };
+  }
+
+  switch (result.status) {
+    case "ok":
+      return { error: null, currentStamps: result.new_stamps };
+    case "not_found":
+      return { error: NOT_FOUND_MESSAGE };
+    case "no_visit":
+      return { error: "Aucun passage à annuler sur cette carte." };
+    case "too_old":
+      return {
+        error: `Ce passage date de plus de ${UNDO_WINDOW_SECONDS / 60} minutes, il ne peut plus être annulé.`,
+      };
+    case "reward_given":
+      return {
+        error:
+          "Une récompense a été remise depuis ce passage, il ne peut plus être annulé.",
+      };
+    default:
+      return { error: GENERIC_ERROR_MESSAGE };
+  }
+}
+
 export type RedeemRewardResult = {
   error: string | null;
   success?: boolean;
@@ -131,37 +187,22 @@ export async function redeemReward(
     return { error: "Vous devez être connecté." };
   }
 
-  const { data: card, error: fetchError } = await supabase
-    .from("loyalty_cards")
-    .select("id, current_stamps, loyalty_programs ( visits_required )")
-    .eq("id", parsed.data.cardId)
-    .maybeSingle();
-
-  if (fetchError || !card) {
-    return {
-      error: "Carte introuvable ou n'appartenant pas à votre établissement.",
-    };
+  const { data, error: rpcError } = await supabase.rpc("redeem_reward", {
+    p_card_id: parsed.data.cardId,
+  });
+  const result = data?.[0];
+  if (rpcError || !result) {
+    return { error: GENERIC_ERROR_MESSAGE };
   }
 
-  const visitsRequired = card.loyalty_programs?.visits_required ?? 0;
-  if (visitsRequired === 0 || card.current_stamps < visitsRequired) {
-    return { error: "Le seuil de récompense n'est pas encore atteint." };
+  switch (result.status) {
+    case "ok":
+      return { error: null, success: true };
+    case "not_found":
+      return { error: NOT_FOUND_MESSAGE };
+    case "not_reached":
+      return { error: "Le seuil de récompense n'est pas encore atteint." };
+    default:
+      return { error: GENERIC_ERROR_MESSAGE };
   }
-
-  const { error: insertError } = await supabase
-    .from("reward_redemptions")
-    .insert({ card_id: card.id, redeemed_at: new Date().toISOString() });
-  if (insertError) {
-    return { error: insertError.message };
-  }
-
-  const { error: resetError } = await supabase
-    .from("loyalty_cards")
-    .update({ current_stamps: 0 })
-    .eq("id", card.id);
-  if (resetError) {
-    return { error: resetError.message };
-  }
-
-  return { error: null, success: true };
 }

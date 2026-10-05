@@ -17,7 +17,10 @@ export default function SignupPage() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<SignupInput>({ resolver: zodResolver(signupSchema) });
+  } = useForm<SignupInput>({
+    resolver: zodResolver(signupSchema),
+    defaultValues: { acceptTerms: false },
+  });
 
   async function onSubmit(data: SignupInput) {
     setServerError(null);
@@ -95,6 +98,33 @@ export default function SignupPage() {
           />
           {errors.password && (
             <p className={errorClass}>{errors.password.message}</p>
+          )}
+        </div>
+        <div>
+          <label className="flex items-start gap-2 text-sm text-neutral-600">
+            <input
+              type="checkbox"
+              className="mt-0.5 h-4 w-4 shrink-0 rounded border-neutral-300"
+              {...register("acceptTerms")}
+            />
+            <span>
+              J&apos;accepte les{" "}
+              <Link href="/cgu" target="_blank" className="underline">
+                conditions d&apos;utilisation
+              </Link>{" "}
+              et la{" "}
+              <Link
+                href="/confidentialite"
+                target="_blank"
+                className="underline"
+              >
+                politique de confidentialité
+              </Link>
+              .
+            </span>
+          </label>
+          {errors.acceptTerms && (
+            <p className={errorClass}>{errors.acceptTerms.message}</p>
           )}
         </div>
         {serverError && <p className={errorClass}>{serverError}</p>}

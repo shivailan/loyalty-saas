@@ -50,6 +50,16 @@ export function RetrieveForm({ slug }: { slug: string }) {
         />
         {errors.email && <p className={errorClass}>{errors.email.message}</p>}
       </div>
+      <div className="absolute -left-[9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
+        <label htmlFor="website">Ne pas remplir ce champ</label>
+        <input
+          id="website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          {...register("website")}
+        />
+      </div>
       <Button type="submit" disabled={isSubmitting} className="mt-2">
         {isSubmitting ? "Envoi..." : "Recevoir ma carte par email"}
       </Button>

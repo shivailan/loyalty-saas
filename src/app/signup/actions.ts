@@ -18,7 +18,10 @@ export async function signup(
     email: parsed.data.email,
     password: parsed.data.password,
     options: {
-      data: { business_name: parsed.data.businessName },
+      data: {
+        business_name: parsed.data.businessName,
+        terms_accepted_at: new Date().toISOString(),
+      },
       emailRedirectTo: `${siteUrl}/login`,
     },
   });

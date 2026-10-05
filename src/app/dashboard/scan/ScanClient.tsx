@@ -1,34 +1,65 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { addVisit, redeemReward, type AddVisitResult } from "./actions";
+import {
+  addVisit,
+  redeemReward,
+  undoLastVisit,
+  type AddVisitResult,
+} from "./actions";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { inputClass, labelClass, errorClass, successClass } from "@/lib/ui";
+
+// La caméra relit le même QR code en boucle tant qu'il est visible : on
+// ignore la même carte pendant quelques secondes pour ne pas l'envoyer en boucle.
+const CAMERA_REPEAT_IGNORE_MS = 15_000;
+
+type ActionState = {
+  pending: boolean;
+  message: string | null;
+  error: string | null;
+};
+
+const idleState: ActionState = { pending: false, message: null, error: null };
 
 export function ScanClient() {
   const [manualCardId, setManualCardId] = useState("");
   const [result, setResult] = useState<AddVisitResult | null>(null);
   const [isPending, setIsPending] = useState(false);
   const [lastCardId, setLastCardId] = useState<string | null>(null);
-  const [redeemState, setRedeemState] = useState<{
-    pending: boolean;
-    message: string | null;
-    error: string | null;
-  }>({ pending: false, message: null, error: null });
+  const [redeemState, setRedeemState] = useState<ActionState>(idleState);
+  const [undoState, setUndoState] = useState<ActionState>(idleState);
   const isScanningRef = useRef(false);
+  const lastSubmissionRef = useRef<{ cardId: string; at: number } | null>(
+    null,
+  );
 
   async function submitCardId(cardId: string) {
     if (isScanningRef.current) return;
     isScanningRef.current = true;
+    lastSubmissionRef.current = { cardId, at: Date.now() };
     setIsPending(true);
     setResult(null);
-    setRedeemState({ pending: false, message: null, error: null });
+    setRedeemState(idleState);
+    setUndoState(idleState);
     const res = await addVisit(cardId);
     setResult(res);
     setLastCardId(res.error ? null : cardId);
     setIsPending(false);
     isScanningRef.current = false;
+  }
+
+  function handleCameraScan(decodedText: string) {
+    const last = lastSubmissionRef.current;
+    if (
+      last &&
+      last.cardId === decodedText &&
+      Date.now() - last.at < CAMERA_REPEAT_IGNORE_MS
+    ) {
+      return;
+    }
+    submitCardId(decodedText);
   }
 
   async function handleRedeem() {
@@ -49,6 +80,39 @@ export function ScanClient() {
     );
   }
 
+  async function handleUndo() {
+    if (!lastCardId) return;
+    setUndoState({ pending: true, message: null, error: null });
+    const res = await undoLastVisit(lastCardId);
+    if (res.error) {
+      setUndoState({ pending: false, message: null, error: res.error });
+      return;
+    }
+    setUndoState({
+      pending: false,
+      message: "Passage annulé.",
+      error: null,
+    });
+    setRedeemState(idleState);
+    setResult((prev) => {
+      if (!prev) return prev;
+      const stamps = res.currentStamps ?? 0;
+      const required = prev.visitsRequired ?? 0;
+      return {
+        ...prev,
+        currentStamps: stamps,
+        rewardReached: required > 0 && stamps >= required,
+      };
+    });
+  }
+
+  // La caméra est démarrée une seule fois : elle appelle toujours la version
+  // la plus récente du gestionnaire, via cette référence.
+  const cameraScanHandlerRef = useRef(handleCameraScan);
+  useEffect(() => {
+    cameraScanHandlerRef.current = handleCameraScan;
+  });
+
   useEffect(() => {
     let isMounted = true;
     let scannerInstance: import("html5-qrcode").Html5QrcodeScanner | null =
@@ -63,7 +127,7 @@ export function ScanClient() {
       );
       scannerInstance.render(
         (decodedText) => {
-          submitCardId(decodedText);
+          cameraScanHandlerRef.current(decodedText);
         },
         () => {
           // ignore: called continuously while no QR code is visible
@@ -76,6 +140,8 @@ export function ScanClient() {
       scannerInstance?.clear().catch(() => {});
     };
   }, []);
+
+  const canUndo = !undoState.message && !redeemState.message;
 
   return (
     <div className="mt-6 flex flex-col gap-6">
@@ -142,6 +208,23 @@ export function ScanClient() {
               )}
               {redeemState.error && (
                 <p className={`mt-2 ${errorClass}`}>{redeemState.error}</p>
+              )}
+              {canUndo && (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={handleUndo}
+                  disabled={undoState.pending}
+                  className="mt-3"
+                >
+                  {undoState.pending ? "Annulation..." : "Annuler ce passage"}
+                </Button>
+              )}
+              {undoState.message && (
+                <p className={`mt-2 ${successClass}`}>{undoState.message}</p>
+              )}
+              {undoState.error && (
+                <p className={`mt-2 ${errorClass}`}>{undoState.error}</p>
               )}
             </>
           )}

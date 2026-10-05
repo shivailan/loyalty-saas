@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { DeleteCustomerButton } from "./DeleteCustomerButton";
 
 export default async function ClientsPage() {
   const supabase = await createClient();
@@ -19,6 +20,7 @@ export default async function ClientsPage() {
       last_name,
       email,
       phone,
+      marketing_consent,
       created_at,
       loyalty_cards ( current_stamps, loyalty_programs ( visits_required ) )
     `,
@@ -43,6 +45,8 @@ export default async function ClientsPage() {
               <th className="px-4 py-3 font-medium">Téléphone</th>
               <th className="px-4 py-3 font-medium">Inscrit le</th>
               <th className="px-4 py-3 font-medium">Passages</th>
+              <th className="px-4 py-3 font-medium">Offres acceptées</th>
+              <th className="px-4 py-3 font-medium">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -72,13 +76,22 @@ export default async function ClientsPage() {
                       ? `${card.current_stamps} / ${card.loyalty_programs?.visits_required ?? "?"}`
                       : "—"}
                   </td>
+                  <td className="px-4 py-3 text-neutral-600">
+                    {customer.marketing_consent ? "Oui" : "Non"}
+                  </td>
+                  <td className="px-4 py-3">
+                    <DeleteCustomerButton
+                      customerId={customer.id}
+                      customerName={`${customer.first_name} ${customer.last_name}`}
+                    />
+                  </td>
                 </tr>
               );
             })}
             {count === 0 && (
               <tr>
                 <td
-                  colSpan={5}
+                  colSpan={7}
                   className="px-4 py-6 text-center text-neutral-500"
                 >
                   Aucun client pour l&apos;instant.

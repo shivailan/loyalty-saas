@@ -17,6 +17,9 @@ export function Footer() {
           <Link href="/cgu" className="hover:text-neutral-900">
             Conditions d’utilisation
           </Link>
+          <Link href="/cgv" className="hover:text-neutral-900">
+            Conditions de vente
+          </Link>
           <a
             href={`mailto:${legal.contactEmail}`}
             className="hover:text-neutral-900"

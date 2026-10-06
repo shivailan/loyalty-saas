@@ -16,8 +16,11 @@ export default function CguPage() {
           {legal.productName}, proposé par {legal.publisherName} (
           {legal.publisherStatus}), qui permet à un commerçant de créer et gérer
           un programme de fidélité digital pour ses clients. Les conditions
-          tarifaires sont précisées dans l’offre commerciale ou les conditions
-          générales de vente applicables.
+          tarifaires sont précisées dans les{" "}
+          <Link href="/cgv" className="underline">
+            conditions générales de vente
+          </Link>
+          .
         </p>
       </LegalSection>
 

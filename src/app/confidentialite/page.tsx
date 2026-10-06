@@ -86,6 +86,10 @@ export default function ConfidentialitePage() {
           <li>Supabase : base de données et authentification des commerçants.</li>
           <li>Vercel : hébergement du site.</li>
           <li>Resend : envoi des emails.</li>
+          <li>
+            Stripe : paiement des abonnements des commerçants. {legal.productName}{" "}
+            ne reçoit ni ne conserve les données de carte bancaire.
+          </li>
         </ul>
         <p>
           Certains de ces prestataires peuvent traiter des données en dehors de

@@ -48,6 +48,9 @@ export function LegalPage({
           <Link href="/cgu" className="hover:text-neutral-900">
             Conditions d’utilisation
           </Link>
+          <Link href="/cgv" className="hover:text-neutral-900">
+            Conditions de vente
+          </Link>
         </nav>
       </main>
     </div>

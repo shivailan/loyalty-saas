@@ -1,54 +1,7 @@
 import Link from "next/link";
 import { Check, Clock } from "lucide-react";
+import { plans } from "@/lib/plans";
 import { Reveal, RevealGroup, RevealItem } from "./Motion";
-
-type Feature = { label: string; soon?: boolean };
-
-type Plan = {
-  name: string;
-  price: string;
-  description: string;
-  features: Feature[];
-  highlighted?: boolean;
-  comingSoon?: boolean;
-};
-
-const plans: Plan[] = [
-  {
-    name: "Essentiel",
-    price: "39,99",
-    description: "Tout pour lancer votre carte de fidélité digitale.",
-    features: [
-      { label: "QR code et carte de fidélité illimités" },
-      { label: "Clients et passages illimités" },
-      { label: "Statistiques en temps réel" },
-      { label: "Logo et couleurs de votre commerce" },
-      { label: "Emails automatiques à vos clients" },
-      { label: "Support par email" },
-      { label: "Mise en place clé en main en option" },
-      { label: "Notifications push", soon: true },
-    ],
-  },
-  {
-    name: "Business",
-    price: "49,99",
-    description: "Un accompagnement plus proche, dès le premier jour.",
-    highlighted: true,
-    features: [
-      { label: "Tout ce qui est inclus dans Essentiel" },
-      { label: "Support par WhatsApp" },
-      { label: "Mise en place clé en main offerte" },
-      { label: "Notifications push", soon: true },
-    ],
-  },
-  {
-    name: "Prochainement",
-    price: "69,99",
-    description: "Une offre plus complète arrive bientôt.",
-    comingSoon: true,
-    features: [],
-  },
-];
 
 export function Pricing() {
   return (
@@ -141,6 +94,17 @@ export function Pricing() {
             </RevealItem>
           ))}
         </RevealGroup>
+
+        <p className="mx-auto mt-10 max-w-2xl text-center text-sm text-neutral-400">
+          Prix en euros par mois, TVA non applicable (art. 293 B du CGI).
+          Sans engagement, résiliable à tout moment.{" "}
+          <Link
+            href="/cgv"
+            className="underline transition-colors hover:text-neutral-900"
+          >
+            Conditions générales de vente
+          </Link>
+        </p>
       </div>
     </section>
   );

@@ -111,6 +111,10 @@ export default function SignupPage() {
               J&apos;accepte les{" "}
               <Link href="/cgu" target="_blank" className="underline">
                 conditions d&apos;utilisation
+              </Link>
+              , les{" "}
+              <Link href="/cgv" target="_blank" className="underline">
+                conditions de vente
               </Link>{" "}
               et la{" "}
               <Link

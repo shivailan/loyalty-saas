@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { CardQrCode } from "./CardQrCode";
+import { AddToWalletButton } from "./AddToWalletButton";
+import { isAppleWalletConfigured } from "@/lib/wallet/config";
 import { Card } from "@/components/ui/Card";
 
 const DEFAULT_ACCENT = "#FACC15";
@@ -97,10 +99,11 @@ export default async function CardPage({
           </div>
         </div>
 
+        {isAppleWalletConfigured() && <AddToWalletButton cardId={card.id} />}
+
         <p className="mt-6 text-center text-xs text-neutral-500">
           Astuce : ajoutez cette page à votre écran d&apos;accueil pour y
-          accéder en un geste, comme une vraie carte. L&apos;ajout à Apple
-          Wallet arrive bientôt.
+          accéder en un geste, comme une vraie carte.
         </p>
       </Card>
     </div>

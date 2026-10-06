@@ -8,7 +8,7 @@ export const legal = {
   publisherStatus: "entrepreneur individuel en micro-entreprise",
   siret: "[À COMPLÉTER : numéro SIRET]",
   address: "[À COMPLÉTER : adresse postale de l’éditeur]",
-  contactEmail: "[À COMPLÉTER : adresse email de contact]",
+  contactEmail: "contact@keepmecard.fr",
   host: {
     name: "Vercel Inc.",
     address: "[À VÉRIFIER : adresse postale de Vercel Inc.]",

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { currentYear } from "@/lib/dates";
+import { legal } from "@/lib/legal";
 
 export function Footer() {
   return (
@@ -16,6 +17,12 @@ export function Footer() {
           <Link href="/cgu" className="hover:text-neutral-900">
             Conditions d’utilisation
           </Link>
+          <a
+            href={`mailto:${legal.contactEmail}`}
+            className="hover:text-neutral-900"
+          >
+            Contact
+          </a>
         </nav>
       </div>
     </footer>

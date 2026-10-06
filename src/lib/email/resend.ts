@@ -5,4 +5,4 @@ export function getResendClient() {
   return new Resend(process.env.RESEND_API_KEY);
 }
 
-export const EMAIL_FROM = "KeepMe <onboarding@resend.dev>";
+export const EMAIL_FROM = "KeepMe <noreply@send.keepmecard.fr>";

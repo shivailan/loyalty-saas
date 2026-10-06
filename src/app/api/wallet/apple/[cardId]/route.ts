@@ -64,7 +64,7 @@ export async function GET(
         merchantColor: merchant.primary_color,
         merchantLogoUrl: merchant.logo_url,
         siteUrl:
-          process.env.NEXT_PUBLIC_SITE_URL ?? new URL(request.url).origin,
+          process.env.NEXT_PUBLIC_SITE_URL || new URL(request.url).origin,
       },
       certificates,
     );

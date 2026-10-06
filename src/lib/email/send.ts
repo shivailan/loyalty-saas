@@ -1,4 +1,5 @@
 import "server-only";
+import { legal } from "@/lib/legal";
 import { getResendClient, EMAIL_FROM } from "./resend";
 import {
   welcomeEmailHtml,
@@ -17,6 +18,7 @@ async function deliver(
   try {
     const { error } = await getResendClient().emails.send({
       from: EMAIL_FROM,
+      replyTo: legal.contactEmail,
       ...message,
     });
     if (error) {

@@ -1,17 +1,18 @@
 // Informations légales affichées sur les pages « Mentions légales »,
-// « Politique de confidentialité » et « CGU ». Les valeurs entre crochets
-// sont à remplacer par les vraies informations avant la mise en service.
+// « Politique de confidentialité » et « CGU ».
+// Identité, SIRET et adresse vérifiés dans le registre public SIRENE.
 export const legal = {
   productName: "KeepMe",
-  lastUpdated: "5 octobre 2026",
-  publisherName: "[À COMPLÉTER : nom et prénom de l’éditeur]",
+  lastUpdated: "6 octobre 2026",
+  publisherName: "Hari Ilanchejian",
+  tradeName: "ORACOM",
   publisherStatus: "entrepreneur individuel en micro-entreprise",
-  siret: "[À COMPLÉTER : numéro SIRET]",
-  address: "[À COMPLÉTER : adresse postale de l’éditeur]",
+  siret: "109 696 534 00014",
+  address: "10 impasse de l’Ormeteau, 77127 Lieusaint",
   contactEmail: "contact@keepmecard.fr",
   host: {
     name: "Vercel Inc.",
-    address: "[À VÉRIFIER : adresse postale de Vercel Inc.]",
+    address: "440 N Barranca Avenue #4133, Covina, CA 91723, États-Unis",
     website: "https://vercel.com",
   },
 };

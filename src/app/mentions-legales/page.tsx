@@ -13,7 +13,7 @@ export default function MentionsLegalesPage() {
       <LegalSection title="Éditeur du site">
         <p>
           Le site {legal.productName} est édité par {legal.publisherName},{" "}
-          {legal.publisherStatus}.
+          {legal.publisherStatus} (nom commercial : {legal.tradeName}).
         </p>
         <ul className="list-disc pl-5">
           <li>SIRET : {legal.siret}</li>

@@ -7,6 +7,7 @@ import {
   QrCode,
   BarChart3,
   Mail,
+  Megaphone,
   UserCog,
   Store,
   type LucideIcon,
@@ -22,6 +23,7 @@ export const iconMap: Record<IconName, LucideIcon> = {
   QrCode,
   BarChart3,
   Mail,
+  Megaphone,
   UserCog,
   Store,
 };

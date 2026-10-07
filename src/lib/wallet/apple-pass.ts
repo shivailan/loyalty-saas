@@ -15,6 +15,7 @@ export type WalletCardData = {
   merchantName: string;
   merchantColor: string | null;
   merchantLogoUrl: string | null;
+  offerMessage: string | null;
   siteUrl: string;
 };
 
@@ -74,6 +75,17 @@ export async function buildApplePass(
       key: "holder",
       label: "TITULAIRE",
       value: data.firstName,
+    });
+  }
+
+  // Offre promotionnelle du commerçant. Quand son texte change, Wallet affiche
+  // ce texte tel quel en notification sur l'écran verrouillé.
+  if (data.offerMessage) {
+    pass.backFields.push({
+      key: "offer",
+      label: "Offre en cours",
+      value: data.offerMessage,
+      changeMessage: "%@",
     });
   }
 

@@ -290,6 +290,38 @@ export type Database = {
           },
         ]
       }
+      wallet_offers: {
+        Row: {
+          created_at: string
+          id: string
+          merchant_id: string
+          message: string
+          recipients_count: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          merchant_id: string
+          message: string
+          recipients_count?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          merchant_id?: string
+          message?: string
+          recipients_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallet_offers_merchant_id_fkey"
+            columns: ["merchant_id"]
+            isOneToOne: false
+            referencedRelation: "merchants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       wallet_registrations: {
         Row: {
           card_id: string
@@ -348,6 +380,14 @@ export type Database = {
       redeem_reward: {
         Args: { p_card_id: string }
         Returns: {
+          status: string
+        }[]
+      }
+      send_wallet_offer: {
+        Args: { p_cooldown_seconds?: number; p_message: string }
+        Returns: {
+          offer_id: string
+          seconds_remaining: number
           status: string
         }[]
       }

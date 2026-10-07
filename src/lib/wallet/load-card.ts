@@ -23,8 +23,8 @@ export async function loadWalletCard(
       id,
       current_stamps,
       updated_at,
-      customers ( first_name ),
-      loyalty_programs ( visits_required, reward_description, merchants ( name, primary_color, logo_url ) )
+      customers ( first_name, marketing_consent ),
+      loyalty_programs ( visits_required, reward_description, merchants ( id, name, primary_color, logo_url ) )
     `,
     )
     .eq("id", cardId)
@@ -33,6 +33,20 @@ export async function loadWalletCard(
   const program = card?.loyalty_programs;
   const merchant = program?.merchants;
   if (!card || !program || !merchant) return null;
+
+  // L'offre en cours n'est montrée qu'aux clients qui ont accepté d'en
+  // recevoir (même règle que pour l'envoi des notifications).
+  let offerMessage: string | null = null;
+  if (card.customers?.marketing_consent) {
+    const { data: offer } = await supabase
+      .from("wallet_offers")
+      .select("message")
+      .eq("merchant_id", merchant.id)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    offerMessage = offer?.message ?? null;
+  }
 
   return {
     updatedAt: card.updated_at,
@@ -45,6 +59,7 @@ export async function loadWalletCard(
       merchantName: merchant.name,
       merchantColor: merchant.primary_color,
       merchantLogoUrl: merchant.logo_url,
+      offerMessage,
       siteUrl,
     },
   };

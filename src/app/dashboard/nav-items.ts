@@ -28,6 +28,12 @@ export const navGroups: NavGroup[] = [
         icon: "ScanLine",
       },
       {
+        href: "/dashboard/offers",
+        label: "Offres Wallet",
+        description: "Envoyez une promotion en notification sur le téléphone de vos clients.",
+        icon: "Megaphone",
+      },
+      {
         href: "/dashboard/clients",
         label: "Clients",
         description: "La liste de vos clients inscrits et leur progression.",

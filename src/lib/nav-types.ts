@@ -7,6 +7,7 @@ export type IconName =
   | "QrCode"
   | "BarChart3"
   | "Mail"
+  | "Megaphone"
   | "UserCog"
   | "Store";
 

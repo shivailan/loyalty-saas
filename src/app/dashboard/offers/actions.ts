@@ -7,6 +7,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { offerSchema, type OfferInput } from "@/lib/validations/offer";
 import { getOfferAudience } from "@/lib/wallet/offers";
 import { notifyWalletUpdates } from "@/lib/wallet/notify";
+import { sendGoogleOffer } from "@/lib/wallet/google/sync";
 
 export type SendOfferResult = { error: string | null; recipients?: number };
 
@@ -33,7 +34,7 @@ export async function sendOffer(input: OfferInput): Promise<SendOfferResult> {
 
   const { data: merchant } = await supabase
     .from("merchants")
-    .select("id")
+    .select("id, name")
     .eq("owner_id", user.id)
     .single();
   if (!merchant) {
@@ -75,7 +76,16 @@ export async function sendOffer(input: OfferInput): Promise<SendOfferResult> {
     .eq("id", result.offer_id!);
 
   // Envoi des notifications une fois la réponse renvoyée au commerçant.
-  after(() => notifyWalletUpdates(audience.cardIds));
+  after(() =>
+    Promise.all([
+      notifyWalletUpdates(audience.cardIds),
+      sendGoogleOffer(audience.cardIds, {
+        id: result.offer_id!,
+        merchantName: merchant.name,
+        message: parsed.data.message,
+      }),
+    ]),
+  );
 
   revalidatePath("/dashboard/offers");
   return { error: null, recipients: audience.count };

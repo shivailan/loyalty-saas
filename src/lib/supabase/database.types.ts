@@ -98,6 +98,29 @@ export type Database = {
           },
         ]
       }
+      google_wallet_cards: {
+        Row: {
+          card_id: string
+          created_at: string
+        }
+        Insert: {
+          card_id: string
+          created_at?: string
+        }
+        Update: {
+          card_id?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "google_wallet_cards_card_id_fkey"
+            columns: ["card_id"]
+            isOneToOne: true
+            referencedRelation: "loyalty_cards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       loyalty_cards: {
         Row: {
           created_at: string

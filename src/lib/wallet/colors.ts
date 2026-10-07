@@ -29,3 +29,12 @@ export function passColors(primaryColor: string | null | undefined) {
     labelColor: toRgbString(foreground),
   };
 }
+
+// Même règle que pour Apple, mais au format « #rrggbb » attendu par Google.
+export function hexBackground(primaryColor: string | null | undefined): string {
+  return primaryColor &&
+    primaryColor !== "#000000" &&
+    /^#[0-9a-f]{6}$/i.test(primaryColor.trim())
+    ? primaryColor.trim()
+    : DEFAULT_BACKGROUND;
+}

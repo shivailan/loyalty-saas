@@ -46,3 +46,29 @@ export async function buildLogo(
     return {};
   }
 }
+
+// Logo carré en PNG pour Google Wallet (qui n'accepte pas le SVG). Si le
+// commerçant n'a pas de logo, ou s'il est illisible, on utilise l'icône KeepMe.
+export async function buildSquareLogo(
+  logoUrl: string | null | undefined,
+): Promise<Buffer> {
+  if (logoUrl) {
+    try {
+      const response = await fetch(logoUrl, {
+        signal: AbortSignal.timeout(5000),
+      });
+      if (response.ok) {
+        return await sharp(Buffer.from(await response.arrayBuffer()))
+          .resize(660, 660, {
+            fit: "contain",
+            background: { r: 255, g: 255, b: 255, alpha: 0 },
+          })
+          .png()
+          .toBuffer();
+      }
+    } catch (error) {
+      console.error("Google Wallet logo fallback:", error);
+    }
+  }
+  return sharp(Buffer.from(ICON_SVG)).resize(660, 660).png().toBuffer();
+}

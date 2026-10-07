@@ -12,6 +12,7 @@ export type WalletCardData = {
   required: number;
   rewardDescription: string | null;
   firstName: string | null;
+  merchantId: string;
   merchantName: string;
   merchantColor: string | null;
   merchantLogoUrl: string | null;

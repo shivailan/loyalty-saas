@@ -7,6 +7,10 @@ export const UUID_PATTERN =
 
 // Adresse publique du site. Une variable vide ou absente retombe sur
 // l'origine de la requête en cours (utile en local).
+// Adresse du site quand aucune requête n'est disponible (tâches lancées après
+// la réponse, comme les mises à jour Google Wallet).
+export const FALLBACK_SITE_URL = "https://www.keepmecard.fr";
+
 export function resolveSiteUrl(request: Request): string {
   return process.env.NEXT_PUBLIC_SITE_URL || new URL(request.url).origin;
 }
@@ -56,6 +60,7 @@ export async function loadWalletCard(
       required: program.visits_required,
       rewardDescription: program.reward_description,
       firstName: card.customers?.first_name ?? null,
+      merchantId: merchant.id,
       merchantName: merchant.name,
       merchantColor: merchant.primary_color,
       merchantLogoUrl: merchant.logo_url,

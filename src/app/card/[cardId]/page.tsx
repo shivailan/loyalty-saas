@@ -2,7 +2,9 @@ import { notFound } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { CardQrCode } from "./CardQrCode";
 import { AddToWalletButton } from "./AddToWalletButton";
+import { AddToGoogleWalletButton } from "./AddToGoogleWalletButton";
 import { isAppleWalletConfigured } from "@/lib/wallet/config";
+import { isGoogleWalletConfigured } from "@/lib/wallet/google/config";
 import { Card } from "@/components/ui/Card";
 
 const DEFAULT_ACCENT = "#FACC15";
@@ -100,6 +102,9 @@ export default async function CardPage({
         </div>
 
         {isAppleWalletConfigured() && <AddToWalletButton cardId={card.id} />}
+        {isGoogleWalletConfigured() && (
+          <AddToGoogleWalletButton cardId={card.id} />
+        )}
 
         <p className="mt-6 text-center text-xs text-neutral-500">
           Astuce : ajoutez cette page à votre écran d&apos;accueil pour y

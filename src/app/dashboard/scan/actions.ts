@@ -61,7 +61,7 @@ export async function addVisit(cardIdInput: string): Promise<AddVisitResult> {
   }
 
   // Rafraîchit la carte dans le Wallet du client, une fois la réponse envoyée.
-  after(() => notifyWalletUpdate(parsed.data.cardId));
+  after(() => notifyWalletUpdate(parsed.data.cardId, { googleNotify: true }));
 
   const previousStampCount = visit.previous_stamps;
   const newStampCount = visit.new_stamps;

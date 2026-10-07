@@ -2,6 +2,7 @@ import "server-only";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getWalletCertificates } from "./config";
 import { sendWalletPushes } from "./apns";
+import { syncGoogleCard } from "./google/sync";
 
 // À appeler après toute modification de cartes : prévient les iPhones qui
 // ont ces cartes dans Wallet pour qu'ils les rafraîchissent. Ne lève jamais
@@ -38,6 +39,15 @@ export async function notifyWalletUpdates(cardIds: string[]): Promise<void> {
   }
 }
 
-export function notifyWalletUpdate(cardId: string): Promise<void> {
-  return notifyWalletUpdates([cardId]);
+// Met à jour la carte d'un client dans les deux Wallet (Apple et Google).
+// Avec googleNotify, Google affiche aussi une notification « Passages : X sur Y »
+// (Apple en affiche une automatiquement quand le champ change).
+export async function notifyWalletUpdate(
+  cardId: string,
+  { googleNotify = false }: { googleNotify?: boolean } = {},
+): Promise<void> {
+  await Promise.all([
+    notifyWalletUpdates([cardId]),
+    syncGoogleCard(cardId, { notify: googleNotify }),
+  ]);
 }

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
@@ -11,6 +12,15 @@ import { Button } from "@/components/ui/Button";
 import { inputClass, labelClass, errorClass } from "@/lib/ui";
 
 export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
+  );
+}
+
+function LoginForm() {
+  const invalidLink = useSearchParams().get("error") === "link";
   const [serverError, setServerError] = useState<string | null>(null);
   const {
     register,
@@ -29,6 +39,12 @@ export default function LoginPage() {
   return (
     <AuthShell>
       <h1 className="text-xl font-semibold text-neutral-900">Connexion</h1>
+      {invalidLink && (
+        <p className="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
+          Ce lien est invalide ou a expiré. Connectez-vous, ou demandez un
+          nouveau lien avec « Mot de passe oublié ».
+        </p>
+      )}
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="mt-6 flex flex-col gap-4"

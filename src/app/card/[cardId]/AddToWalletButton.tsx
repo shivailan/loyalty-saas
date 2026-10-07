@@ -12,9 +12,9 @@ function isAppleDevice(): boolean {
   return /iPhone|iPad|iPod/.test(ua) || iPadOnMac;
 }
 
-// Wallet n'existe que sur iPhone/iPad : on n'affiche le bouton que là.
-// TODO avant lancement : remplacer par le badge officiel « Ajouter à Apple
-// Wallet » fourni par Apple (obligatoire pour utiliser leur marque).
+// Wallet n'existe que sur iPhone/iPad : on n'affiche le badge que là.
+// Le fichier SVG est le badge officiel français fourni par Apple : il ne doit
+// être ni modifié, ni recoloré, ni déformé (voir les directives d'Apple).
 export function AddToWalletButton({ cardId }: { cardId: string }) {
   const visible = useSyncExternalStore(subscribe, isAppleDevice, () => false);
   if (!visible) return null;
@@ -22,10 +22,15 @@ export function AddToWalletButton({ cardId }: { cardId: string }) {
   return (
     <a
       href={`/api/wallet/apple/${cardId}`}
-      className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-black px-4 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+      className="mt-6 flex justify-center py-1"
+      aria-label="Ajouter à l’app Cartes Apple"
     >
-      <span aria-hidden="true"></span>
-      Ajouter à Apple Wallet
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/wallet/add-to-apple-wallet-fr.svg"
+        alt="Ajouter à l’app Cartes Apple"
+        className="h-12 w-auto"
+      />
     </a>
   );
 }

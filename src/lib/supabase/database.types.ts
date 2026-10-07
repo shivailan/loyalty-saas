@@ -105,6 +105,7 @@ export type Database = {
           customer_id: string
           id: string
           loyalty_program_id: string
+          updated_at: string
         }
         Insert: {
           created_at?: string
@@ -112,6 +113,7 @@ export type Database = {
           customer_id: string
           id?: string
           loyalty_program_id: string
+          updated_at?: string
         }
         Update: {
           created_at?: string
@@ -119,6 +121,7 @@ export type Database = {
           customer_id?: string
           id?: string
           loyalty_program_id?: string
+          updated_at?: string
         }
         Relationships: [
           {
@@ -280,6 +283,38 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "visits_card_id_fkey"
+            columns: ["card_id"]
+            isOneToOne: false
+            referencedRelation: "loyalty_cards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wallet_registrations: {
+        Row: {
+          card_id: string
+          created_at: string
+          device_library_identifier: string
+          pass_type_identifier: string
+          push_token: string
+        }
+        Insert: {
+          card_id: string
+          created_at?: string
+          device_library_identifier: string
+          pass_type_identifier: string
+          push_token: string
+        }
+        Update: {
+          card_id?: string
+          created_at?: string
+          device_library_identifier?: string
+          pass_type_identifier?: string
+          push_token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallet_registrations_card_id_fkey"
             columns: ["card_id"]
             isOneToOne: false
             referencedRelation: "loyalty_cards"

@@ -4,6 +4,7 @@ import { legal } from "@/lib/legal";
 import { PASS_TYPE_ID, APPLE_TEAM_ID, type WalletCertificates } from "./config";
 import { passColors } from "./colors";
 import { buildIcons, buildLogo } from "./images";
+import { walletAuthToken } from "./auth";
 
 export type WalletCardData = {
   cardId: string;
@@ -35,6 +36,14 @@ export async function buildApplePass(
     description: `Carte de fidélité ${data.merchantName}`,
     logoText: data.merchantName,
     ...passColors(data.merchantColor),
+    // Apple n'accepte le service de mise à jour qu'en HTTPS : en local
+    // (http://localhost) la carte est créée sans mise à jour automatique.
+    ...(data.siteUrl.startsWith("https://")
+      ? {
+          webServiceURL: `${data.siteUrl}/api/wallet/ws`,
+          authenticationToken: walletAuthToken(data.cardId),
+        }
+      : {}),
   });
 
   pass.type = "storeCard";

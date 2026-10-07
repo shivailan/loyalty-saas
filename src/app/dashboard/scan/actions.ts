@@ -1,8 +1,10 @@
 "use server";
 
+import { after } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { scanSchema } from "@/lib/validations/scan";
 import { sendRewardEmail } from "@/lib/email/send";
+import { notifyWalletUpdate } from "@/lib/wallet/notify";
 
 // Délai minimum entre deux passages d'une même carte (anti double scan) et
 // durée pendant laquelle le dernier passage peut être annulé.
@@ -57,6 +59,9 @@ export async function addVisit(cardIdInput: string): Promise<AddVisitResult> {
       tooSoon: true,
     };
   }
+
+  // Rafraîchit la carte dans le Wallet du client, une fois la réponse envoyée.
+  after(() => notifyWalletUpdate(parsed.data.cardId));
 
   const previousStampCount = visit.previous_stamps;
   const newStampCount = visit.new_stamps;
@@ -147,6 +152,7 @@ export async function undoLastVisit(
 
   switch (result.status) {
     case "ok":
+      after(() => notifyWalletUpdate(parsed.data.cardId));
       return { error: null, currentStamps: result.new_stamps };
     case "not_found":
       return { error: NOT_FOUND_MESSAGE };
@@ -197,6 +203,7 @@ export async function redeemReward(
 
   switch (result.status) {
     case "ok":
+      after(() => notifyWalletUpdate(parsed.data.cardId));
       return { error: null, success: true };
     case "not_found":
       return { error: NOT_FOUND_MESSAGE };

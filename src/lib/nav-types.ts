@@ -8,6 +8,7 @@ export type IconName =
   | "BarChart3"
   | "Mail"
   | "Megaphone"
+  | "CreditCard"
   | "UserCog"
   | "Store";
 

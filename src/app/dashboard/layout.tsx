@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { logout } from "./actions";
 import { SidebarNav, MobileNav } from "@/components/ui/SidebarNav";
 import { navGroups } from "./nav-items";
+import { hasPaidAccess } from "@/lib/billing/access";
 
 export default async function DashboardLayout({
   children,
@@ -21,7 +22,7 @@ export default async function DashboardLayout({
 
   const { data: merchant } = await supabase
     .from("merchants")
-    .select("is_suspended")
+    .select("is_suspended, billing_exempt, subscription_status")
     .single();
 
   if (merchant?.is_suspended) {
@@ -46,6 +47,12 @@ export default async function DashboardLayout({
         </div>
       </div>
     );
+  }
+
+  // Abonnement requis pour accéder à l'espace (inactif tant que Stripe n'est
+  // pas configuré, voir lib/billing/config).
+  if (merchant && !hasPaidAccess(merchant)) {
+    redirect("/subscribe");
   }
 
   return (
@@ -97,6 +104,16 @@ export default async function DashboardLayout({
         <div className="px-6 py-4 md:hidden">
           <MobileNav groups={navGroups} />
         </div>
+
+        {merchant?.subscription_status === "past_due" && (
+          <div className="border-b border-amber-200 bg-amber-50 px-6 py-3 text-sm text-amber-800">
+            Votre dernier paiement a échoué.{" "}
+            <Link href="/dashboard/billing" className="font-medium underline">
+              Mettez à jour votre moyen de paiement
+            </Link>{" "}
+            pour garder l&apos;accès à votre espace.
+          </div>
+        )}
 
         <main className="mx-auto max-w-5xl px-6 py-10">{children}</main>
       </div>

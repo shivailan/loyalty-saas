@@ -24,6 +24,27 @@ export async function setMerchantSuspended(
   return { error: null };
 }
 
+// Compte « offert » : accès sans abonnement (démonstration, partenaire…).
+export async function setMerchantExempt(
+  merchantId: string,
+  exempt: boolean,
+): Promise<{ error: string | null }> {
+  await requireAdmin();
+  const supabase = createAdminClient();
+
+  const { error } = await supabase
+    .from("merchants")
+    .update({ billing_exempt: exempt })
+    .eq("id", merchantId);
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  revalidatePath("/admin/merchants");
+  return { error: null };
+}
+
 export async function deleteMerchant(
   merchantId: string,
 ): Promise<{ error: string | null }> {

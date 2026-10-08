@@ -8,7 +8,9 @@ export default async function AdminMerchantsPage() {
 
   const { data: merchants } = await supabase
     .from("merchants")
-    .select("id, name, slug, is_suspended, created_at")
+    .select(
+      "id, name, slug, is_suspended, created_at, billing_exempt, subscription_status, subscription_plan",
+    )
     .order("created_at", { ascending: false });
 
   return (

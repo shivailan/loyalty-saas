@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { joinSchema, type JoinInput } from "@/lib/validations/join";
 import { sendWelcomeEmail } from "@/lib/email/send";
 import { allowAction, getClientFingerprint } from "@/lib/rate-limit";
+import { isMerchantOpen } from "@/lib/billing/access";
 
 // Limites par heure : large pour ne jamais gêner un vrai commerce (tous les
 // clients peuvent s'inscrire depuis le même wifi), mais bloquante pour un robot.
@@ -39,13 +40,15 @@ export async function joinLoyaltyProgram(
 
   const { data: merchant } = await supabase
     .from("merchants")
-    .select("id, name, send_welcome_email, is_suspended")
+    .select(
+      "id, name, send_welcome_email, is_suspended, billing_exempt, subscription_status",
+    )
     .eq("slug", slug)
     .maybeSingle();
   if (!merchant) {
     return { error: "Commerçant introuvable." };
   }
-  if (merchant.is_suspended) {
+  if (!isMerchantOpen(merchant)) {
     return {
       error: "Ce commerçant n'accepte plus de nouvelles inscriptions pour le moment.",
     };

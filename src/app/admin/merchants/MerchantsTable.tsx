@@ -3,7 +3,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Store } from "lucide-react";
-import { setMerchantSuspended, deleteMerchant } from "./actions";
+import {
+  setMerchantSuspended,
+  setMerchantExempt,
+  deleteMerchant,
+} from "./actions";
 import { Button } from "@/components/ui/Button";
 
 type Merchant = {
@@ -12,6 +16,20 @@ type Merchant = {
   slug: string;
   is_suspended: boolean;
   created_at: string;
+  billing_exempt: boolean;
+  subscription_status: string;
+  subscription_plan: string | null;
+};
+
+const SUBSCRIPTION_LABELS: Record<string, string> = {
+  trialing: "Essai",
+  active: "Abonné",
+  past_due: "Paiement en retard",
+  canceled: "Résilié",
+  unpaid: "Impayé",
+  incomplete: "Non finalisé",
+  incomplete_expired: "Expiré",
+  none: "Non abonné",
 };
 
 export function MerchantsTable({ merchants }: { merchants: Merchant[] }) {
@@ -21,6 +39,13 @@ export function MerchantsTable({ merchants }: { merchants: Merchant[] }) {
   async function handleToggleSuspend(merchant: Merchant) {
     setPendingId(merchant.id);
     await setMerchantSuspended(merchant.id, !merchant.is_suspended);
+    setPendingId(null);
+    router.refresh();
+  }
+
+  async function handleToggleExempt(merchant: Merchant) {
+    setPendingId(merchant.id);
+    await setMerchantExempt(merchant.id, !merchant.billing_exempt);
     setPendingId(null);
     router.refresh();
   }
@@ -58,6 +83,7 @@ export function MerchantsTable({ merchants }: { merchants: Merchant[] }) {
             <th className="px-4 py-3 font-medium">Nom</th>
             <th className="px-4 py-3 font-medium">Inscrit le</th>
             <th className="px-4 py-3 font-medium">Statut</th>
+            <th className="px-4 py-3 font-medium">Abonnement</th>
             <th className="px-4 py-3 font-medium">Actions</th>
           </tr>
         </thead>
@@ -91,6 +117,11 @@ export function MerchantsTable({ merchants }: { merchants: Merchant[] }) {
                   </span>
                 )}
               </td>
+              <td className="px-4 py-3 text-neutral-700">
+                {merchant.billing_exempt
+                  ? "Offert"
+                  : `${SUBSCRIPTION_LABELS[merchant.subscription_status] ?? merchant.subscription_status}${merchant.subscription_plan ? ` · ${merchant.subscription_plan}` : ""}`}
+              </td>
               <td className="px-4 py-3">
                 <div className="flex gap-2">
                   <Button
@@ -100,6 +131,14 @@ export function MerchantsTable({ merchants }: { merchants: Merchant[] }) {
                     onClick={() => handleToggleSuspend(merchant)}
                   >
                     {merchant.is_suspended ? "Réactiver" : "Suspendre"}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    disabled={pendingId === merchant.id}
+                    onClick={() => handleToggleExempt(merchant)}
+                  >
+                    {merchant.billing_exempt ? "Retirer l'offre" : "Offrir"}
                   </Button>
                   <Button
                     type="button"

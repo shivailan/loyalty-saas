@@ -79,6 +79,12 @@ export const navGroups: NavGroup[] = [
         description: "Nom de l'établissement et mot de passe.",
         icon: "UserCog",
       },
+      {
+        href: "/dashboard/billing",
+        label: "Abonnement",
+        description: "Votre formule, vos factures et votre moyen de paiement.",
+        icon: "CreditCard",
+      },
     ],
   },
 ];

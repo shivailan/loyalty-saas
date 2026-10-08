@@ -2,7 +2,10 @@
 // qu'un prix ou une fonctionnalité ne puisse jamais différer entre les deux.
 export type Feature = { label: string; soon?: boolean };
 
+export type PlanId = "essentiel" | "business";
+
 export type Plan = {
+  id?: PlanId;
   name: string;
   price: string;
   description: string;
@@ -13,6 +16,7 @@ export type Plan = {
 
 export const plans: Plan[] = [
   {
+    id: "essentiel",
     name: "Essentiel",
     price: "39,99",
     description: "Tout pour lancer votre carte de fidélité digitale.",
@@ -27,6 +31,7 @@ export const plans: Plan[] = [
     ],
   },
   {
+    id: "business",
     name: "Business",
     price: "49,99",
     description: "Un accompagnement plus proche, dès le premier jour.",

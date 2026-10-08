@@ -8,6 +8,7 @@ import {
   BarChart3,
   Mail,
   Megaphone,
+  CreditCard,
   UserCog,
   Store,
   type LucideIcon,
@@ -24,6 +25,7 @@ export const iconMap: Record<IconName, LucideIcon> = {
   BarChart3,
   Mail,
   Megaphone,
+  CreditCard,
   UserCog,
   Store,
 };

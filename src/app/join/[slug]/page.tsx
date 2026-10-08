@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { JoinForm } from "./JoinForm";
 import { Card } from "@/components/ui/Card";
+import { isMerchantOpen } from "@/lib/billing/access";
 
 export default async function JoinPage({
   params,
@@ -14,7 +15,9 @@ export default async function JoinPage({
 
   const { data: merchant } = await supabase
     .from("merchants")
-    .select("id, name, is_suspended, logo_url")
+    .select(
+      "id, name, is_suspended, logo_url, billing_exempt, subscription_status",
+    )
     .eq("slug", slug)
     .maybeSingle();
 
@@ -43,7 +46,7 @@ export default async function JoinPage({
         <h1 className="text-xl font-semibold text-neutral-900">
           Bienvenue chez {merchant.name}
         </h1>
-        {merchant.is_suspended ? (
+        {!isMerchantOpen(merchant) ? (
           <p className="mt-2 text-sm text-red-600">
             Ce commerçant n&apos;accepte plus de nouvelles inscriptions pour
             le moment.

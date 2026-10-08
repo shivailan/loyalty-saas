@@ -203,6 +203,7 @@ export type Database = {
       }
       merchants: {
         Row: {
+          billing_exempt: boolean
           created_at: string
           id: string
           is_suspended: boolean
@@ -213,8 +214,14 @@ export type Database = {
           send_reward_email: boolean
           send_welcome_email: boolean
           slug: string
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          subscription_period_end: string | null
+          subscription_plan: string | null
+          subscription_status: string
         }
         Insert: {
+          billing_exempt?: boolean
           created_at?: string
           id?: string
           is_suspended?: boolean
@@ -225,8 +232,14 @@ export type Database = {
           send_reward_email?: boolean
           send_welcome_email?: boolean
           slug: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          subscription_period_end?: string | null
+          subscription_plan?: string | null
+          subscription_status?: string
         }
         Update: {
+          billing_exempt?: boolean
           created_at?: string
           id?: string
           is_suspended?: boolean
@@ -237,6 +250,11 @@ export type Database = {
           send_reward_email?: boolean
           send_welcome_email?: boolean
           slug?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          subscription_period_end?: string | null
+          subscription_plan?: string | null
+          subscription_status?: string
         }
         Relationships: []
       }

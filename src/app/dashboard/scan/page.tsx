@@ -12,13 +12,11 @@ export default async function ScanPage() {
   }
 
   return (
-    <div className="max-w-md">
-      <h1 className="text-2xl font-bold text-neutral-900">
-        Scanner une carte
-      </h1>
+    <div className="mx-auto max-w-md">
+      <h1 className="text-2xl font-bold text-neutral-900">Scanner</h1>
       <p className="mt-1 text-sm text-neutral-600">
-        Scannez le QR code affiché sur la carte du client pour ajouter un
-        passage.
+        Présentez la caméra devant le QR code de la carte du client : le passage
+        est ajouté tout seul.
       </p>
       <ScanClient />
     </div>

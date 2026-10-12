@@ -93,10 +93,7 @@ export async function addVisit(cardIdInput: string): Promise<AddVisitResult> {
     .maybeSingle();
 
   const visitsRequired = card?.loyalty_programs?.visits_required ?? 0;
-  const customerName = [
-    card?.customers?.first_name,
-    card?.customers?.last_name,
-  ]
+  const customerName = [card?.customers?.first_name, card?.customers?.last_name]
     .filter(Boolean)
     .join(" ");
   const rewardReached = visitsRequired > 0 && newStampCount >= visitsRequired;
@@ -110,8 +107,7 @@ export async function addVisit(cardIdInput: string): Promise<AddVisitResult> {
     merchant?.send_reward_email &&
     card.customers?.email
   ) {
-    const siteUrl =
-      process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
     await sendRewardEmail({
       to: card.customers.email,
       customerFirstName: card.customers.first_name,

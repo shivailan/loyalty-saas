@@ -15,6 +15,7 @@ export type WalletCardData = {
   merchantId: string;
   merchantName: string;
   merchantColor: string | null;
+  merchantSecondaryColor: string | null;
   merchantLogoUrl: string | null;
   offerMessage: string | null;
   siteUrl: string;
@@ -37,7 +38,7 @@ export async function buildApplePass(
     organizationName: data.merchantName,
     description: `Carte de fidélité ${data.merchantName}`,
     logoText: data.merchantName,
-    ...passColors(data.merchantColor),
+    ...passColors(data.merchantColor, data.merchantSecondaryColor),
     // Apple n'accepte le service de mise à jour qu'en HTTPS : en local
     // (http://localhost) la carte est créée sans mise à jour automatique.
     ...(data.siteUrl.startsWith("https://")

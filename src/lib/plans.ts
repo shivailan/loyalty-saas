@@ -1,6 +1,8 @@
 // Source unique des offres : utilisée par la page Tarifs et par les CGV, pour
 // qu'un prix ou une fonctionnalité ne puisse jamais différer entre les deux.
-export type Feature = { label: string; soon?: boolean };
+// excluded : fonctionnalité absente de cette formule, affichée barrée pour
+// montrer ce que la formule supérieure apporte.
+export type Feature = { label: string; soon?: boolean; excluded?: boolean };
 
 export type PlanId = "essentiel" | "business";
 
@@ -23,11 +25,16 @@ export const plans: Plan[] = [
     features: [
       { label: "QR code et carte de fidélité illimités" },
       { label: "Clients et passages illimités" },
+      { label: "Carte ajoutable à Apple Wallet et Google Wallet" },
       { label: "Statistiques en temps réel" },
-      { label: "Logo et couleurs de votre commerce" },
+      { label: "Logo et 2 couleurs de votre commerce" },
       { label: "Emails automatiques à vos clients" },
+      { label: "Export de vos clients au format Excel" },
       { label: "Support par email" },
-      { label: "Notifications push", soon: true },
+      {
+        label: "Offres envoyées en notification sur le téléphone de vos clients",
+        excluded: true,
+      },
     ],
   },
   {
@@ -38,9 +45,12 @@ export const plans: Plan[] = [
     highlighted: true,
     features: [
       { label: "Tout ce qui est inclus dans Essentiel" },
+      {
+        label:
+          "Offres envoyées en notification sur le téléphone de vos clients (1 par jour)",
+      },
       { label: "Support par WhatsApp" },
       { label: "Accompagnement à la mise en place inclus" },
-      { label: "Notifications push", soon: true },
     ],
   },
   {

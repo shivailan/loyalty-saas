@@ -1,6 +1,7 @@
 import type Stripe from "stripe";
 import { getStripe } from "@/lib/billing/stripe";
 import { syncSubscription } from "@/lib/billing/sync";
+import { sendTrialEnding } from "@/lib/billing/trial-reminder";
 
 export const runtime = "nodejs";
 
@@ -39,6 +40,10 @@ export async function POST(request: Request) {
         }
         break;
       }
+      // Stripe envoie cet événement 3 jours avant la fin de l'essai.
+      case "customer.subscription.trial_will_end":
+        await sendTrialEnding(event.data.object);
+        break;
       case "customer.subscription.created":
       case "customer.subscription.updated":
       case "customer.subscription.deleted":

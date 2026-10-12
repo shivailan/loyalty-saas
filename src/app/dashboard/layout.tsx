@@ -6,6 +6,16 @@ import { SidebarNav, MobileNav } from "@/components/ui/SidebarNav";
 import { navGroups } from "./nav-items";
 import { hasPaidAccess } from "@/lib/billing/access";
 
+// Jours restants avant la fin de l'essai gratuit (hors du composant : lire
+// l'heure courante n'est pas permis pendant le rendu).
+function trialDaysLeft(periodEnd: string | null): number | null {
+  if (!periodEnd) return null;
+  const days = Math.ceil(
+    (new Date(periodEnd).getTime() - Date.now()) / (24 * 60 * 60 * 1000),
+  );
+  return days >= 0 ? days : null;
+}
+
 export default async function DashboardLayout({
   children,
 }: {
@@ -22,7 +32,9 @@ export default async function DashboardLayout({
 
   const { data: merchant } = await supabase
     .from("merchants")
-    .select("is_suspended, billing_exempt, subscription_status")
+    .select(
+      "is_suspended, billing_exempt, subscription_status, subscription_period_end",
+    )
     .single();
 
   if (merchant?.is_suspended) {
@@ -104,6 +116,27 @@ export default async function DashboardLayout({
         <div className="px-6 py-4 md:hidden">
           <MobileNav groups={navGroups} />
         </div>
+
+        {merchant?.subscription_status === "trialing" &&
+          (() => {
+            const days = trialDaysLeft(merchant.subscription_period_end);
+            if (days === null || days > 5) return null;
+            return (
+              <div className="border-b border-yellow-200 bg-yellow-50 px-6 py-3 text-sm text-yellow-900">
+                Votre essai gratuit se termine{" "}
+                {days === 0
+                  ? "aujourd'hui"
+                  : `dans ${days} jour${days > 1 ? "s" : ""}`}
+                . Votre abonnement démarrera ensuite automatiquement.{" "}
+                <Link
+                  href="/dashboard/billing"
+                  className="font-medium underline"
+                >
+                  Gérer mon abonnement
+                </Link>
+              </div>
+            );
+          })()}
 
         {merchant?.subscription_status === "past_due" && (
           <div className="border-b border-amber-200 bg-amber-50 px-6 py-3 text-sm text-amber-800">

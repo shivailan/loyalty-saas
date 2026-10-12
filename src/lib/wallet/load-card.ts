@@ -28,7 +28,7 @@ export async function loadWalletCard(
       current_stamps,
       updated_at,
       customers ( first_name, marketing_consent ),
-      loyalty_programs ( visits_required, reward_description, merchants ( id, name, primary_color, logo_url ) )
+      loyalty_programs ( visits_required, reward_description, merchants ( id, name, primary_color, secondary_color, logo_url ) )
     `,
     )
     .eq("id", cardId)
@@ -63,6 +63,7 @@ export async function loadWalletCard(
       merchantId: merchant.id,
       merchantName: merchant.name,
       merchantColor: merchant.primary_color,
+      merchantSecondaryColor: merchant.secondary_color,
       merchantLogoUrl: merchant.logo_url,
       offerMessage,
       siteUrl,

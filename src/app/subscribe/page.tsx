@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Check } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { isBillingEnabled, trialDays } from "@/lib/billing/config";
 import { hasPaidAccess } from "@/lib/billing/access";
@@ -77,40 +77,74 @@ export default async function SubscribePage({
           </p>
         )}
 
-        <div className="mt-8 grid gap-4 sm:grid-cols-2">
+        <div className="mt-10 grid items-stretch gap-4 sm:grid-cols-2">
           {sellable.map((plan) => (
             <div
               key={plan.id}
-              className={`flex flex-col rounded-2xl border bg-white p-6 shadow-sm ${plan.highlighted ? "border-yellow-400 ring-2 ring-yellow-400/30" : "border-neutral-200"}`}
+              className={`relative flex flex-col rounded-2xl border p-6 ${
+                plan.highlighted
+                  ? "border-yellow-400 bg-neutral-900 text-white shadow-xl ring-2 ring-yellow-400 sm:-my-2 sm:py-8"
+                  : "border-neutral-200 bg-white shadow-sm"
+              }`}
             >
-              <h2 className="text-lg font-semibold text-neutral-900">
+              {plan.highlighted && (
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-yellow-400 px-3 py-1 text-xs font-bold uppercase tracking-wide text-neutral-900">
+                  Le plus choisi
+                </span>
+              )}
+              <h2
+                className={`text-lg font-semibold ${plan.highlighted ? "text-white" : "text-neutral-900"}`}
+              >
                 {plan.name}
               </h2>
-              <p className="mt-1 text-sm text-neutral-600">
+              <p
+                className={`mt-1 text-sm ${plan.highlighted ? "text-neutral-300" : "text-neutral-600"}`}
+              >
                 {plan.description}
               </p>
-              <p className="mt-4 text-3xl font-bold text-neutral-900">
+              <p
+                className={`mt-4 text-3xl font-bold ${plan.highlighted ? "text-yellow-400" : "text-neutral-900"}`}
+              >
                 {plan.price} €
-                <span className="text-sm font-medium text-neutral-500">
+                <span
+                  className={`text-sm font-medium ${plan.highlighted ? "text-neutral-300" : "text-neutral-500"}`}
+                >
                   {" "}
                   / mois
                 </span>
               </p>
-              <ul className="mt-4 flex flex-1 flex-col gap-2 text-sm text-neutral-700">
+              <ul className="mt-4 flex flex-1 flex-col gap-2 text-sm">
                 {plan.features
                   .filter((feature) => !feature.soon)
                   .map((feature) => (
-                    <li key={feature.label} className="flex gap-2">
-                      <Check
-                        className="mt-0.5 h-4 w-4 shrink-0 text-yellow-600"
-                        aria-hidden="true"
-                      />
+                    <li
+                      key={feature.label}
+                      className={`flex gap-2 ${
+                        feature.excluded
+                          ? "text-neutral-400 line-through"
+                          : plan.highlighted
+                            ? "text-neutral-100"
+                            : "text-neutral-700"
+                      }`}
+                    >
+                      {feature.excluded ? (
+                        <X className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+                      ) : (
+                        <Check
+                          className={`mt-0.5 h-4 w-4 shrink-0 ${plan.highlighted ? "text-yellow-400" : "text-yellow-600"}`}
+                          aria-hidden="true"
+                        />
+                      )}
                       {feature.label}
                     </li>
                   ))}
               </ul>
               <form action={startCheckout.bind(null, plan.id!)} className="mt-6">
-                <Button type="submit" className="w-full">
+                <Button
+                  type="submit"
+                  variant={plan.highlighted ? "primary" : "secondary"}
+                  className="w-full"
+                >
                   {days > 0 ? `Essayer ${days} jours gratuitement` : "S'abonner"}
                 </Button>
               </form>

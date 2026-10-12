@@ -211,6 +211,7 @@ export type Database = {
           name: string
           owner_id: string
           primary_color: string
+          secondary_color: string
           send_reward_email: boolean
           send_welcome_email: boolean
           slug: string
@@ -229,6 +230,7 @@ export type Database = {
           name: string
           owner_id: string
           primary_color?: string
+          secondary_color?: string
           send_reward_email?: boolean
           send_welcome_email?: boolean
           slug: string
@@ -247,6 +249,7 @@ export type Database = {
           name?: string
           owner_id?: string
           primary_color?: string
+          secondary_color?: string
           send_reward_email?: boolean
           send_welcome_email?: boolean
           slug?: string

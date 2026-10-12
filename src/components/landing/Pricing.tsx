@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Check, Clock } from "lucide-react";
+import { Check, Clock, X } from "lucide-react";
 import { plans } from "@/lib/plans";
 import { Reveal, RevealGroup, RevealItem } from "./Motion";
 
@@ -16,40 +16,62 @@ export function Pricing() {
           </p>
         </Reveal>
 
-        <RevealGroup className="mx-auto mt-16 grid max-w-5xl gap-5 md:grid-cols-3">
+        <RevealGroup className="mx-auto mt-16 grid max-w-5xl items-stretch gap-5 md:grid-cols-3">
           {plans.map((plan) => (
             <RevealItem
               key={plan.name}
               className={`relative flex flex-col rounded-3xl border p-8 ${
                 plan.highlighted
-                  ? "border-yellow-400 bg-white shadow-xl ring-1 ring-yellow-400"
+                  ? "z-10 border-yellow-400 bg-neutral-900 text-white shadow-2xl ring-2 ring-yellow-400 md:-my-4 md:py-12"
                   : plan.comingSoon
                     ? "border-dashed border-neutral-300 bg-transparent"
-                    : "border-neutral-200 bg-white"
+                    : "border-neutral-200 bg-white/70"
               }`}
             >
               {plan.highlighted && (
-                <span className="absolute -top-3 left-8 rounded-full bg-yellow-400 px-3 py-1 text-xs font-semibold text-neutral-900">
-                  Recommandé
+                <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-yellow-400 px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-neutral-900 shadow-sm">
+                  Le plus choisi
                 </span>
               )}
 
-              <h3 className="font-heading text-xl font-semibold tracking-tight text-neutral-900">
+              <h3
+                className={`font-heading text-xl font-semibold tracking-tight ${
+                  plan.highlighted ? "text-white" : "text-neutral-900"
+                }`}
+              >
                 {plan.name}
               </h3>
-              <p className="mt-2 text-sm text-neutral-500">
+              <p
+                className={`mt-2 text-sm ${
+                  plan.highlighted ? "text-neutral-300" : "text-neutral-500"
+                }`}
+              >
                 {plan.description}
               </p>
 
               <p
                 className={`mt-6 flex items-baseline gap-1 ${
-                  plan.comingSoon ? "text-neutral-400" : "text-neutral-900"
+                  plan.highlighted
+                    ? "text-white"
+                    : plan.comingSoon
+                      ? "text-neutral-400"
+                      : "text-neutral-900"
                 }`}
               >
-                <span className="text-4xl font-semibold tracking-tight">
+                <span
+                  className={`font-semibold tracking-tight ${
+                    plan.highlighted ? "text-5xl text-yellow-400" : "text-4xl"
+                  }`}
+                >
                   {plan.price} €
                 </span>
-                <span className="text-sm text-neutral-500">/ mois</span>
+                <span
+                  className={`text-sm ${
+                    plan.highlighted ? "text-neutral-300" : "text-neutral-500"
+                  }`}
+                >
+                  / mois
+                </span>
               </p>
 
               {plan.features.length > 0 && (
@@ -58,13 +80,27 @@ export function Pricing() {
                     <li
                       key={feature.label}
                       className={`flex items-start gap-2 text-sm ${
-                        feature.soon ? "text-neutral-400" : "text-neutral-600"
+                        feature.excluded
+                          ? "text-neutral-400 line-through"
+                          : feature.soon
+                            ? "text-neutral-400"
+                            : plan.highlighted
+                              ? "text-neutral-100"
+                              : "text-neutral-600"
                       }`}
                     >
-                      {feature.soon ? (
+                      {feature.excluded ? (
+                        <X className="mt-0.5 h-4 w-4 shrink-0" />
+                      ) : feature.soon ? (
                         <Clock className="mt-0.5 h-4 w-4 shrink-0" />
                       ) : (
-                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-neutral-900" />
+                        <Check
+                          className={`mt-0.5 h-4 w-4 shrink-0 ${
+                            plan.highlighted
+                              ? "text-yellow-400"
+                              : "text-neutral-900"
+                          }`}
+                        />
                       )}
                       <span>
                         {feature.label}
@@ -84,11 +120,11 @@ export function Pricing() {
                   href="/signup"
                   className={`mt-8 block rounded-full px-4 py-3 text-center text-sm font-semibold transition-transform hover:scale-[1.02] active:scale-[0.98] ${
                     plan.highlighted
-                      ? "bg-yellow-400 text-neutral-900 hover:bg-yellow-300"
-                      : "bg-neutral-900 text-white hover:bg-neutral-800"
+                      ? "bg-yellow-400 py-3.5 text-base text-neutral-900 shadow-lg shadow-yellow-400/20 hover:bg-yellow-300"
+                      : "border border-neutral-300 bg-transparent text-neutral-700 hover:bg-neutral-100"
                   }`}
                 >
-                  Commencer
+                  {plan.highlighted ? "Choisir Business" : "Choisir Essentiel"}
                 </Link>
               )}
             </RevealItem>

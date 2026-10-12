@@ -38,7 +38,10 @@ export async function syncSubscription(
 
   const merchantId = subscription.metadata?.merchant_id;
   if (!merchantId) {
-    console.error("Stripe subscription without known merchant:", subscription.id);
+    console.error(
+      "Stripe subscription without known merchant:",
+      subscription.id,
+    );
     return;
   }
   const byMetadata = await supabase

@@ -27,3 +27,13 @@ export function hasPaidAccess(
 export function isMerchantOpen(merchant: BillingFields): boolean {
   return !merchant.is_suspended && hasPaidAccess(merchant);
 }
+
+// L'envoi d'offres en notification est réservé à la formule Business (les
+// comptes offerts, et l'absence de paiement configuré, n'y changent rien).
+export function canSendOffers(merchant: {
+  billing_exempt: boolean;
+  subscription_plan: string | null;
+}): boolean {
+  if (!isBillingEnabled()) return true;
+  return merchant.billing_exempt || merchant.subscription_plan === "business";
+}

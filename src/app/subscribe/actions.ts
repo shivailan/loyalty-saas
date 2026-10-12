@@ -7,6 +7,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getStripe } from "@/lib/billing/stripe";
 import { isBillingEnabled, priceIdForPlan, trialDays } from "@/lib/billing/config";
 import type { PlanId } from "@/lib/plans";
+import { syncSubscription } from "@/lib/billing/sync";
 
 async function siteUrl(): Promise<string> {
   return (
@@ -25,7 +26,7 @@ async function currentMerchant() {
 
   const { data: merchant } = await supabase
     .from("merchants")
-    .select("id, name, stripe_customer_id")
+    .select("id, name, stripe_customer_id, stripe_subscription_id, subscription_plan, subscription_status")
     .eq("owner_id", user.id)
     .single();
   if (!merchant) redirect("/login");
@@ -107,4 +108,41 @@ export async function openBillingPortal(): Promise<void> {
     console.error("Stripe portal creation failed:", error);
   }
   redirect(url ?? "/dashboard/billing?error=1");
+}
+
+// Passe un abonné Essentiel à Business : le prix de son abonnement existant est
+// remplacé, et la différence est facturée au prorata. Pendant l'essai gratuit,
+// cela change simplement la formule qui sera facturée à la fin de l'essai.
+export async function upgradeToBusiness(): Promise<void> {
+  if (!isBillingEnabled()) redirect("/dashboard");
+  const { merchant } = await currentMerchant();
+  const priceId = priceIdForPlan("business");
+  if (
+    !priceId ||
+    !merchant.stripe_subscription_id ||
+    merchant.subscription_plan !== "essentiel"
+  ) {
+    redirect("/dashboard/billing");
+  }
+
+  let ok = false;
+  try {
+    const stripe = getStripe();
+    const current = await stripe.subscriptions.retrieve(
+      merchant.stripe_subscription_id,
+    );
+    const item = current.items.data[0];
+    if (item) {
+      const updated = await stripe.subscriptions.update(current.id, {
+        items: [{ id: item.id, price: priceId }],
+        proration_behavior: "create_prorations",
+        metadata: { ...current.metadata, plan: "business" },
+      });
+      await syncSubscription(updated);
+      ok = true;
+    }
+  } catch (error) {
+    console.error("Stripe upgrade failed:", error);
+  }
+  redirect(ok ? "/dashboard/offers" : "/dashboard/billing?error=1");
 }

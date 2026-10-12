@@ -1,3 +1,13 @@
+// Les noms (commerce, client) et la récompense sont saisis par des
+// utilisateurs : on neutralise le HTML avant de les insérer dans un email.
+function esc(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
 function emailLayout(bodyHtml: string): string {
   return `
     <div style="font-family: -apple-system, sans-serif; background: #f9fafb; padding: 32px;">
@@ -22,9 +32,9 @@ export function welcomeEmailHtml(params: {
   cardUrl: string;
 }): string {
   return emailLayout(`
-    <h1 style="font-size: 20px; color: #171717; margin: 0 0 12px;">Bienvenue chez ${params.merchantName} !</h1>
+    <h1 style="font-size: 20px; color: #171717; margin: 0 0 12px;">Bienvenue chez ${esc(params.merchantName)} !</h1>
     <p style="font-size: 14px; color: #525252; line-height: 1.6; margin: 0;">
-      Bonjour ${params.customerFirstName}, votre carte de fidélité a bien été créée.
+      Bonjour ${esc(params.customerFirstName)}, votre carte de fidélité a bien été créée.
       Gardez ce lien pour la retrouver à tout moment.
     </p>
     ${ctaButton(params.cardUrl, "Voir ma carte")}
@@ -42,7 +52,7 @@ export function retrieveCardEmailHtml(params: {
   return emailLayout(`
     <h1 style="font-size: 20px; color: #171717; margin: 0 0 12px;">Voici votre carte</h1>
     <p style="font-size: 14px; color: #525252; line-height: 1.6; margin: 0;">
-      Bonjour ${params.customerFirstName}, voici le lien vers votre carte de fidélité chez ${params.merchantName}.
+      Bonjour ${esc(params.customerFirstName)}, voici le lien vers votre carte de fidélité chez ${esc(params.merchantName)}.
     </p>
     ${buttons}
   `);
@@ -57,9 +67,36 @@ export function rewardEmailHtml(params: {
   return emailLayout(`
     <h1 style="font-size: 20px; color: #171717; margin: 0 0 12px;">Votre récompense est prête !</h1>
     <p style="font-size: 14px; color: #525252; line-height: 1.6; margin: 0;">
-      Bonjour ${params.customerFirstName}, vous avez atteint le seuil chez ${params.merchantName}.
-      Passez récupérer : <strong style="color: #171717;">${params.rewardDescription}</strong>.
+      Bonjour ${esc(params.customerFirstName)}, vous avez atteint le seuil chez ${esc(params.merchantName)}.
+      Passez récupérer : <strong style="color: #171717;">${esc(params.rewardDescription)}</strong>.
     </p>
     ${ctaButton(params.cardUrl, "Voir ma carte")}
+  `);
+}
+
+export function trialEndingEmailHtml(params: {
+  merchantName: string;
+  planName: string;
+  price: string;
+  trialEndDate: string;
+  billingUrl: string;
+}): string {
+  return emailLayout(`
+    <h1 style="font-size: 20px; color: #171717; margin: 0 0 12px;">Votre essai gratuit se termine bientôt</h1>
+    <p style="font-size: 14px; color: #525252; line-height: 1.6; margin: 0;">
+      Bonjour, l'essai gratuit de ${esc(params.merchantName)} sur KeepMe se termine le
+      <strong style="color: #171717;">${esc(params.trialEndDate)}</strong>.
+    </p>
+    <p style="font-size: 14px; color: #525252; line-height: 1.6; margin: 12px 0 0;">
+      Sans action de votre part, votre abonnement
+      <strong style="color: #171717;">${esc(params.planName)}</strong>
+      (${esc(params.price)} € par mois) démarrera automatiquement et le premier
+      paiement sera prélevé à cette date. Vous pouvez changer de formule ou
+      résilier sans frais avant cette date.
+    </p>
+    ${ctaButton(params.billingUrl, "Gérer mon abonnement")}
+    <p style="font-size: 12px; color: #a3a3a3; line-height: 1.6; margin: 24px 0 0;">
+      Une question ? Répondez simplement à cet email.
+    </p>
   `);
 }

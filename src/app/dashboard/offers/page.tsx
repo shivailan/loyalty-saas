@@ -2,6 +2,9 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getOfferAudience } from "@/lib/wallet/offers";
 import { OfferForm } from "./OfferForm";
+import { canSendOffers } from "@/lib/billing/access";
+import { upgradeToBusiness } from "@/app/subscribe/actions";
+import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 
 const COOLDOWN_MS = 24 * 60 * 60 * 1000;
@@ -35,11 +38,39 @@ export default async function OffersPage() {
 
   const { data: merchant } = await supabase
     .from("merchants")
-    .select("id, name")
+    .select("id, name, billing_exempt, subscription_plan")
     .eq("owner_id", user.id)
     .single();
   if (!merchant) {
     redirect("/login");
+  }
+
+  if (!canSendOffers(merchant)) {
+    return (
+      <div className="max-w-xl">
+        <h1 className="text-2xl font-bold text-neutral-900">Offres Wallet</h1>
+        <Card className="mt-6 border-yellow-300 bg-neutral-900 text-white">
+          <p className="text-xs font-bold uppercase tracking-wide text-yellow-400">
+            Formule Business
+          </p>
+          <h2 className="mt-2 text-xl font-semibold">
+            Envoyez vos promotions directement sur le téléphone de vos clients
+          </h2>
+          <p className="mt-2 text-sm text-neutral-300">
+            Avec la formule Business, une offre (par exemple « -20 % ce samedi »)
+            s&apos;affiche en notification sur l&apos;écran verrouillé de vos
+            clients qui ont ajouté leur carte à Apple Wallet ou Google Wallet.
+            Cette option n&apos;est pas incluse dans la formule Essentiel.
+          </p>
+          <form action={upgradeToBusiness} className="mt-5">
+            <Button type="submit">Passer à Business · 49,99 €/mois</Button>
+          </form>
+          <p className="mt-3 text-xs text-neutral-400">
+            La différence est facturée au prorata. Sans engagement.
+          </p>
+        </Card>
+      </div>
+    );
   }
 
   const [{ data: offers }, audience, { count: consentCount }] =

@@ -5,6 +5,7 @@ import {
   welcomeEmailHtml,
   rewardEmailHtml,
   retrieveCardEmailHtml,
+  trialEndingEmailHtml,
 } from "./templates";
 
 // Un échec d'envoi ne doit jamais bloquer l'action du client ou du commerçant :
@@ -66,5 +67,20 @@ export async function sendRewardEmail(params: {
     to: params.to,
     subject: "Votre récompense est prête !",
     html: rewardEmailHtml(params),
+  });
+}
+
+export async function sendTrialEndingEmail(params: {
+  to: string;
+  merchantName: string;
+  planName: string;
+  price: string;
+  trialEndDate: string;
+  billingUrl: string;
+}): Promise<void> {
+  await deliver("fin d'essai", {
+    to: params.to,
+    subject: `Votre essai KeepMe se termine le ${params.trialEndDate}`,
+    html: trialEndingEmailHtml(params),
   });
 }

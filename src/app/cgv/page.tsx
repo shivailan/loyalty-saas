@@ -44,7 +44,7 @@ export default function CgvPage() {
                 {plan.name} : {plan.price} € par mois.
               </strong>{" "}
               {plan.features
-                .filter((feature) => !feature.soon)
+                .filter((feature) => !feature.soon && !feature.excluded)
                 .map((feature) => feature.label)
                 .join(" ; ")}
               .
@@ -52,8 +52,8 @@ export default function CgvPage() {
           ))}
         </ul>
         <p>
-          Les fonctionnalités signalées « bientôt » sur le site (notamment les
-          notifications push) ne sont pas encore disponibles. Elles ne font pas
+          Les fonctionnalités signalées « bientôt » sur le site ne sont pas encore
+          disponibles. Elles ne font pas
           partie des obligations du Prestataire tant qu’elles n’ont pas été mises
           à disposition, et leur date de disponibilité n’est pas garantie.
         </p>

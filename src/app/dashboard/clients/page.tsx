@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { Download } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { DeleteCustomerButton } from "./DeleteCustomerButton";
 
@@ -31,10 +32,23 @@ export default async function ClientsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-neutral-900">Clients</h1>
-      <p className="mt-1 text-sm text-neutral-600">
-        {count} client{count > 1 ? "s" : ""} inscrit{count > 1 ? "s" : ""}.
-      </p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold text-neutral-900">Clients</h1>
+          <p className="mt-1 text-sm text-neutral-600">
+            {count} client{count > 1 ? "s" : ""} inscrit{count > 1 ? "s" : ""}.
+          </p>
+        </div>
+        {count > 0 && (
+          <a
+            href="/dashboard/clients/export"
+            className="inline-flex items-center gap-2 rounded-lg border border-neutral-300 px-4 py-2.5 text-sm font-medium text-neutral-700 transition hover:bg-neutral-50"
+          >
+            <Download className="h-4 w-4" aria-hidden="true" />
+            Télécharger (Excel)
+          </a>
+        )}
+      </div>
 
       <div className="mt-6 overflow-x-auto rounded-2xl border border-neutral-200 bg-white">
         <table className="w-full text-left text-sm">

@@ -46,6 +46,15 @@ export async function GET(request: Request) {
       rewardDescription: program?.reward_description ?? null,
     });
     const inline = new URL(request.url).searchParams.get("inline") === "1";
+    // Mémorise le premier téléchargement (et non l'aperçu) pour cocher
+    // l'étape correspondante du guide de démarrage.
+    if (!inline) {
+      await supabase
+        .from("merchants")
+        .update({ poster_downloaded_at: new Date().toISOString() })
+        .eq("id", merchant.id)
+        .is("poster_downloaded_at", null);
+    }
     return new Response(new Uint8Array(pdf), {
       headers: {
         "Content-Type": "application/pdf",

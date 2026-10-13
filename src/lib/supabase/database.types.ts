@@ -210,6 +210,7 @@ export type Database = {
           logo_url: string | null
           name: string
           owner_id: string
+          poster_downloaded_at: string | null
           primary_color: string
           secondary_color: string
           send_reward_email: boolean
@@ -229,6 +230,7 @@ export type Database = {
           logo_url?: string | null
           name: string
           owner_id: string
+          poster_downloaded_at?: string | null
           primary_color?: string
           secondary_color?: string
           send_reward_email?: boolean
@@ -248,6 +250,7 @@ export type Database = {
           logo_url?: string | null
           name?: string
           owner_id?: string
+          poster_downloaded_at?: string | null
           primary_color?: string
           secondary_color?: string
           send_reward_email?: boolean

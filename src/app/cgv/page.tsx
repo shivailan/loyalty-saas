@@ -52,10 +52,10 @@ export default function CgvPage() {
           ))}
         </ul>
         <p>
-          Les fonctionnalités signalées « bientôt » sur le site ne sont pas encore
-          disponibles. Elles ne font pas
-          partie des obligations du Prestataire tant qu’elles n’ont pas été mises
-          à disposition, et leur date de disponibilité n’est pas garantie.
+          Les fonctionnalités signalées « bientôt » sur le site ne sont pas
+          encore disponibles. Elles ne font pas partie des obligations du
+          Prestataire tant qu’elles n’ont pas été mises à disposition, et leur
+          date de disponibilité n’est pas garantie.
         </p>
         <p>
           Une offre supplémentaire peut être annoncée sur le site. Tant qu’elle
@@ -74,58 +74,88 @@ export default function CgvPage() {
         <p>
           Le Prestataire peut modifier ses prix. Toute modification est notifiée
           au Client par email au moins 30 jours avant son entrée en vigueur ; le
-          Client peut alors résilier son abonnement avant cette date, sans frais.
+          Client peut alors résilier son abonnement avant cette date, sans
+          frais.
         </p>
       </LegalSection>
 
-      <LegalSection title="4. Souscription, durée et reconduction">
+      <LegalSection title="4. Souscription, essai gratuit, durée et reconduction">
         <p>
-          L’abonnement est mensuel et sans engagement de durée. Il commence à la
-          date d’activation du compte du Client et se renouvelle automatiquement
-          chaque mois, jusqu’à sa résiliation.
+          Le Client crée son compte sur le site, accepte les présentes CGV, puis
+          choisit sa formule et souscrit son abonnement en ligne. Le contrat est
+          conclu à la validation de la souscription ; le Client reçoit une
+          confirmation par email.
+        </p>
+        <p>
+          Chaque Client bénéficie d’un{" "}
+          <strong>essai gratuit de 14 jours</strong> à la première souscription
+          (une seule fois par Client). Aucune somme n’est prélevée pendant
+          l’essai, mais un moyen de paiement est demandé à la souscription. Un
+          email de rappel est envoyé quelques jours avant la fin de l’essai.
+          Sauf résiliation avant son terme, l’abonnement choisi démarre
+          automatiquement à la fin de l’essai et le premier paiement est alors
+          prélevé.
+        </p>
+        <p>
+          L’abonnement est mensuel et sans engagement de durée. Il se renouvelle
+          automatiquement chaque mois, jusqu’à sa résiliation. Le Client peut
+          passer à une formule supérieure à tout moment depuis son espace : la
+          différence de prix est facturée au prorata de la période restante. Le
+          retour à une formule inférieure se fait sur demande par email et prend
+          effet à la prochaine échéance.
         </p>
       </LegalSection>
 
       <LegalSection title="5. Paiement">
         <p>
           Le paiement s’effectue chaque mois, à l’avance, par carte bancaire ou
-          prélèvement SEPA, au moyen d’un lien de paiement sécurisé fourni par le
-          Prestataire et opéré par Stripe. Le Prestataire ne reçoit ni ne conserve
-          les données de la carte bancaire du Client. Un reçu est envoyé par email
-          à chaque paiement.
+          prélèvement SEPA, sur une page de paiement sécurisée opérée par
+          Stripe, à laquelle le Client est redirigé depuis le site. Le
+          Prestataire ne reçoit ni ne conserve les données de la carte bancaire
+          du Client. Les factures et reçus sont envoyés par email et accessibles
+          depuis la rubrique « Abonnement » de l’espace du Client, où il peut
+          aussi changer son moyen de paiement.
         </p>
         <p>
-          Lorsque l’article 9 s’applique, le premier paiement n’est demandé qu’à
-          l’expiration d’un délai de 7 jours après la conclusion du contrat.
+          L’essai gratuit de 14 jours garantit qu’aucun paiement n’est demandé
+          avant l’expiration du délai de 7 jours prévu lorsque l’article 9
+          s’applique.
         </p>
       </LegalSection>
 
       <LegalSection title="6. Retard ou défaut de paiement">
         <p>
           En cas de retard de paiement, des pénalités sont dues de plein droit,
-          sans rappel, à un taux égal à trois fois le taux d’intérêt légal, ainsi
-          qu’une indemnité forfaitaire de 40 € pour frais de recouvrement (art.
-          L441-10 du Code de commerce).
+          sans rappel, à un taux égal à trois fois le taux d’intérêt légal,
+          ainsi qu’une indemnité forfaitaire de 40 € pour frais de recouvrement
+          (art. L441-10 du Code de commerce).
         </p>
         <p>
-          Si un paiement n’est pas régularisé huit jours après une relance, le
-          Prestataire peut suspendre l’accès au service jusqu’à régularisation.
+          Un paiement refusé fait l’objet de nouvelles tentatives automatiques
+          pendant plusieurs jours, durant lesquelles l’accès au service est
+          maintenu et le Client est invité à mettre à jour son moyen de
+          paiement. Si le paiement n’est pas régularisé à l’issue de ces
+          tentatives, le Prestataire peut suspendre l’accès au service jusqu’à
+          régularisation.
         </p>
       </LegalSection>
 
       <LegalSection title="7. Résiliation">
         <p>
-          Le Client peut résilier son abonnement à tout moment en écrivant à{" "}
-          {legal.contactEmail}. La résiliation prend effet à la fin de la période
-          mensuelle en cours ; aucun prélèvement n’est effectué ensuite. La
-          période déjà payée n’est pas remboursée.
+          Le Client peut résilier son abonnement à tout moment, directement
+          depuis la rubrique « Abonnement » de son espace, ou en écrivant à{" "}
+          {legal.contactEmail}. La résiliation prend effet à la fin de la
+          période mensuelle en cours (ou de l’essai gratuit, auquel cas aucun
+          prélèvement n’est effectué) ; aucun prélèvement n’est effectué
+          ensuite. La période déjà payée n’est pas remboursée, sous réserve de
+          l’article 9.
         </p>
         <p>
           Le Prestataire peut résilier l’abonnement en cas de manquement du
           Client à ses obligations (notamment défaut de paiement ou non-respect
           des conditions d’utilisation) après une mise en demeure restée sans
-          effet pendant huit jours. Il peut également mettre fin au service moyennant
-          un préavis de 30 jours.
+          effet pendant huit jours. Il peut également mettre fin au service
+          moyennant un préavis de 30 jours.
         </p>
         <p>
           À la fin du contrat, le Client peut demander la restitution ou la
@@ -150,25 +180,25 @@ export default function CgvPage() {
           exemple lors d’une visite dans le commerce du Client), que le Client
           emploie cinq salariés au plus et que l’objet du contrat n’entre pas
           dans le champ de son activité principale (art. L221-3 du Code de la
-          consommation), le Client dispose d’un délai de <strong>14 jours
-          calendaires</strong> à compter de la conclusion du contrat pour se
-          rétracter, sans avoir à se justifier et sans pénalité (art. L221-18 du
-          même code).
+          consommation), le Client dispose d’un délai de{" "}
+          <strong>14 jours calendaires</strong> à compter de la conclusion du
+          contrat pour se rétracter, sans avoir à se justifier et sans pénalité
+          (art. L221-18 du même code).
         </p>
         <p>
           Pour l’exercer, le Client adresse une déclaration claire à{" "}
           {legal.contactEmail} avant l’expiration du délai, par exemple avec le
-          formulaire ci-dessous. S’il a demandé que le service commence avant la
-          fin de ce délai, il paie la part du service déjà fournie jusqu’à la
-          rétractation.
+          formulaire ci-dessous. Le service étant gratuit pendant les 14
+          premiers jours (essai gratuit), aucune somme n’est due en cas de
+          rétractation dans ce délai.
         </p>
         <p className="rounded-xl border border-neutral-200 bg-white p-4">
           <strong>Formulaire type de rétractation</strong>
           <br />À l’attention de {legal.publisherName}, {legal.address},{" "}
           {legal.contactEmail} : je vous notifie par la présente ma rétractation
           du contrat portant sur l’abonnement au service {legal.productName}.
-          Souscrit le [date]. Nom du Client : [nom]. Adresse : [adresse]. Date et
-          signature : [date, signature].
+          Souscrit le [date]. Nom du Client : [nom]. Adresse : [adresse]. Date
+          et signature : [date, signature].
         </p>
       </LegalSection>
 
@@ -185,9 +215,9 @@ export default function CgvPage() {
         <p>
           La responsabilité du Prestataire est limitée aux dommages directs et
           prévisibles, et plafonnée au montant des sommes payées par le Client
-          au cours des 12 mois précédant le fait générateur. Le Prestataire n’est
-          pas responsable des récompenses promises par le Client à ses propres
-          clients ni de l’utilisation que le Client fait du service.
+          au cours des 12 mois précédant le fait générateur. Le Prestataire
+          n’est pas responsable des récompenses promises par le Client à ses
+          propres clients ni de l’utilisation que le Client fait du service.
         </p>
       </LegalSection>
 
@@ -209,8 +239,8 @@ export default function CgvPage() {
 
       <LegalSection title="14. Droit applicable et litiges">
         <p>
-          Les présentes CGV sont soumises au droit français. En cas de litige, une
-          solution amiable sera recherchée avant toute action devant les
+          Les présentes CGV sont soumises au droit français. En cas de litige,
+          une solution amiable sera recherchée avant toute action devant les
           juridictions compétentes.
         </p>
       </LegalSection>

@@ -83,28 +83,38 @@ export default function ConfidentialitePage() {
           pour faire fonctionner le service :
         </p>
         <ul className="list-disc pl-5">
-          <li>Supabase : base de données et authentification des commerçants.</li>
+          <li>
+            Supabase : base de données et authentification des commerçants.
+          </li>
           <li>Vercel : hébergement du site.</li>
           <li>Resend : envoi des emails.</li>
           <li>
-            Stripe : paiement des abonnements des commerçants. {legal.productName}{" "}
-            ne reçoit ni ne conserve les données de carte bancaire.
+            Apple (Apple Wallet) et Google (Google Wallet) : uniquement si le
+            client choisit d’ajouter sa carte à son portefeuille numérique. Le
+            nom du commerce, le prénom du client, le nombre de passages et, le
+            cas échéant, l’offre en cours sont alors transmis à Apple ou à
+            Google pour afficher et mettre à jour la carte.
+          </li>
+          <li>
+            Stripe : paiement des abonnements des commerçants.{" "}
+            {legal.productName} ne reçoit ni ne conserve les données de carte
+            bancaire.
           </li>
         </ul>
         <p>
           Certains de ces prestataires peuvent traiter des données en dehors de
           l’Union européenne, dans le cadre de garanties prévues par le
-          règlement général sur la protection des données (clauses contractuelles
-          types notamment). Vos données ne sont ni vendues ni cédées à des
-          tiers à des fins publicitaires.
+          règlement général sur la protection des données (clauses
+          contractuelles types notamment). Vos données ne sont ni vendues ni
+          cédées à des tiers à des fins publicitaires.
         </p>
       </LegalSection>
 
       <LegalSection title="Combien de temps sont-elles conservées ?">
         <p>
-          Les données d’un client sont conservées tant que sa carte de
-          fidélité est utilisée, puis supprimées sur demande auprès du commerce
-          ou de {legal.productName}. Les données d’un commerçant sont conservées
+          Les données d’un client sont conservées tant que sa carte de fidélité
+          est utilisée, puis supprimées sur demande auprès du commerce ou de{" "}
+          {legal.productName}. Les données d’un commerçant sont conservées
           pendant la durée du compte, puis supprimées à sa clôture.
         </p>
       </LegalSection>
@@ -117,10 +127,10 @@ export default function ConfidentialitePage() {
           consentement à recevoir des offres.
         </p>
         <p>
-          Pour exercer vos droits, adressez-vous au commerce concerné, ou écrivez
-          à {legal.contactEmail}. Si vous estimez que vos droits ne sont pas
-          respectés, vous pouvez introduire une réclamation auprès de la CNIL
-          (www.cnil.fr).
+          Pour exercer vos droits, adressez-vous au commerce concerné, ou
+          écrivez à {legal.contactEmail}. Si vous estimez que vos droits ne sont
+          pas respectés, vous pouvez introduire une réclamation auprès de la
+          CNIL (www.cnil.fr).
         </p>
       </LegalSection>
 

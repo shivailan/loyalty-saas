@@ -5,7 +5,11 @@ import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getStripe } from "@/lib/billing/stripe";
-import { isBillingEnabled, priceIdForPlan, trialDays } from "@/lib/billing/config";
+import {
+  isBillingEnabled,
+  priceIdForPlan,
+  trialDays,
+} from "@/lib/billing/config";
 import type { PlanId } from "@/lib/plans";
 import { syncSubscription } from "@/lib/billing/sync";
 
@@ -26,7 +30,9 @@ async function currentMerchant() {
 
   const { data: merchant } = await supabase
     .from("merchants")
-    .select("id, name, stripe_customer_id, stripe_subscription_id, subscription_plan, subscription_status")
+    .select(
+      "id, name, stripe_customer_id, stripe_subscription_id, subscription_plan, subscription_status",
+    )
     .eq("owner_id", user.id)
     .single();
   if (!merchant) redirect("/login");
@@ -66,7 +72,9 @@ export async function startCheckout(plan: PlanId): Promise<void> {
   let url: string | null = null;
   try {
     const customerId = await ensureStripeCustomer(merchant, user.email);
-    const days = trialDays();
+    // L'essai gratuit n'est offert qu'une fois : un commerçant qui a déjà eu
+    // un abonnement (même résilié) n'en obtient pas un second.
+    const days = merchant.stripe_subscription_id ? 0 : trialDays();
     const session = await getStripe().checkout.sessions.create({
       mode: "subscription",
       customer: customerId,

@@ -23,13 +23,14 @@ export default async function SubscribePage({
 
   const { data: merchant } = await supabase
     .from("merchants")
-    .select("name, billing_exempt, subscription_status")
+    .select("name, billing_exempt, subscription_status, stripe_subscription_id")
     .eq("owner_id", user.id)
     .single();
   if (!merchant) redirect("/login");
   if (!isBillingEnabled() || hasPaidAccess(merchant)) redirect("/dashboard");
 
-  const days = trialDays();
+  // Même règle que lors du paiement : pas de second essai gratuit.
+  const days = merchant.stripe_subscription_id ? 0 : trialDays();
   const sellable = plans.filter((plan) => plan.id);
   const wasSubscribed = ["canceled", "unpaid", "incomplete_expired"].includes(
     merchant.subscription_status,
@@ -128,7 +129,10 @@ export default async function SubscribePage({
                       }`}
                     >
                       {feature.excluded ? (
-                        <X className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+                        <X
+                          className="mt-0.5 h-4 w-4 shrink-0"
+                          aria-hidden="true"
+                        />
                       ) : (
                         <Check
                           className={`mt-0.5 h-4 w-4 shrink-0 ${plan.highlighted ? "text-yellow-400" : "text-yellow-600"}`}
@@ -139,13 +143,18 @@ export default async function SubscribePage({
                     </li>
                   ))}
               </ul>
-              <form action={startCheckout.bind(null, plan.id!)} className="mt-6">
+              <form
+                action={startCheckout.bind(null, plan.id!)}
+                className="mt-6"
+              >
                 <Button
                   type="submit"
                   variant={plan.highlighted ? "primary" : "secondary"}
                   className="w-full"
                 >
-                  {days > 0 ? `Essayer ${days} jours gratuitement` : "S'abonner"}
+                  {days > 0
+                    ? `Essayer ${days} jours gratuitement`
+                    : "S'abonner"}
                 </Button>
               </form>
             </div>

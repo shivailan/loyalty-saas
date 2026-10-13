@@ -1,11 +1,23 @@
 "use client";
 
-import Link from "next/link";
+import Link, { useLinkStatus } from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Loader2, Menu, X } from "lucide-react";
 import type { NavGroup } from "@/lib/nav-types";
 import { iconMap } from "@/lib/icons";
+import type { LucideIcon } from "lucide-react";
+
+// Dans un lien : l'icône devient un petit cercle qui tourne dès le clic, pour
+// montrer que la page se charge.
+function NavIcon({ Icon }: { Icon: LucideIcon }) {
+  const { pending } = useLinkStatus();
+  return pending ? (
+    <Loader2 className="h-4 w-4 shrink-0 animate-spin text-yellow-600" />
+  ) : (
+    <Icon className="h-4 w-4 shrink-0" />
+  );
+}
 
 function NavLinks({
   groups,
@@ -38,7 +50,7 @@ function NavLinks({
                       : "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900"
                   }`}
                 >
-                  <Icon className="h-4 w-4 shrink-0" />
+                  <NavIcon Icon={Icon} />
                   {item.label}
                 </Link>
               );

@@ -42,6 +42,7 @@ export default async function ClientsPage() {
         {count > 0 && (
           <a
             href="/dashboard/clients/export"
+            download
             className="inline-flex items-center gap-2 rounded-lg border border-neutral-300 px-4 py-2.5 text-sm font-medium text-neutral-700 transition hover:bg-neutral-50"
           >
             <Download className="h-4 w-4" aria-hidden="true" />
@@ -81,9 +82,7 @@ export default async function ClientsPage() {
                     {customer.phone ?? "—"}
                   </td>
                   <td className="px-4 py-3 text-neutral-600">
-                    {new Date(customer.created_at).toLocaleDateString(
-                      "fr-FR",
-                    )}
+                    {new Date(customer.created_at).toLocaleDateString("fr-FR")}
                   </td>
                   <td className="px-4 py-3 text-neutral-600">
                     {card

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { NavigationProgress } from "@/components/ui/NavigationProgress";
 
 export const metadata: Metadata = {
   title: "KeepMe — Cartes de fidélité digitales",
@@ -13,8 +14,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full antialiased">
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="fr" className="h-full antialiased">
+      <body className="min-h-full flex flex-col">
+        <NavigationProgress />
+        {children}
+      </body>
     </html>
   );
 }

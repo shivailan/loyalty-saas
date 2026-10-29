@@ -256,7 +256,7 @@ export async function buildPoster(data: PosterData): Promise<Uint8Array> {
       ...lines.map((line) => bold.widthOfTextAtSize(line, size)),
     );
     const width = Math.min(widest + 56, PAGE_W - 80);
-    const pillTop = top(638);
+    const pillTop = top(634);
     roundedRect(
       page,
       cx - width / 2,
@@ -288,7 +288,7 @@ export async function buildPoster(data: PosterData): Promise<Uint8Array> {
   const colW = (PAGE_W - 100) / 3;
   steps.forEach((step, i) => {
     const colCx = 50 + colW * i + colW / 2;
-    const circleY = top(746);
+    const circleY = top(736);
     page.drawCircle({
       x: colCx,
       y: circleY,
@@ -309,7 +309,7 @@ export async function buildPoster(data: PosterData): Promise<Uint8Array> {
     regular,
     9.5,
     cx,
-    top(800),
+    top(810),
     GREY,
   );
   drawCentered(
@@ -318,7 +318,7 @@ export async function buildPoster(data: PosterData): Promise<Uint8Array> {
     regular,
     9,
     cx,
-    top(818),
+    top(828),
     "#9CA3AF",
   );
 

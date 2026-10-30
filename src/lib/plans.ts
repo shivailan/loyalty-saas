@@ -2,7 +2,7 @@
 // qu'un prix ou une fonctionnalité ne puisse jamais différer entre les deux.
 // excluded : fonctionnalité absente de cette formule, affichée barrée pour
 // montrer ce que la formule supérieure apporte.
-export type Feature = { label: string; soon?: boolean; excluded?: boolean };
+export type Feature = { label: string; excluded?: boolean };
 
 export type PlanId = "essentiel" | "business";
 
@@ -13,14 +13,13 @@ export type Plan = {
   description: string;
   features: Feature[];
   highlighted?: boolean;
-  comingSoon?: boolean;
 };
 
 export const plans: Plan[] = [
   {
     id: "essentiel",
     name: "Essentiel",
-    price: "39,99",
+    price: "19,99",
     description: "Tout pour lancer votre carte de fidélité digitale.",
     features: [
       { label: "QR code et carte de fidélité illimités" },
@@ -32,7 +31,8 @@ export const plans: Plan[] = [
       { label: "Export de vos clients au format Excel" },
       { label: "Support par email" },
       {
-        label: "Offres envoyées en notification sur le téléphone de vos clients",
+        label:
+          "Offres envoyées en notification sur le téléphone de vos clients",
         excluded: true,
       },
     ],
@@ -40,7 +40,7 @@ export const plans: Plan[] = [
   {
     id: "business",
     name: "Business",
-    price: "49,99",
+    price: "29,99",
     description: "Un accompagnement plus proche, dès le premier jour.",
     highlighted: true,
     features: [
@@ -53,11 +53,10 @@ export const plans: Plan[] = [
       { label: "Accompagnement à la mise en place inclus" },
     ],
   },
-  {
-    name: "Prochainement",
-    price: "69,99",
-    description: "Une offre plus complète arrive bientôt.",
-    comingSoon: true,
-    features: [],
-  },
 ];
+
+// Prix affiché de la formule Business : source unique pour les boutons de
+// montée en gamme (jamais de prix écrit en dur ailleurs).
+export const businessPrice = plans.find(
+  (plan) => plan.id === "business",
+)!.price;

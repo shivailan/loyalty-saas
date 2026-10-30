@@ -6,6 +6,7 @@ import { canSendOffers } from "@/lib/billing/access";
 import { upgradeToBusiness } from "@/app/subscribe/actions";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { businessPrice } from "@/lib/plans";
 
 const COOLDOWN_MS = 24 * 60 * 60 * 1000;
 
@@ -57,13 +58,15 @@ export default async function OffersPage() {
             Envoyez vos promotions directement sur le téléphone de vos clients
           </h2>
           <p className="mt-2 text-sm text-neutral-300">
-            Avec la formule Business, une offre (par exemple « -20 % ce samedi »)
-            s&apos;affiche en notification sur l&apos;écran verrouillé de vos
+            Avec la formule Business, une offre (par exemple « -20 % ce samedi
+            ») s&apos;affiche en notification sur l&apos;écran verrouillé de vos
             clients qui ont ajouté leur carte à Apple Wallet ou Google Wallet.
             Cette option n&apos;est pas incluse dans la formule Essentiel.
           </p>
           <form action={upgradeToBusiness} className="mt-5">
-            <Button type="submit">Passer à Business · 49,99 €/mois</Button>
+            <Button type="submit">
+              Passer à Business · {businessPrice} €/mois
+            </Button>
           </form>
           <p className="mt-3 text-xs text-neutral-400">
             La différence est facturée au prorata. Sans engagement.

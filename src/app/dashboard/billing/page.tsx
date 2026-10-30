@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { isBillingEnabled } from "@/lib/billing/config";
-import { plans } from "@/lib/plans";
+import { plans, businessPrice } from "@/lib/plans";
 import { openBillingPortal, upgradeToBusiness } from "@/app/subscribe/actions";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -105,7 +105,9 @@ export default async function BillingPage({
             )}
             {merchant.subscription_plan === "essentiel" && (
               <form action={upgradeToBusiness} className="mt-5">
-                <Button type="submit">Passer à Business · 49,99 €/mois</Button>
+                <Button type="submit">
+                  Passer à Business · {businessPrice} €/mois
+                </Button>
               </form>
             )}
             {merchant.stripe_customer_id && (

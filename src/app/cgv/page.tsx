@@ -8,8 +8,6 @@ export const metadata: Metadata = {
   title: "Conditions générales de vente — KeepMe",
 };
 
-const sellablePlans = plans.filter((plan) => !plan.comingSoon);
-
 export default function CgvPage() {
   return (
     <LegalPage title="Conditions générales de vente">
@@ -38,13 +36,13 @@ export default function CgvPage() {
       <LegalSection title="2. Les offres">
         <p>Le Prestataire propose actuellement les offres suivantes :</p>
         <ul className="list-disc pl-5">
-          {sellablePlans.map((plan) => (
+          {plans.map((plan) => (
             <li key={plan.name}>
               <strong>
                 {plan.name} : {plan.price} € par mois.
               </strong>{" "}
               {plan.features
-                .filter((feature) => !feature.soon && !feature.excluded)
+                .filter((feature) => !feature.excluded)
                 .map((feature) => feature.label)
                 .join(" ; ")}
               .
@@ -52,15 +50,9 @@ export default function CgvPage() {
           ))}
         </ul>
         <p>
-          Les fonctionnalités signalées « bientôt » sur le site ne sont pas
-          encore disponibles. Elles ne font pas partie des obligations du
-          Prestataire tant qu’elles n’ont pas été mises à disposition, et leur
-          date de disponibilité n’est pas garantie.
-        </p>
-        <p>
-          Une offre supplémentaire peut être annoncée sur le site. Tant qu’elle
-          n’est pas commercialisée, elle n’est pas couverte par les présentes
-          CGV.
+          Le Prestataire peut proposer de nouvelles offres. Tant qu’elles ne
+          sont pas commercialisées, elles ne sont pas couvertes par les
+          présentes CGV.
         </p>
       </LegalSection>
 

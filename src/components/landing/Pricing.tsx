@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Check, Clock, X } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { plans } from "@/lib/plans";
 import { Reveal, RevealGroup, RevealItem } from "./Motion";
 
@@ -16,16 +16,14 @@ export function Pricing() {
           </p>
         </Reveal>
 
-        <RevealGroup className="mx-auto mt-16 grid max-w-5xl items-stretch gap-5 md:grid-cols-3">
+        <RevealGroup className="mx-auto mt-16 grid max-w-3xl items-stretch gap-5 md:grid-cols-2">
           {plans.map((plan) => (
             <RevealItem
               key={plan.name}
               className={`relative flex flex-col rounded-3xl border p-8 ${
                 plan.highlighted
                   ? "z-10 border-yellow-400 bg-neutral-900 text-white shadow-2xl ring-2 ring-yellow-400 md:-my-4 md:py-12"
-                  : plan.comingSoon
-                    ? "border-dashed border-neutral-300 bg-transparent"
-                    : "border-neutral-200 bg-white/70"
+                  : "border-neutral-200 bg-white/70"
               }`}
             >
               {plan.highlighted && (
@@ -51,11 +49,7 @@ export function Pricing() {
 
               <p
                 className={`mt-6 flex items-baseline gap-1 ${
-                  plan.highlighted
-                    ? "text-white"
-                    : plan.comingSoon
-                      ? "text-neutral-400"
-                      : "text-neutral-900"
+                  plan.highlighted ? "text-white" : "text-neutral-900"
                 }`}
               >
                 <span
@@ -82,17 +76,13 @@ export function Pricing() {
                       className={`flex items-start gap-2 text-sm ${
                         feature.excluded
                           ? "text-neutral-400 line-through"
-                          : feature.soon
-                            ? "text-neutral-400"
-                            : plan.highlighted
-                              ? "text-neutral-100"
-                              : "text-neutral-600"
+                          : plan.highlighted
+                            ? "text-neutral-100"
+                            : "text-neutral-600"
                       }`}
                     >
                       {feature.excluded ? (
                         <X className="mt-0.5 h-4 w-4 shrink-0" />
-                      ) : feature.soon ? (
-                        <Clock className="mt-0.5 h-4 w-4 shrink-0" />
                       ) : (
                         <Check
                           className={`mt-0.5 h-4 w-4 shrink-0 ${
@@ -102,38 +92,29 @@ export function Pricing() {
                           }`}
                         />
                       )}
-                      <span>
-                        {feature.label}
-                        {feature.soon && " (bientôt)"}
-                      </span>
+                      <span>{feature.label}</span>
                     </li>
                   ))}
                 </ul>
               )}
 
-              {plan.comingSoon ? (
-                <p className="mt-8 rounded-full border border-neutral-200 px-4 py-3 text-center text-sm font-semibold text-neutral-400">
-                  Bientôt disponible
-                </p>
-              ) : (
-                <Link
-                  href="/signup"
-                  className={`mt-8 block rounded-full px-4 py-3 text-center text-sm font-semibold transition-transform hover:scale-[1.02] active:scale-[0.98] ${
-                    plan.highlighted
-                      ? "bg-yellow-400 py-3.5 text-base text-neutral-900 shadow-lg shadow-yellow-400/20 hover:bg-yellow-300"
-                      : "border border-neutral-300 bg-transparent text-neutral-700 hover:bg-neutral-100"
-                  }`}
-                >
-                  {plan.highlighted ? "Choisir Business" : "Choisir Essentiel"}
-                </Link>
-              )}
+              <Link
+                href="/signup"
+                className={`mt-8 block rounded-full px-4 py-3 text-center text-sm font-semibold transition-transform hover:scale-[1.02] active:scale-[0.98] ${
+                  plan.highlighted
+                    ? "bg-yellow-400 py-3.5 text-base text-neutral-900 shadow-lg shadow-yellow-400/20 hover:bg-yellow-300"
+                    : "border border-neutral-300 bg-transparent text-neutral-700 hover:bg-neutral-100"
+                }`}
+              >
+                {plan.highlighted ? "Choisir Business" : "Choisir Essentiel"}
+              </Link>
             </RevealItem>
           ))}
         </RevealGroup>
 
         <p className="mx-auto mt-10 max-w-2xl text-center text-sm text-neutral-400">
-          Prix en euros par mois, TVA non applicable (art. 293 B du CGI).
-          Sans engagement, résiliable à tout moment.{" "}
+          Prix en euros par mois, TVA non applicable (art. 293 B du CGI). Sans
+          engagement, résiliable à tout moment.{" "}
           <Link
             href="/cgv"
             className="underline transition-colors hover:text-neutral-900"

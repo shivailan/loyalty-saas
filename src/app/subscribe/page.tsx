@@ -115,33 +115,31 @@ export default async function SubscribePage({
                 </span>
               </p>
               <ul className="mt-4 flex flex-1 flex-col gap-2 text-sm">
-                {plan.features
-                  .filter((feature) => !feature.soon)
-                  .map((feature) => (
-                    <li
-                      key={feature.label}
-                      className={`flex gap-2 ${
-                        feature.excluded
-                          ? "text-neutral-400 line-through"
-                          : plan.highlighted
-                            ? "text-neutral-100"
-                            : "text-neutral-700"
-                      }`}
-                    >
-                      {feature.excluded ? (
-                        <X
-                          className="mt-0.5 h-4 w-4 shrink-0"
-                          aria-hidden="true"
-                        />
-                      ) : (
-                        <Check
-                          className={`mt-0.5 h-4 w-4 shrink-0 ${plan.highlighted ? "text-yellow-400" : "text-yellow-600"}`}
-                          aria-hidden="true"
-                        />
-                      )}
-                      {feature.label}
-                    </li>
-                  ))}
+                {plan.features.map((feature) => (
+                  <li
+                    key={feature.label}
+                    className={`flex gap-2 ${
+                      feature.excluded
+                        ? "text-neutral-400 line-through"
+                        : plan.highlighted
+                          ? "text-neutral-100"
+                          : "text-neutral-700"
+                    }`}
+                  >
+                    {feature.excluded ? (
+                      <X
+                        className="mt-0.5 h-4 w-4 shrink-0"
+                        aria-hidden="true"
+                      />
+                    ) : (
+                      <Check
+                        className={`mt-0.5 h-4 w-4 shrink-0 ${plan.highlighted ? "text-yellow-400" : "text-yellow-600"}`}
+                        aria-hidden="true"
+                      />
+                    )}
+                    {feature.label}
+                  </li>
+                ))}
               </ul>
               <form
                 action={startCheckout.bind(null, plan.id!)}

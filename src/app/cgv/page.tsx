@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalPage, LegalSection } from "@/components/legal/LegalPage";
 import { legal } from "@/lib/legal";
-import { plans } from "@/lib/plans";
+import { sellablePlans } from "@/lib/plans";
 
 export const metadata: Metadata = {
   title: "Conditions générales de vente — KeepMe",
@@ -36,7 +36,7 @@ export default function CgvPage() {
       <LegalSection title="2. Les offres">
         <p>Le Prestataire propose actuellement les offres suivantes :</p>
         <ul className="list-disc pl-5">
-          {plans.map((plan) => (
+          {sellablePlans.map((plan) => (
             <li key={plan.name}>
               <strong>
                 {plan.name} : {plan.price} € par mois.
@@ -50,9 +50,13 @@ export default function CgvPage() {
           ))}
         </ul>
         <p>
-          Le Prestataire peut proposer de nouvelles offres. Tant qu’elles ne
-          sont pas commercialisées, elles ne sont pas couvertes par les
-          présentes CGV.
+          Une offre « Premium » est annoncée sur le site (notification de
+          proximité, notifications push illimitées, carte de fidélité
+          entièrement personnalisable). Elle n’est pas encore commercialisée :
+          elle ne fait pas partie des obligations du Prestataire tant qu’elle
+          n’a pas été mise à disposition, sa date de disponibilité n’est pas
+          garantie et elle n’est pas couverte par les présentes CGV. Il en va de
+          même de toute autre nouvelle offre.
         </p>
       </LegalSection>
 

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Check, X } from "lucide-react";
 import { plans } from "@/lib/plans";
+import { legal } from "@/lib/legal";
 import { Reveal, RevealGroup, RevealItem } from "./Motion";
 
 export function Pricing() {
@@ -16,19 +17,27 @@ export function Pricing() {
           </p>
         </Reveal>
 
-        <RevealGroup className="mx-auto mt-16 grid max-w-3xl items-stretch gap-5 md:grid-cols-2">
+        <RevealGroup className="mx-auto mt-16 grid max-w-5xl items-stretch gap-5 md:grid-cols-3">
           {plans.map((plan) => (
             <RevealItem
               key={plan.name}
               className={`relative flex flex-col rounded-3xl border p-8 ${
                 plan.highlighted
                   ? "z-10 border-yellow-400 bg-neutral-900 text-white shadow-2xl ring-2 ring-yellow-400 md:-my-4 md:py-12"
-                  : "border-neutral-200 bg-white/70"
+                  : plan.comingSoon
+                    ? "border-dashed border-neutral-300 bg-transparent"
+                    : "border-neutral-200 bg-white/70"
               }`}
             >
               {plan.highlighted && (
                 <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-yellow-400 px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-neutral-900 shadow-sm">
                   Le plus choisi
+                </span>
+              )}
+
+              {plan.comingSoon && (
+                <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full border border-neutral-300 bg-neutral-50 px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-neutral-500">
+                  À venir
                 </span>
               )}
 
@@ -47,26 +56,32 @@ export function Pricing() {
                 {plan.description}
               </p>
 
-              <p
-                className={`mt-6 flex items-baseline gap-1 ${
-                  plan.highlighted ? "text-white" : "text-neutral-900"
-                }`}
-              >
-                <span
-                  className={`font-semibold tracking-tight ${
-                    plan.highlighted ? "text-5xl text-yellow-400" : "text-4xl"
+              {plan.comingSoon ? (
+                <p className="mt-6 text-lg font-semibold text-neutral-400">
+                  Tarif communiqué prochainement
+                </p>
+              ) : (
+                <p
+                  className={`mt-6 flex items-baseline gap-1 ${
+                    plan.highlighted ? "text-white" : "text-neutral-900"
                   }`}
                 >
-                  {plan.price} €
-                </span>
-                <span
-                  className={`text-sm ${
-                    plan.highlighted ? "text-neutral-300" : "text-neutral-500"
-                  }`}
-                >
-                  / mois
-                </span>
-              </p>
+                  <span
+                    className={`font-semibold tracking-tight ${
+                      plan.highlighted ? "text-5xl text-yellow-400" : "text-4xl"
+                    }`}
+                  >
+                    {plan.price} €
+                  </span>
+                  <span
+                    className={`text-sm ${
+                      plan.highlighted ? "text-neutral-300" : "text-neutral-500"
+                    }`}
+                  >
+                    / mois
+                  </span>
+                </p>
+              )}
 
               {plan.features.length > 0 && (
                 <ul className="mt-6 flex-1 space-y-3">
@@ -78,7 +93,9 @@ export function Pricing() {
                           ? "text-neutral-400 line-through"
                           : plan.highlighted
                             ? "text-neutral-100"
-                            : "text-neutral-600"
+                            : plan.comingSoon
+                              ? "text-neutral-500"
+                              : "text-neutral-600"
                       }`}
                     >
                       {feature.excluded ? (
@@ -88,7 +105,9 @@ export function Pricing() {
                           className={`mt-0.5 h-4 w-4 shrink-0 ${
                             plan.highlighted
                               ? "text-yellow-400"
-                              : "text-neutral-900"
+                              : plan.comingSoon
+                                ? "text-neutral-400"
+                                : "text-neutral-900"
                           }`}
                         />
                       )}
@@ -98,16 +117,25 @@ export function Pricing() {
                 </ul>
               )}
 
-              <Link
-                href="/signup"
-                className={`mt-8 block rounded-full px-4 py-3 text-center text-sm font-semibold transition-transform hover:scale-[1.02] active:scale-[0.98] ${
-                  plan.highlighted
-                    ? "bg-yellow-400 py-3.5 text-base text-neutral-900 shadow-lg shadow-yellow-400/20 hover:bg-yellow-300"
-                    : "border border-neutral-300 bg-transparent text-neutral-700 hover:bg-neutral-100"
-                }`}
-              >
-                {plan.highlighted ? "Choisir Business" : "Choisir Essentiel"}
-              </Link>
+              {plan.comingSoon ? (
+                <a
+                  href={`mailto:${legal.contactEmail}?subject=${encodeURIComponent("Être prévenu de la sortie de l'offre Premium")}`}
+                  className="mt-8 block rounded-full border border-neutral-300 px-4 py-3 text-center text-sm font-semibold text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-900"
+                >
+                  Être prévenu de sa sortie
+                </a>
+              ) : (
+                <Link
+                  href="/signup"
+                  className={`mt-8 block rounded-full px-4 py-3 text-center text-sm font-semibold transition-transform hover:scale-[1.02] active:scale-[0.98] ${
+                    plan.highlighted
+                      ? "bg-yellow-400 py-3.5 text-base text-neutral-900 shadow-lg shadow-yellow-400/20 hover:bg-yellow-300"
+                      : "border border-neutral-300 bg-transparent text-neutral-700 hover:bg-neutral-100"
+                  }`}
+                >
+                  {plan.highlighted ? "Choisir Business" : "Choisir Essentiel"}
+                </Link>
+              )}
             </RevealItem>
           ))}
         </RevealGroup>

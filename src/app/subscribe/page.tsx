@@ -4,10 +4,11 @@ import { Check, X } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { isBillingEnabled, trialDays } from "@/lib/billing/config";
 import { hasPaidAccess } from "@/lib/billing/access";
-import { plans } from "@/lib/plans";
+import { plans, sellablePlans } from "@/lib/plans";
 import { startCheckout } from "./actions";
+import { SubscribeButton } from "./SubscribeButton";
+import { CheckoutShell } from "./CheckoutShell";
 import { logout } from "@/app/dashboard/actions";
-import { Button } from "@/components/ui/Button";
 
 export default async function SubscribePage({
   searchParams,
@@ -31,7 +32,8 @@ export default async function SubscribePage({
 
   // Même règle que lors du paiement : pas de second essai gratuit.
   const days = merchant.stripe_subscription_id ? 0 : trialDays();
-  const sellable = plans.filter((plan) => plan.id);
+  const sellable = sellablePlans;
+  const upcoming = plans.find((plan) => plan.comingSoon);
   const wasSubscribed = ["canceled", "unpaid", "incomplete_expired"].includes(
     merchant.subscription_status,
   );
@@ -78,86 +80,114 @@ export default async function SubscribePage({
           </p>
         )}
 
-        <div className="mt-10 grid items-stretch gap-4 sm:grid-cols-2">
-          {sellable.map((plan) => (
-            <div
-              key={plan.id}
-              className={`relative flex flex-col rounded-2xl border p-6 ${
-                plan.highlighted
-                  ? "border-yellow-400 bg-neutral-900 text-white shadow-xl ring-2 ring-yellow-400 sm:-my-2 sm:py-8"
-                  : "border-neutral-200 bg-white shadow-sm"
-              }`}
-            >
-              {plan.highlighted && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-yellow-400 px-3 py-1 text-xs font-bold uppercase tracking-wide text-neutral-900">
-                  Le plus choisi
-                </span>
-              )}
-              <h2
-                className={`text-lg font-semibold ${plan.highlighted ? "text-white" : "text-neutral-900"}`}
+        <CheckoutShell key={error ?? "ok"}>
+          <div className="mt-10 grid items-stretch gap-4 sm:grid-cols-2">
+            {sellable.map((plan) => (
+              <div
+                key={plan.id}
+                className={`relative flex flex-col rounded-2xl border p-6 ${
+                  plan.highlighted
+                    ? "border-yellow-400 bg-neutral-900 text-white shadow-xl ring-2 ring-yellow-400 sm:-my-2 sm:py-8"
+                    : "border-neutral-200 bg-white shadow-sm"
+                }`}
               >
-                {plan.name}
-              </h2>
-              <p
-                className={`mt-1 text-sm ${plan.highlighted ? "text-neutral-300" : "text-neutral-600"}`}
-              >
-                {plan.description}
-              </p>
-              <p
-                className={`mt-4 text-3xl font-bold ${plan.highlighted ? "text-yellow-400" : "text-neutral-900"}`}
-              >
-                {plan.price} €
-                <span
-                  className={`text-sm font-medium ${plan.highlighted ? "text-neutral-300" : "text-neutral-500"}`}
+                {plan.highlighted && (
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-yellow-400 px-3 py-1 text-xs font-bold uppercase tracking-wide text-neutral-900">
+                    Le plus choisi
+                  </span>
+                )}
+                <h2
+                  className={`text-lg font-semibold ${plan.highlighted ? "text-white" : "text-neutral-900"}`}
                 >
-                  {" "}
-                  / mois
-                </span>
-              </p>
-              <ul className="mt-4 flex flex-1 flex-col gap-2 text-sm">
-                {plan.features.map((feature) => (
-                  <li
-                    key={feature.label}
-                    className={`flex gap-2 ${
-                      feature.excluded
-                        ? "text-neutral-400 line-through"
-                        : plan.highlighted
-                          ? "text-neutral-100"
-                          : "text-neutral-700"
-                    }`}
+                  {plan.name}
+                </h2>
+                <p
+                  className={`mt-1 text-sm ${plan.highlighted ? "text-neutral-300" : "text-neutral-600"}`}
+                >
+                  {plan.description}
+                </p>
+                <p
+                  className={`mt-4 text-3xl font-bold ${plan.highlighted ? "text-yellow-400" : "text-neutral-900"}`}
+                >
+                  {plan.price} €
+                  <span
+                    className={`text-sm font-medium ${plan.highlighted ? "text-neutral-300" : "text-neutral-500"}`}
                   >
-                    {feature.excluded ? (
-                      <X
-                        className="mt-0.5 h-4 w-4 shrink-0"
-                        aria-hidden="true"
-                      />
-                    ) : (
-                      <Check
-                        className={`mt-0.5 h-4 w-4 shrink-0 ${plan.highlighted ? "text-yellow-400" : "text-yellow-600"}`}
-                        aria-hidden="true"
-                      />
-                    )}
+                    {" "}
+                    / mois
+                  </span>
+                </p>
+                <ul className="mt-4 flex flex-1 flex-col gap-2 text-sm">
+                  {plan.features.map((feature) => (
+                    <li
+                      key={feature.label}
+                      className={`flex gap-2 ${
+                        feature.excluded
+                          ? "text-neutral-400 line-through"
+                          : plan.highlighted
+                            ? "text-neutral-100"
+                            : "text-neutral-700"
+                      }`}
+                    >
+                      {feature.excluded ? (
+                        <X
+                          className="mt-0.5 h-4 w-4 shrink-0"
+                          aria-hidden="true"
+                        />
+                      ) : (
+                        <Check
+                          className={`mt-0.5 h-4 w-4 shrink-0 ${plan.highlighted ? "text-yellow-400" : "text-yellow-600"}`}
+                          aria-hidden="true"
+                        />
+                      )}
+                      {feature.label}
+                    </li>
+                  ))}
+                </ul>
+                <form
+                  action={startCheckout.bind(null, plan.id)}
+                  className="mt-6"
+                >
+                  <SubscribeButton
+                    highlighted={Boolean(plan.highlighted)}
+                    label={
+                      days > 0
+                        ? `Essayer ${days} jours gratuitement`
+                        : "S'abonner"
+                    }
+                  />
+                </form>
+              </div>
+            ))}
+          </div>
+
+          {upcoming && (
+            <div className="mt-4 rounded-2xl border border-dashed border-neutral-300 bg-white/60 p-6">
+              <div className="flex flex-wrap items-center gap-3">
+                <h2 className="text-lg font-semibold text-neutral-900">
+                  {upcoming.name}
+                </h2>
+                <span className="rounded-full border border-neutral-300 bg-neutral-50 px-3 py-1 text-xs font-bold uppercase tracking-wide text-neutral-500">
+                  À venir
+                </span>
+                <span className="text-sm text-neutral-500">
+                  Tarif communiqué prochainement
+                </span>
+              </div>
+              <ul className="mt-4 grid gap-2 text-sm text-neutral-600 sm:grid-cols-2">
+                {upcoming.features.slice(1).map((feature) => (
+                  <li key={feature.label} className="flex gap-2">
+                    <Check
+                      className="mt-0.5 h-4 w-4 shrink-0 text-neutral-400"
+                      aria-hidden="true"
+                    />
                     {feature.label}
                   </li>
                 ))}
               </ul>
-              <form
-                action={startCheckout.bind(null, plan.id!)}
-                className="mt-6"
-              >
-                <Button
-                  type="submit"
-                  variant={plan.highlighted ? "primary" : "secondary"}
-                  className="w-full"
-                >
-                  {days > 0
-                    ? `Essayer ${days} jours gratuitement`
-                    : "S'abonner"}
-                </Button>
-              </form>
             </div>
-          ))}
-        </div>
+          )}
+        </CheckoutShell>
 
         <p className="mt-6 text-center text-xs text-neutral-500">
           Paiement sécurisé par Stripe. TVA non applicable, art. 293 B du CGI.

@@ -11,11 +11,7 @@ import { updateBusinessName } from "./actions";
 import { Button } from "@/components/ui/Button";
 import { inputClass, labelClass, errorClass, successClass } from "@/lib/ui";
 
-export function BusinessNameForm({
-  defaultValue,
-}: {
-  defaultValue: string;
-}) {
+export function BusinessNameForm({ defaultValue }: { defaultValue: string }) {
   const [serverError, setServerError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
   const {

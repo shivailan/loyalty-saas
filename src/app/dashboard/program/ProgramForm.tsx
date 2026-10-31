@@ -90,8 +90,8 @@ export function ProgramForm({
             Programme actif
           </span>
           <span className="block text-sm text-neutral-600">
-            Désactivez pour suspendre temporairement les nouvelles
-            inscriptions et les scans, sans rien supprimer.
+            Désactivez pour suspendre temporairement les nouvelles inscriptions
+            et les scans, sans rien supprimer.
           </span>
         </span>
       </label>

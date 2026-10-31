@@ -28,8 +28,8 @@ export const plans: Plan[] = [
       { label: "Statistiques en temps réel" },
       { label: "Logo et 2 couleurs de votre commerce" },
       { label: "Emails automatiques à vos clients" },
-      { label: "Export de vos clients au format Excel" },
       { label: "Support par email" },
+      { label: "Export de vos clients au format Excel", excluded: true },
       {
         label:
           "Offres envoyées en notification sur le téléphone de vos clients",
@@ -45,6 +45,7 @@ export const plans: Plan[] = [
     highlighted: true,
     features: [
       { label: "Tout ce qui est inclus dans Essentiel" },
+      { label: "Export de vos clients au format Excel" },
       {
         label:
           "Offres envoyées en notification sur le téléphone de vos clients (1 par jour)",

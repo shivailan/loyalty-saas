@@ -4,477 +4,480 @@ export type Json =
   | boolean
   | null
   | { [key: string]: Json | undefined }
-  | Json[]
+  | Json[];
 
 export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.5"
-  }
+    PostgrestVersion: "14.5";
+  };
   graphql_public: {
     Tables: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Views: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Functions: {
       graphql: {
         Args: {
-          extensions?: Json
-          operationName?: string
-          query?: string
-          variables?: Json
-        }
-        Returns: Json
-      }
-    }
+          extensions?: Json;
+          operationName?: string;
+          query?: string;
+          variables?: Json;
+        };
+        Returns: Json;
+      };
+    };
     Enums: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     CompositeTypes: {
-      [_ in never]: never
-    }
-  }
+      [_ in never]: never;
+    };
+  };
   public: {
     Tables: {
       admin_users: {
         Row: {
-          created_at: string
-          user_id: string
-        }
+          created_at: string;
+          user_id: string;
+        };
         Insert: {
-          created_at?: string
-          user_id: string
-        }
+          created_at?: string;
+          user_id: string;
+        };
         Update: {
-          created_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
+          created_at?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       customers: {
         Row: {
-          created_at: string
-          email: string
-          first_name: string
-          id: string
-          last_name: string
-          marketing_consent: boolean
-          marketing_consent_at: string | null
-          merchant_id: string
-          phone: string | null
-        }
+          created_at: string;
+          email: string;
+          first_name: string;
+          id: string;
+          last_name: string;
+          marketing_consent: boolean;
+          marketing_consent_at: string | null;
+          merchant_id: string;
+          phone: string | null;
+        };
         Insert: {
-          created_at?: string
-          email: string
-          first_name: string
-          id?: string
-          last_name: string
-          marketing_consent?: boolean
-          marketing_consent_at?: string | null
-          merchant_id: string
-          phone?: string | null
-        }
+          created_at?: string;
+          email: string;
+          first_name: string;
+          id?: string;
+          last_name: string;
+          marketing_consent?: boolean;
+          marketing_consent_at?: string | null;
+          merchant_id: string;
+          phone?: string | null;
+        };
         Update: {
-          created_at?: string
-          email?: string
-          first_name?: string
-          id?: string
-          last_name?: string
-          marketing_consent?: boolean
-          marketing_consent_at?: string | null
-          merchant_id?: string
-          phone?: string | null
-        }
+          created_at?: string;
+          email?: string;
+          first_name?: string;
+          id?: string;
+          last_name?: string;
+          marketing_consent?: boolean;
+          marketing_consent_at?: string | null;
+          merchant_id?: string;
+          phone?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "customers_merchant_id_fkey"
-            columns: ["merchant_id"]
-            isOneToOne: false
-            referencedRelation: "merchants"
-            referencedColumns: ["id"]
+            foreignKeyName: "customers_merchant_id_fkey";
+            columns: ["merchant_id"];
+            isOneToOne: false;
+            referencedRelation: "merchants";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       google_wallet_cards: {
         Row: {
-          card_id: string
-          created_at: string
-        }
+          card_id: string;
+          created_at: string;
+        };
         Insert: {
-          card_id: string
-          created_at?: string
-        }
+          card_id: string;
+          created_at?: string;
+        };
         Update: {
-          card_id?: string
-          created_at?: string
-        }
+          card_id?: string;
+          created_at?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "google_wallet_cards_card_id_fkey"
-            columns: ["card_id"]
-            isOneToOne: true
-            referencedRelation: "loyalty_cards"
-            referencedColumns: ["id"]
+            foreignKeyName: "google_wallet_cards_card_id_fkey";
+            columns: ["card_id"];
+            isOneToOne: true;
+            referencedRelation: "loyalty_cards";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       loyalty_cards: {
         Row: {
-          created_at: string
-          current_stamps: number
-          customer_id: string
-          id: string
-          loyalty_program_id: string
-          updated_at: string
-        }
+          created_at: string;
+          current_stamps: number;
+          customer_id: string;
+          id: string;
+          loyalty_program_id: string;
+          updated_at: string;
+        };
         Insert: {
-          created_at?: string
-          current_stamps?: number
-          customer_id: string
-          id?: string
-          loyalty_program_id: string
-          updated_at?: string
-        }
+          created_at?: string;
+          current_stamps?: number;
+          customer_id: string;
+          id?: string;
+          loyalty_program_id: string;
+          updated_at?: string;
+        };
         Update: {
-          created_at?: string
-          current_stamps?: number
-          customer_id?: string
-          id?: string
-          loyalty_program_id?: string
-          updated_at?: string
-        }
+          created_at?: string;
+          current_stamps?: number;
+          customer_id?: string;
+          id?: string;
+          loyalty_program_id?: string;
+          updated_at?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "loyalty_cards_customer_id_fkey"
-            columns: ["customer_id"]
-            isOneToOne: false
-            referencedRelation: "customers"
-            referencedColumns: ["id"]
+            foreignKeyName: "loyalty_cards_customer_id_fkey";
+            columns: ["customer_id"];
+            isOneToOne: false;
+            referencedRelation: "customers";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "loyalty_cards_loyalty_program_id_fkey"
-            columns: ["loyalty_program_id"]
-            isOneToOne: false
-            referencedRelation: "loyalty_programs"
-            referencedColumns: ["id"]
+            foreignKeyName: "loyalty_cards_loyalty_program_id_fkey";
+            columns: ["loyalty_program_id"];
+            isOneToOne: false;
+            referencedRelation: "loyalty_programs";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       loyalty_programs: {
         Row: {
-          created_at: string
-          id: string
-          is_active: boolean
-          merchant_id: string
-          name: string
-          reward_description: string
-          visits_required: number
-        }
+          created_at: string;
+          id: string;
+          is_active: boolean;
+          merchant_id: string;
+          name: string;
+          reward_description: string;
+          visits_required: number;
+        };
         Insert: {
-          created_at?: string
-          id?: string
-          is_active?: boolean
-          merchant_id: string
-          name: string
-          reward_description: string
-          visits_required: number
-        }
+          created_at?: string;
+          id?: string;
+          is_active?: boolean;
+          merchant_id: string;
+          name: string;
+          reward_description: string;
+          visits_required: number;
+        };
         Update: {
-          created_at?: string
-          id?: string
-          is_active?: boolean
-          merchant_id?: string
-          name?: string
-          reward_description?: string
-          visits_required?: number
-        }
+          created_at?: string;
+          id?: string;
+          is_active?: boolean;
+          merchant_id?: string;
+          name?: string;
+          reward_description?: string;
+          visits_required?: number;
+        };
         Relationships: [
           {
-            foreignKeyName: "loyalty_programs_merchant_id_fkey"
-            columns: ["merchant_id"]
-            isOneToOne: false
-            referencedRelation: "merchants"
-            referencedColumns: ["id"]
+            foreignKeyName: "loyalty_programs_merchant_id_fkey";
+            columns: ["merchant_id"];
+            isOneToOne: false;
+            referencedRelation: "merchants";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       merchants: {
         Row: {
-          billing_exempt: boolean
-          created_at: string
-          id: string
-          is_suspended: boolean
-          logo_url: string | null
-          name: string
-          owner_id: string
-          poster_downloaded_at: string | null
-          primary_color: string
-          secondary_color: string
-          send_reward_email: boolean
-          send_welcome_email: boolean
-          slug: string
-          stripe_customer_id: string | null
-          stripe_subscription_id: string | null
-          subscription_period_end: string | null
-          subscription_plan: string | null
-          subscription_status: string
-        }
+          billing_exempt: boolean;
+          created_at: string;
+          id: string;
+          is_suspended: boolean;
+          logo_url: string | null;
+          name: string;
+          owner_id: string;
+          poster_downloaded_at: string | null;
+          primary_color: string;
+          secondary_color: string;
+          send_reward_email: boolean;
+          send_welcome_email: boolean;
+          slug: string;
+          stripe_customer_id: string | null;
+          stripe_subscription_id: string | null;
+          subscription_period_end: string | null;
+          subscription_plan: string | null;
+          subscription_status: string;
+        };
         Insert: {
-          billing_exempt?: boolean
-          created_at?: string
-          id?: string
-          is_suspended?: boolean
-          logo_url?: string | null
-          name: string
-          owner_id: string
-          poster_downloaded_at?: string | null
-          primary_color?: string
-          secondary_color?: string
-          send_reward_email?: boolean
-          send_welcome_email?: boolean
-          slug: string
-          stripe_customer_id?: string | null
-          stripe_subscription_id?: string | null
-          subscription_period_end?: string | null
-          subscription_plan?: string | null
-          subscription_status?: string
-        }
+          billing_exempt?: boolean;
+          created_at?: string;
+          id?: string;
+          is_suspended?: boolean;
+          logo_url?: string | null;
+          name: string;
+          owner_id: string;
+          poster_downloaded_at?: string | null;
+          primary_color?: string;
+          secondary_color?: string;
+          send_reward_email?: boolean;
+          send_welcome_email?: boolean;
+          slug: string;
+          stripe_customer_id?: string | null;
+          stripe_subscription_id?: string | null;
+          subscription_period_end?: string | null;
+          subscription_plan?: string | null;
+          subscription_status?: string;
+        };
         Update: {
-          billing_exempt?: boolean
-          created_at?: string
-          id?: string
-          is_suspended?: boolean
-          logo_url?: string | null
-          name?: string
-          owner_id?: string
-          poster_downloaded_at?: string | null
-          primary_color?: string
-          secondary_color?: string
-          send_reward_email?: boolean
-          send_welcome_email?: boolean
-          slug?: string
-          stripe_customer_id?: string | null
-          stripe_subscription_id?: string | null
-          subscription_period_end?: string | null
-          subscription_plan?: string | null
-          subscription_status?: string
-        }
-        Relationships: []
-      }
+          billing_exempt?: boolean;
+          created_at?: string;
+          id?: string;
+          is_suspended?: boolean;
+          logo_url?: string | null;
+          name?: string;
+          owner_id?: string;
+          poster_downloaded_at?: string | null;
+          primary_color?: string;
+          secondary_color?: string;
+          send_reward_email?: boolean;
+          send_welcome_email?: boolean;
+          slug?: string;
+          stripe_customer_id?: string | null;
+          stripe_subscription_id?: string | null;
+          subscription_period_end?: string | null;
+          subscription_plan?: string | null;
+          subscription_status?: string;
+        };
+        Relationships: [];
+      };
       rate_limit_hits: {
         Row: {
-          created_at: string
-          id: number
-          key: string
-        }
+          created_at: string;
+          id: number;
+          key: string;
+        };
         Insert: {
-          created_at?: string
-          id?: never
-          key: string
-        }
+          created_at?: string;
+          id?: never;
+          key: string;
+        };
         Update: {
-          created_at?: string
-          id?: never
-          key?: string
-        }
-        Relationships: []
-      }
+          created_at?: string;
+          id?: never;
+          key?: string;
+        };
+        Relationships: [];
+      };
       reward_redemptions: {
         Row: {
-          card_id: string
-          granted_at: string
-          id: string
-          redeemed_at: string | null
-        }
+          card_id: string;
+          granted_at: string;
+          id: string;
+          redeemed_at: string | null;
+        };
         Insert: {
-          card_id: string
-          granted_at?: string
-          id?: string
-          redeemed_at?: string | null
-        }
+          card_id: string;
+          granted_at?: string;
+          id?: string;
+          redeemed_at?: string | null;
+        };
         Update: {
-          card_id?: string
-          granted_at?: string
-          id?: string
-          redeemed_at?: string | null
-        }
+          card_id?: string;
+          granted_at?: string;
+          id?: string;
+          redeemed_at?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "reward_redemptions_card_id_fkey"
-            columns: ["card_id"]
-            isOneToOne: false
-            referencedRelation: "loyalty_cards"
-            referencedColumns: ["id"]
+            foreignKeyName: "reward_redemptions_card_id_fkey";
+            columns: ["card_id"];
+            isOneToOne: false;
+            referencedRelation: "loyalty_cards";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       visits: {
         Row: {
-          card_id: string
-          created_at: string
-          id: string
-        }
+          card_id: string;
+          created_at: string;
+          id: string;
+        };
         Insert: {
-          card_id: string
-          created_at?: string
-          id?: string
-        }
+          card_id: string;
+          created_at?: string;
+          id?: string;
+        };
         Update: {
-          card_id?: string
-          created_at?: string
-          id?: string
-        }
+          card_id?: string;
+          created_at?: string;
+          id?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "visits_card_id_fkey"
-            columns: ["card_id"]
-            isOneToOne: false
-            referencedRelation: "loyalty_cards"
-            referencedColumns: ["id"]
+            foreignKeyName: "visits_card_id_fkey";
+            columns: ["card_id"];
+            isOneToOne: false;
+            referencedRelation: "loyalty_cards";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       wallet_offers: {
         Row: {
-          created_at: string
-          id: string
-          merchant_id: string
-          message: string
-          recipients_count: number
-        }
+          created_at: string;
+          id: string;
+          merchant_id: string;
+          message: string;
+          recipients_count: number;
+        };
         Insert: {
-          created_at?: string
-          id?: string
-          merchant_id: string
-          message: string
-          recipients_count?: number
-        }
+          created_at?: string;
+          id?: string;
+          merchant_id: string;
+          message: string;
+          recipients_count?: number;
+        };
         Update: {
-          created_at?: string
-          id?: string
-          merchant_id?: string
-          message?: string
-          recipients_count?: number
-        }
+          created_at?: string;
+          id?: string;
+          merchant_id?: string;
+          message?: string;
+          recipients_count?: number;
+        };
         Relationships: [
           {
-            foreignKeyName: "wallet_offers_merchant_id_fkey"
-            columns: ["merchant_id"]
-            isOneToOne: false
-            referencedRelation: "merchants"
-            referencedColumns: ["id"]
+            foreignKeyName: "wallet_offers_merchant_id_fkey";
+            columns: ["merchant_id"];
+            isOneToOne: false;
+            referencedRelation: "merchants";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       wallet_registrations: {
         Row: {
-          card_id: string
-          created_at: string
-          device_library_identifier: string
-          pass_type_identifier: string
-          push_token: string
-        }
+          card_id: string;
+          created_at: string;
+          device_library_identifier: string;
+          pass_type_identifier: string;
+          push_token: string;
+        };
         Insert: {
-          card_id: string
-          created_at?: string
-          device_library_identifier: string
-          pass_type_identifier: string
-          push_token: string
-        }
+          card_id: string;
+          created_at?: string;
+          device_library_identifier: string;
+          pass_type_identifier: string;
+          push_token: string;
+        };
         Update: {
-          card_id?: string
-          created_at?: string
-          device_library_identifier?: string
-          pass_type_identifier?: string
-          push_token?: string
-        }
+          card_id?: string;
+          created_at?: string;
+          device_library_identifier?: string;
+          pass_type_identifier?: string;
+          push_token?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "wallet_registrations_card_id_fkey"
-            columns: ["card_id"]
-            isOneToOne: false
-            referencedRelation: "loyalty_cards"
-            referencedColumns: ["id"]
+            foreignKeyName: "wallet_registrations_card_id_fkey";
+            columns: ["card_id"];
+            isOneToOne: false;
+            referencedRelation: "loyalty_cards";
+            referencedColumns: ["id"];
           },
-        ]
-      }
-    }
+        ];
+      };
+    };
     Views: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Functions: {
       add_visit: {
-        Args: { p_card_id: string; p_cooldown_seconds?: number }
+        Args: { p_card_id: string; p_cooldown_seconds?: number };
         Returns: {
-          new_stamps: number
-          previous_stamps: number
-          seconds_remaining: number
-          status: string
-        }[]
-      }
+          new_stamps: number;
+          previous_stamps: number;
+          seconds_remaining: number;
+          status: string;
+        }[];
+      };
       check_rate_limit: {
-        Args: { p_key: string; p_max: number; p_window_seconds: number }
-        Returns: boolean
-      }
-      is_card_owner: { Args: { target_card_id: string }; Returns: boolean }
+        Args: { p_key: string; p_max: number; p_window_seconds: number };
+        Returns: boolean;
+      };
+      is_card_owner: { Args: { target_card_id: string }; Returns: boolean };
       is_merchant_owner: {
-        Args: { target_merchant_id: string }
-        Returns: boolean
-      }
+        Args: { target_merchant_id: string };
+        Returns: boolean;
+      };
       redeem_reward: {
-        Args: { p_card_id: string }
+        Args: { p_card_id: string };
         Returns: {
-          status: string
-        }[]
-      }
+          status: string;
+        }[];
+      };
       send_wallet_offer: {
-        Args: { p_cooldown_seconds?: number; p_message: string }
+        Args: { p_cooldown_seconds?: number; p_message: string };
         Returns: {
-          offer_id: string
-          seconds_remaining: number
-          status: string
-        }[]
-      }
+          offer_id: string;
+          seconds_remaining: number;
+          status: string;
+        }[];
+      };
       undo_last_visit: {
-        Args: { p_card_id: string; p_window_seconds?: number }
+        Args: { p_card_id: string; p_window_seconds?: number };
         Returns: {
-          new_stamps: number
-          status: string
-        }[]
-      }
-    }
+          new_stamps: number;
+          status: string;
+        }[];
+      };
+    };
     Enums: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     CompositeTypes: {
-      [_ in never]: never
-    }
-  }
-}
+      [_ in never]: never;
+    };
+  };
+};
 
-type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">;
 
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+type DefaultSchema = DatabaseWithoutInternals[Extract<
+  keyof Database,
+  "public"
+>];
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends (DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
       DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
-      Row: infer R
+      Row: infer R;
     }
     ? R
     : never
@@ -482,95 +485,92 @@ export type Tables<
         DefaultSchema["Views"])
     ? (DefaultSchema["Tables"] &
         DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
-        Row: infer R
+        Row: infer R;
       }
       ? R
       : never
-    : never
+    : never;
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
+    keyof DefaultSchema["Tables"] | { schema: keyof DatabaseWithoutInternals },
   TableName extends (DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I
+      Insert: infer I;
     }
     ? I
     : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
     ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Insert: infer I
+        Insert: infer I;
       }
       ? I
       : never
-    : never
+    : never;
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
+    keyof DefaultSchema["Tables"] | { schema: keyof DatabaseWithoutInternals },
   TableName extends (DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U
+      Update: infer U;
     }
     ? U
     : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
     ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Update: infer U
+        Update: infer U;
       }
       ? U
       : never
-    : never
+    : never;
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
-    | { schema: keyof DatabaseWithoutInternals },
+    keyof DefaultSchema["Enums"] | { schema: keyof DatabaseWithoutInternals },
   EnumName extends (DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
     ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
-    : never
+    : never;
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-    : never
+    : never;
 
 export const Constants = {
   graphql_public: {
@@ -579,4 +579,4 @@ export const Constants = {
   public: {
     Enums: {},
   },
-} as const
+} as const;

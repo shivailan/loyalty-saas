@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getOfferAudience } from "@/lib/wallet/offers";
 import { OfferForm } from "./OfferForm";
-import { canSendOffers } from "@/lib/billing/access";
+import { hasFeature } from "@/lib/billing/access";
 import { upgradeToBusiness } from "@/app/subscribe/actions";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -46,7 +46,7 @@ export default async function OffersPage() {
     redirect("/login");
   }
 
-  if (!canSendOffers(merchant)) {
+  if (!hasFeature("walletOffers", merchant)) {
     return (
       <div className="max-w-xl">
         <h1 className="text-2xl font-bold text-neutral-900">Offres Wallet</h1>

@@ -51,8 +51,7 @@ export function NotificationsForm({
             Email de bienvenue
           </span>
           <span className="block text-sm text-neutral-600">
-            Envoyé au client à l&apos;inscription, avec le lien vers sa
-            carte.
+            Envoyé au client à l&apos;inscription, avec le lien vers sa carte.
           </span>
         </span>
       </label>

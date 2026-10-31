@@ -29,8 +29,8 @@ export default async function BrandingPage() {
       </h1>
       <p className="mt-1 text-sm text-neutral-600">
         Personnalisez le logo et les deux couleurs de la carte de vos clients :
-        la couleur principale pour le fond, la couleur secondaire pour les textes
-        et les accents.
+        la couleur principale pour le fond, la couleur secondaire pour les
+        textes et les accents.
       </p>
       <Card className="mt-6 flex flex-col gap-8">
         <div>

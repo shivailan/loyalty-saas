@@ -40,9 +40,7 @@ export default async function SettingsPage() {
       </Card>
 
       <Card className="mt-6">
-        <h2 className="text-sm font-medium text-neutral-700">
-          Mot de passe
-        </h2>
+        <h2 className="text-sm font-medium text-neutral-700">Mot de passe</h2>
         <div className="mt-3">
           <ChangePasswordForm />
         </div>

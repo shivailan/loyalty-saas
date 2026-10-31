@@ -19,7 +19,9 @@ export function ChangePasswordForm() {
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<ResetPasswordInput>({ resolver: zodResolver(resetPasswordSchema) });
+  } = useForm<ResetPasswordInput>({
+    resolver: zodResolver(resetPasswordSchema),
+  });
 
   async function onSubmit(data: ResetPasswordInput) {
     setServerError(null);

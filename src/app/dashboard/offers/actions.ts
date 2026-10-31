@@ -8,7 +8,7 @@ import { offerSchema, type OfferInput } from "@/lib/validations/offer";
 import { getOfferAudience } from "@/lib/wallet/offers";
 import { notifyWalletUpdates } from "@/lib/wallet/notify";
 import { sendGoogleOffer } from "@/lib/wallet/google/sync";
-import { canSendOffers } from "@/lib/billing/access";
+import { hasFeature } from "@/lib/billing/access";
 
 export type SendOfferResult = { error: string | null; recipients?: number };
 
@@ -41,7 +41,7 @@ export async function sendOffer(input: OfferInput): Promise<SendOfferResult> {
   if (!merchant) {
     return { error: "Établissement introuvable." };
   }
-  if (!canSendOffers(merchant)) {
+  if (!hasFeature("walletOffers", merchant)) {
     return { error: "L'envoi d'offres est réservé à la formule Business." };
   }
 

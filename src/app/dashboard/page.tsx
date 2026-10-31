@@ -4,6 +4,9 @@ import { createClient } from "@/lib/supabase/server";
 import { Card } from "@/components/ui/Card";
 import { navGroups } from "./nav-items";
 import { iconMap } from "@/lib/icons";
+import { lockedFeatures } from "@/lib/billing/access";
+import { LOCKED_MESSAGE } from "@/lib/features";
+import { Lock } from "lucide-react";
 import {
   OnboardingChecklist,
   type OnboardingStep,
@@ -21,7 +24,9 @@ export default async function DashboardPage() {
 
   const { data: merchant } = await supabase
     .from("merchants")
-    .select("id, name, slug, logo_url, primary_color, poster_downloaded_at")
+    .select(
+      "id, name, slug, logo_url, primary_color, poster_downloaded_at, billing_exempt, subscription_plan",
+    )
     .single();
 
   // Guide de démarrage : chaque étape se coche d'après les données réelles.
@@ -99,6 +104,7 @@ export default async function DashboardPage() {
     },
   ];
   const onboardingDone = steps.every((step) => step.done);
+  const locked = merchant ? lockedFeatures(merchant) : [];
 
   return (
     <div>
@@ -129,17 +135,31 @@ export default async function DashboardPage() {
               <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {items.map((item) => {
                   const Icon = iconMap[item.icon];
+                  const isLocked = Boolean(
+                    item.feature && locked.includes(item.feature),
+                  );
                   return (
                     <Link key={item.href} href={item.href}>
                       <Card className="h-full transition hover:border-yellow-300 hover:shadow-md">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-yellow-100">
-                          <Icon className="h-5 w-5 text-yellow-700" />
+                        <div className="flex items-start justify-between">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-yellow-100">
+                            <Icon className="h-5 w-5 text-yellow-700" />
+                          </div>
+                          {isLocked && (
+                            <span
+                              title={LOCKED_MESSAGE}
+                              className="flex items-center gap-1 rounded-full bg-neutral-100 px-2.5 py-1 text-[11px] font-semibold text-neutral-500"
+                            >
+                              <Lock className="h-3 w-3" aria-hidden="true" />
+                              Business
+                            </span>
+                          )}
                         </div>
                         <h3 className="mt-4 font-semibold text-neutral-900">
                           {item.label}
                         </h3>
                         <p className="mt-1 text-sm text-neutral-600">
-                          {item.description}
+                          {isLocked ? LOCKED_MESSAGE : item.description}
                         </p>
                       </Card>
                     </Link>

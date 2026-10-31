@@ -59,9 +59,7 @@ export default async function StatsPage() {
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
           <Card key={stat.label}>
-            <p className="text-3xl font-bold text-neutral-900">
-              {stat.value}
-            </p>
+            <p className="text-3xl font-bold text-neutral-900">{stat.value}</p>
             <p className="mt-1 text-sm text-neutral-600">{stat.label}</p>
           </Card>
         ))}

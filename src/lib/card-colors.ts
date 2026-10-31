@@ -39,7 +39,8 @@ export function resolveSecondary(
   primary: string,
   secondary: string | null | undefined,
 ): string {
-  const wanted = secondary && HEX.test(secondary) ? secondary : DEFAULT_SECONDARY;
+  const wanted =
+    secondary && HEX.test(secondary) ? secondary : DEFAULT_SECONDARY;
   if (contrastRatio(primary, wanted) >= 3) return wanted;
   return luminance(primary) > 0.4 ? "#171717" : "#FFFFFF";
 }

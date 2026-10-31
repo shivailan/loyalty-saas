@@ -32,8 +32,8 @@ export default async function ProgramPage() {
         Règles de fidélité
       </h1>
       <p className="mt-1 text-sm text-neutral-600">
-        Définissez le nombre de passages nécessaires et la récompense offerte
-        à vos clients.
+        Définissez le nombre de passages nécessaires et la récompense offerte à
+        vos clients.
       </p>
       <Card className="mt-6">
         <ProgramForm

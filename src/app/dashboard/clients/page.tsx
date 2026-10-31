@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 import { Download } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { DeleteCustomerButton } from "./DeleteCustomerButton";
+import { LockedExportButton } from "./LockedExportButton";
+import { hasFeature } from "@/lib/billing/access";
 
 export default async function ClientsPage() {
   const supabase = await createClient();
@@ -30,6 +32,15 @@ export default async function ClientsPage() {
 
   const count = customers?.length ?? 0;
 
+  const { data: merchant } = await supabase
+    .from("merchants")
+    .select("billing_exempt, subscription_plan")
+    .eq("owner_id", user.id)
+    .single();
+  const canExport = merchant ? hasFeature("customerExport", merchant) : false;
+  // Le passage à Business se fait en un clic seulement pour un abonné Essentiel.
+  const canUpgrade = merchant?.subscription_plan === "essentiel";
+
   return (
     <div>
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -39,16 +50,19 @@ export default async function ClientsPage() {
             {count} client{count > 1 ? "s" : ""} inscrit{count > 1 ? "s" : ""}.
           </p>
         </div>
-        {count > 0 && (
-          <a
-            href="/dashboard/clients/export"
-            download
-            className="inline-flex items-center gap-2 rounded-lg border border-neutral-300 px-4 py-2.5 text-sm font-medium text-neutral-700 transition hover:bg-neutral-50"
-          >
-            <Download className="h-4 w-4" aria-hidden="true" />
-            Télécharger (Excel)
-          </a>
-        )}
+        {count > 0 &&
+          (canExport ? (
+            <a
+              href="/dashboard/clients/export"
+              download
+              className="inline-flex items-center gap-2 rounded-lg border border-neutral-300 px-4 py-2.5 text-sm font-medium text-neutral-700 transition hover:bg-neutral-50"
+            >
+              <Download className="h-4 w-4" aria-hidden="true" />
+              Télécharger (Excel)
+            </a>
+          ) : (
+            <LockedExportButton canUpgrade={canUpgrade} />
+          ))}
       </div>
 
       <div className="mt-6 overflow-x-auto rounded-2xl border border-neutral-200 bg-white">

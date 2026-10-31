@@ -30,8 +30,10 @@ export const navGroups: NavGroup[] = [
       {
         href: "/dashboard/offers",
         label: "Offres Wallet",
-        description: "Envoyez une promotion en notification sur le téléphone de vos clients.",
+        description:
+          "Envoyez une promotion en notification sur le téléphone de vos clients.",
         icon: "Megaphone",
+        feature: "walletOffers",
       },
       {
         href: "/dashboard/clients",

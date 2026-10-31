@@ -1,6 +1,6 @@
 import ExcelJS from "exceljs";
 import { createClient } from "@/lib/supabase/server";
-import { hasPaidAccess } from "@/lib/billing/access";
+import { hasFeature, hasPaidAccess } from "@/lib/billing/access";
 
 export const runtime = "nodejs";
 
@@ -25,10 +25,14 @@ export async function GET() {
 
   const { data: merchant } = await supabase
     .from("merchants")
-    .select("name, billing_exempt, subscription_status")
+    .select("name, billing_exempt, subscription_status, subscription_plan")
     .eq("owner_id", user.id)
     .single();
-  if (!merchant || !hasPaidAccess(merchant)) {
+  if (
+    !merchant ||
+    !hasPaidAccess(merchant) ||
+    !hasFeature("customerExport", merchant)
+  ) {
     return new Response("Forbidden", { status: 403 });
   }
 
@@ -58,7 +62,12 @@ export async function GET() {
     { header: "Nom", key: "lastName", width: 18 },
     { header: "Email", key: "email", width: 32 },
     { header: "Téléphone", key: "phone", width: 16 },
-    { header: "Inscrit le", key: "createdAt", width: 14, style: { numFmt: "dd/mm/yyyy" } },
+    {
+      header: "Inscrit le",
+      key: "createdAt",
+      width: 14,
+      style: { numFmt: "dd/mm/yyyy" },
+    },
     { header: "Passages", key: "stamps", width: 10 },
     { header: "Passages requis", key: "required", width: 16 },
     { header: "Accepte les offres", key: "consent", width: 18 },

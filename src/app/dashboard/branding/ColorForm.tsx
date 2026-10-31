@@ -3,10 +3,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  brandingSchema,
-  type BrandingInput,
-} from "@/lib/validations/branding";
+import { brandingSchema, type BrandingInput } from "@/lib/validations/branding";
 import { saveBrandingColors } from "./actions";
 import { cardColors, contrastRatio } from "@/lib/card-colors";
 import { Button } from "@/components/ui/Button";
@@ -61,7 +58,9 @@ export function ColorForm({
           <label className={labelClass} htmlFor="primaryColor">
             Couleur principale
           </label>
-          <p className="mt-0.5 text-xs text-neutral-500">Le fond de la carte.</p>
+          <p className="mt-0.5 text-xs text-neutral-500">
+            Le fond de la carte.
+          </p>
           <div className="mt-2 flex items-center gap-3">
             <input
               id="primaryColor"

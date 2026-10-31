@@ -32,7 +32,10 @@ export async function notifyWalletUpdates(cardIds: string[]): Promise<void> {
     // cette carte : on oublie ce jeton.
     const gone = results.filter((r) => r.status === 410).map((r) => r.token);
     if (gone.length > 0) {
-      await supabase.from("wallet_registrations").delete().in("push_token", gone);
+      await supabase
+        .from("wallet_registrations")
+        .delete()
+        .in("push_token", gone);
     }
   } catch (error) {
     console.error("Wallet update notification failed:", error);

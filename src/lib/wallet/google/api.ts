@@ -42,9 +42,13 @@ async function upsert(
       payload,
     );
     if (patched.status === 200) return;
-    throw new Error(`Google ${resource} update ${patched.status}: ${patched.body.slice(0, 300)}`);
+    throw new Error(
+      `Google ${resource} update ${patched.status}: ${patched.body.slice(0, 300)}`,
+    );
   }
-  throw new Error(`Google ${resource} insert ${created.status}: ${created.body.slice(0, 300)}`);
+  throw new Error(
+    `Google ${resource} insert ${created.status}: ${created.body.slice(0, 300)}`,
+  );
 }
 
 export function upsertLoyaltyClass(
@@ -75,7 +79,11 @@ export async function patchLoyaltyObject(
     payload,
   );
   if (result.status !== 200 && result.status !== 404) {
-    console.error("Google object patch failed:", result.status, result.body.slice(0, 300));
+    console.error(
+      "Google object patch failed:",
+      result.status,
+      result.body.slice(0, 300),
+    );
   }
   return result.status;
 }
@@ -94,7 +102,11 @@ export async function addLoyaltyMessage(
     { message: { ...message, messageType: "TEXT_AND_NOTIFY" } },
   );
   if (result.status !== 200 && result.status !== 404) {
-    console.error("Google addMessage failed:", result.status, result.body.slice(0, 300));
+    console.error(
+      "Google addMessage failed:",
+      result.status,
+      result.body.slice(0, 300),
+    );
   }
   return result.status;
 }

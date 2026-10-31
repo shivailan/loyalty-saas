@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { logout } from "./actions";
 import { SidebarNav, MobileNav } from "@/components/ui/SidebarNav";
 import { navGroups } from "./nav-items";
-import { hasPaidAccess } from "@/lib/billing/access";
+import { hasPaidAccess, lockedFeatures } from "@/lib/billing/access";
 
 // Jours restants avant la fin de l'essai gratuit (hors du composant : lire
 // l'heure courante n'est pas permis pendant le rendu).
@@ -33,7 +33,7 @@ export default async function DashboardLayout({
   const { data: merchant } = await supabase
     .from("merchants")
     .select(
-      "is_suspended, billing_exempt, subscription_status, subscription_period_end",
+      "is_suspended, billing_exempt, subscription_status, subscription_plan, subscription_period_end",
     )
     .single();
 
@@ -67,6 +67,9 @@ export default async function DashboardLayout({
     redirect("/subscribe");
   }
 
+  // Options Business : affichées avec un cadenas tant que la formule ne les inclut pas.
+  const locked = merchant ? lockedFeatures(merchant) : [];
+
   return (
     <div className="min-h-screen bg-neutral-50 md:flex">
       <aside className="hidden border-r border-neutral-200 bg-white md:flex md:w-64 md:shrink-0 md:flex-col md:justify-between md:px-4 md:py-6">
@@ -80,7 +83,7 @@ export default async function DashboardLayout({
             </span>
           </Link>
           <div className="mt-8">
-            <SidebarNav groups={navGroups} />
+            <SidebarNav groups={navGroups} locked={locked} />
           </div>
         </div>
         <form action={logout}>
@@ -114,7 +117,7 @@ export default async function DashboardLayout({
         </header>
 
         <div className="px-6 py-4 md:hidden">
-          <MobileNav groups={navGroups} />
+          <MobileNav groups={navGroups} locked={locked} />
         </div>
 
         {merchant?.subscription_status === "trialing" &&

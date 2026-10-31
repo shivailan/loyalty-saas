@@ -1,5 +1,6 @@
 import "server-only";
 import { isBillingEnabled } from "./config";
+import { BUSINESS_FEATURES, type FeatureKey } from "@/lib/features";
 
 // past_due = un prélèvement a échoué mais Stripe réessaie pendant plusieurs
 // jours : on laisse l'accès (avec un avertissement) plutôt que de bloquer un
@@ -28,12 +29,21 @@ export function isMerchantOpen(merchant: BillingFields): boolean {
   return !merchant.is_suspended && hasPaidAccess(merchant);
 }
 
-// L'envoi d'offres en notification est réservé à la formule Business (les
-// comptes offerts, et l'absence de paiement configuré, n'y changent rien).
-export function canSendOffers(merchant: {
-  billing_exempt: boolean;
-  subscription_plan: string | null;
-}): boolean {
+// Les options Business (offres en notification, export Excel) ne sont ouvertes
+// qu'à la formule Business. Les comptes offerts, et l'absence de paiement
+// configuré, n'y changent rien : tout est alors ouvert.
+export function hasFeature(
+  _feature: FeatureKey,
+  merchant: { billing_exempt: boolean; subscription_plan: string | null },
+): boolean {
   if (!isBillingEnabled()) return true;
   return merchant.billing_exempt || merchant.subscription_plan === "business";
+}
+
+// Options verrouillées pour ce commerçant (pour afficher les cadenas).
+export function lockedFeatures(merchant: {
+  billing_exempt: boolean;
+  subscription_plan: string | null;
+}): FeatureKey[] {
+  return BUSINESS_FEATURES.filter((feature) => !hasFeature(feature, merchant));
 }

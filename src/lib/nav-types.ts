@@ -1,3 +1,5 @@
+import type { FeatureKey } from "./features";
+
 export type IconName =
   | "LayoutDashboard"
   | "ScanLine"
@@ -17,6 +19,8 @@ export type NavItem = {
   label: string;
   description: string;
   icon: IconName;
+  // Option réservée à la formule Business (cadenas si elle n'est pas incluse).
+  feature?: FeatureKey;
 };
 
 export type NavGroup = {

@@ -5,7 +5,6 @@ import Link from "next/link";
 import { Check } from "lucide-react";
 import {
   COMMANDE_FEATURES,
-  COMMANDE_URL,
   PRICE_CENTS,
   TIER_LABEL,
   completFeatures,
@@ -165,11 +164,7 @@ export function Offers() {
           blurb="Vos commandes à emporter, sans commission et sans file d'attente."
           features={COMMANDE_FEATURES}
           note="Options à la demande : paiement en ligne, accès aux données clients."
-          cta={{
-            label: "Choisir Commande",
-            href: `${COMMANDE_URL}/inscription?offre=commande`,
-            external: true,
-          }}
+          cta={{ label: "Choisir Commande", href: "/signup?offre=commande" }}
         />
         <OfferCard
           highlighted

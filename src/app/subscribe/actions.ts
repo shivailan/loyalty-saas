@@ -7,10 +7,15 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getStripe } from "@/lib/billing/stripe";
 import {
   isBillingEnabled,
-  priceIdForPlan,
+  priceIdForChoice,
   trialDays,
 } from "@/lib/billing/config";
-import type { PlanId } from "@/lib/plans";
+import {
+  choiceParts,
+  choicesForOffer,
+  parseOffer,
+  type Choice,
+} from "@/lib/offers";
 import { syncSubscription } from "@/lib/billing/sync";
 
 async function siteUrl(): Promise<string> {
@@ -31,7 +36,7 @@ async function currentMerchant() {
   const { data: merchant } = await supabase
     .from("merchants")
     .select(
-      "id, name, stripe_customer_id, stripe_subscription_id, subscription_plan, subscription_status",
+      "id, name, offer, stripe_customer_id, stripe_subscription_id, subscription_plan, subscription_status",
     )
     .eq("owner_id", user.id)
     .single();
@@ -60,13 +65,18 @@ async function ensureStripeCustomer(
   return customer.id;
 }
 
-// Ouvre la page de paiement Stripe pour la formule choisie.
-export async function startCheckout(plan: PlanId): Promise<void> {
+// Ouvre la page de paiement Stripe pour la formule choisie. La formule doit
+// correspondre à l'offre du compte (un compte Commande n'achète pas Fidélité).
+export async function startCheckout(choice: Choice): Promise<void> {
   if (!isBillingEnabled()) redirect("/dashboard");
-  const priceId = priceIdForPlan(plan);
-  if (!priceId) redirect("/subscribe?error=1");
 
   const { user, merchant } = await currentMerchant();
+  if (!choicesForOffer(parseOffer(merchant.offer)).includes(choice)) {
+    redirect("/subscribe?error=1");
+  }
+  const priceId = priceIdForChoice(choice);
+  if (!priceId) redirect("/subscribe?error=1");
+  const { offer, tier } = choiceParts(choice);
   const base = await siteUrl();
 
   let url: string | null = null;
@@ -81,7 +91,7 @@ export async function startCheckout(plan: PlanId): Promise<void> {
       client_reference_id: merchant.id,
       line_items: [{ price: priceId, quantity: 1 }],
       subscription_data: {
-        metadata: { merchant_id: merchant.id, plan },
+        metadata: { merchant_id: merchant.id, offer, ...(tier ? { plan: tier } : {}) },
         ...(days > 0 ? { trial_period_days: days } : {}),
       },
       success_url: `${base}/subscribe/done?session_id={CHECKOUT_SESSION_ID}`,
@@ -118,13 +128,17 @@ export async function openBillingPortal(): Promise<void> {
   redirect(url ?? "/dashboard/billing?error=1");
 }
 
-// Passe un abonné Essentiel à Business : le prix de son abonnement existant est
+// Passe un abonné Essentiel à Business (même offre) : le prix de son abonnement existant est
 // remplacé, et la différence est facturée au prorata. Pendant l'essai gratuit,
 // cela change simplement la formule qui sera facturée à la fin de l'essai.
 export async function upgradeToBusiness(): Promise<void> {
   if (!isBillingEnabled()) redirect("/dashboard");
   const { merchant } = await currentMerchant();
-  const priceId = priceIdForPlan("business");
+  const offer = parseOffer(merchant.offer);
+  const priceId =
+    offer === "commande"
+      ? null
+      : priceIdForChoice(offer === "complet" ? "complet:business" : "fidelite:business");
   if (
     !priceId ||
     !merchant.stripe_subscription_id ||
@@ -144,7 +158,7 @@ export async function upgradeToBusiness(): Promise<void> {
       const updated = await stripe.subscriptions.update(current.id, {
         items: [{ id: item.id, price: priceId }],
         proration_behavior: "create_prorations",
-        metadata: { ...current.metadata, plan: "business" },
+        metadata: { ...current.metadata, offer, plan: "business" },
       });
       await syncSubscription(updated);
       ok = true;

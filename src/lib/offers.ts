@@ -86,3 +86,81 @@ export function completFeatures(tier: Tier): string[] {
     "Le client reçoit sa carte par e-mail dès sa première commande",
   ];
 }
+
+// ---------------------------------------------------------------------------
+// Formules vendables : ce que le commerçant peut acheter selon son offre.
+// « fidelite:essentiel » = offre Fidélité au niveau Essentiel, etc.
+// ---------------------------------------------------------------------------
+export type Choice =
+  | "fidelite:essentiel"
+  | "fidelite:business"
+  | "commande"
+  | "complet:essentiel"
+  | "complet:business";
+
+export function choiceOf(offer: Offer, tier: Tier | null): Choice | null {
+  if (offer === "commande") return "commande";
+  if (tier === null) return null;
+  return `${offer}:${tier}` as Choice;
+}
+
+export function choiceParts(choice: Choice): { offer: Offer; tier: Tier | null } {
+  if (choice === "commande") return { offer: "commande", tier: null };
+  const [offer, tier] = choice.split(":") as [Offer, Tier];
+  return { offer, tier };
+}
+
+export function choicesForOffer(offer: Offer): Choice[] {
+  if (offer === "commande") return ["commande"];
+  return [`${offer}:essentiel`, `${offer}:business`] as Choice[];
+}
+
+export function choiceCents(choice: Choice): number {
+  const { offer, tier } = choiceParts(choice);
+  if (offer === "commande") return PRICE_CENTS.commande;
+  if (offer === "complet") return PRICE_CENTS.complet[tier!];
+  return fidelityCents(tier!);
+}
+
+export function choiceInfo(choice: Choice): {
+  name: string;
+  description: string;
+  price: string;
+  features: string[];
+  highlighted: boolean;
+} {
+  const { offer, tier } = choiceParts(choice);
+  const price = formatPrice(choiceCents(choice));
+  if (offer === "commande") {
+    return {
+      name: "KeepMe Commande",
+      description: "Vos commandes à emporter, sans commission et sans file d'attente.",
+      price,
+      features: COMMANDE_FEATURES,
+      highlighted: true,
+    };
+  }
+  if (offer === "complet") {
+    return {
+      name: `KeepMe Complet ${TIER_LABEL[tier!]}`,
+      description: "Commandes et fidélité qui travaillent ensemble.",
+      price,
+      features: completFeatures(tier!),
+      highlighted: tier === "business",
+    };
+  }
+  const plan = plans.find((p) => p.id === tier);
+  return {
+    name: `KeepMe Fidélité ${TIER_LABEL[tier!]}`,
+    description: plan?.description ?? "",
+    price,
+    features: fidelityFeatures(tier!),
+    highlighted: tier === "business",
+  };
+}
+
+// Prix de la formule Business de la même offre (bouton « Passer à Business »).
+export function businessUpgradePrice(offer: Offer): string {
+  const choice = offer === "complet" ? "complet:business" : "fidelite:business";
+  return formatPrice(choiceCents(choice));
+}

@@ -3,13 +3,19 @@
 import { useState } from "react";
 import { Lock } from "lucide-react";
 import { LOCKED_MESSAGE } from "@/lib/features";
-import { businessPrice } from "@/lib/plans";
+import { businessUpgradePrice, type Offer } from "@/lib/offers";
 import { upgradeToBusiness } from "@/app/subscribe/actions";
 import { Button } from "@/components/ui/Button";
 
 // Bouton « Télécharger (Excel) » cadenassé : un clic explique que l'option est
 // incluse dans la formule Business et propose d'y passer.
-export function LockedExportButton({ canUpgrade }: { canUpgrade: boolean }) {
+export function LockedExportButton({
+  canUpgrade,
+  offer,
+}: {
+  canUpgrade: boolean;
+  offer: Offer;
+}) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -40,7 +46,7 @@ export function LockedExportButton({ canUpgrade }: { canUpgrade: boolean }) {
           {canUpgrade ? (
             <form action={upgradeToBusiness} className="mt-3">
               <Button type="submit" className="w-full">
-                Passer à Business · {businessPrice} €/mois
+                Passer à Business · {businessUpgradePrice(offer)} €/mois
               </Button>
             </form>
           ) : (

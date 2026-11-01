@@ -1,4 +1,5 @@
 import { createAdminClient } from "@/lib/supabase/admin";
+import { ordersStatusFor } from "@/lib/integrations/orders-sync";
 import { generateIntegrationKey } from "@/lib/integrations/key";
 import { isTrustedCaller, verifyHandoffToken } from "@/lib/integrations/handoff";
 import { allowAction, getClientFingerprint } from "@/lib/rate-limit";
@@ -28,7 +29,7 @@ export async function POST(request: Request) {
   const supabase = createAdminClient();
   const { data: merchant } = await supabase
     .from("merchants")
-    .select("id, offer")
+    .select("id, offer, subscription_status, billing_exempt")
     .eq("id", payload.m)
     .maybeSingle();
   if (!merchant || merchant.offer === "fidelite") {
@@ -49,5 +50,9 @@ export async function POST(request: Request) {
     return Response.json({ error: "server_error" }, { status: 500 });
   }
 
-  return Response.json({ key });
+  // Comptes offerts : page en ligne sans abonnement.
+  const status = merchant.billing_exempt
+    ? "active"
+    : ordersStatusFor(merchant.subscription_status);
+  return Response.json({ key, status });
 }

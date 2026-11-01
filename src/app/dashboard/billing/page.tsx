@@ -1,7 +1,12 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { isBillingEnabled } from "@/lib/billing/config";
-import { plans, businessPrice } from "@/lib/plans";
+import {
+  businessUpgradePrice,
+  choiceInfo,
+  choiceOf,
+  parseOffer,
+} from "@/lib/offers";
 import { openBillingPortal, upgradeToBusiness } from "@/app/subscribe/actions";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -41,13 +46,20 @@ export default async function BillingPage({
   const { data: merchant } = await supabase
     .from("merchants")
     .select(
-      "billing_exempt, stripe_customer_id, subscription_status, subscription_plan, subscription_period_end",
+      "billing_exempt, offer, stripe_customer_id, subscription_status, subscription_plan, subscription_period_end",
     )
     .eq("owner_id", user.id)
     .single();
   if (!merchant) redirect("/login");
 
-  const plan = plans.find((p) => p.id === merchant.subscription_plan);
+  const offer = parseOffer(merchant.offer);
+  const choice = choiceOf(
+    offer,
+    merchant.subscription_plan === "business" || merchant.subscription_plan === "essentiel"
+      ? merchant.subscription_plan
+      : null,
+  );
+  const plan = choice ? choiceInfo(choice) : null;
 
   return (
     <div className="max-w-md">
@@ -103,10 +115,10 @@ export default async function BillingPage({
                 dans un instant.
               </p>
             )}
-            {merchant.subscription_plan === "essentiel" && (
+            {offer !== "commande" && merchant.subscription_plan === "essentiel" && (
               <form action={upgradeToBusiness} className="mt-5">
                 <Button type="submit">
-                  Passer à Business · {businessPrice} €/mois
+                  Passer à Business · {businessUpgradePrice(offer)} €/mois
                 </Button>
               </form>
             )}

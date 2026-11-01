@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Card } from "@/components/ui/Card";
 import { BusinessNameForm } from "./BusinessNameForm";
 import { ChangePasswordForm } from "./ChangePasswordForm";
+import { QtimeLinkForm } from "./QtimeLinkForm";
 
 export default async function SettingsPage() {
   const supabase = await createClient();
@@ -15,7 +16,7 @@ export default async function SettingsPage() {
 
   const { data: merchant } = await supabase
     .from("merchants")
-    .select("name")
+    .select("name, integration_key_hint, integration_key_created_at")
     .single();
   if (!merchant) {
     redirect("/login");
@@ -36,6 +37,18 @@ export default async function SettingsPage() {
         </h2>
         <div className="mt-3">
           <BusinessNameForm defaultValue={merchant.name} />
+        </div>
+      </Card>
+
+      <Card className="mt-6">
+        <h2 className="text-sm font-medium text-neutral-700">
+          Liaison avec Qtime
+        </h2>
+        <div className="mt-3">
+          <QtimeLinkForm
+            hint={merchant.integration_key_hint}
+            createdAt={merchant.integration_key_created_at}
+          />
         </div>
       </Card>
 

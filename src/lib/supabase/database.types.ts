@@ -98,6 +98,48 @@ export type Database = {
           },
         ];
       };
+      external_order_visits: {
+        Row: {
+          card_id: string | null;
+          created_at: string;
+          external_order_id: string;
+          id: string;
+          merchant_id: string;
+          source: string;
+        };
+        Insert: {
+          card_id?: string | null;
+          created_at?: string;
+          external_order_id: string;
+          id?: string;
+          merchant_id: string;
+          source: string;
+        };
+        Update: {
+          card_id?: string | null;
+          created_at?: string;
+          external_order_id?: string;
+          id?: string;
+          merchant_id?: string;
+          source?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "external_order_visits_card_id_fkey";
+            columns: ["card_id"];
+            isOneToOne: false;
+            referencedRelation: "loyalty_cards";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "external_order_visits_merchant_id_fkey";
+            columns: ["merchant_id"];
+            isOneToOne: false;
+            referencedRelation: "merchants";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       google_wallet_cards: {
         Row: {
           card_id: string;
@@ -206,6 +248,9 @@ export type Database = {
           billing_exempt: boolean;
           created_at: string;
           id: string;
+          integration_key_created_at: string | null;
+          integration_key_hash: string | null;
+          integration_key_hint: string | null;
           is_suspended: boolean;
           logo_url: string | null;
           name: string;
@@ -226,6 +271,9 @@ export type Database = {
           billing_exempt?: boolean;
           created_at?: string;
           id?: string;
+          integration_key_created_at?: string | null;
+          integration_key_hash?: string | null;
+          integration_key_hint?: string | null;
           is_suspended?: boolean;
           logo_url?: string | null;
           name: string;
@@ -246,6 +294,9 @@ export type Database = {
           billing_exempt?: boolean;
           created_at?: string;
           id?: string;
+          integration_key_created_at?: string | null;
+          integration_key_hash?: string | null;
+          integration_key_hint?: string | null;
           is_suspended?: boolean;
           logo_url?: string | null;
           name?: string;

@@ -5,6 +5,7 @@ import { joinSchema, type JoinInput } from "@/lib/validations/join";
 import { sendWelcomeEmail } from "@/lib/email/send";
 import { allowAction, getClientFingerprint } from "@/lib/rate-limit";
 import { isMerchantOpen } from "@/lib/billing/access";
+import { findOrCreateCard } from "@/lib/loyalty/enroll";
 
 // Limites par heure : large pour ne jamais gêner un vrai commerce (tous les
 // clients peuvent s'inscrire depuis le même wifi), mais bloquante pour un robot.
@@ -78,61 +79,19 @@ export async function joinLoyaltyProgram(
     };
   }
 
-  const { data: existingCustomer } = await supabase
-    .from("customers")
-    .select("id")
-    .eq("merchant_id", merchant.id)
-    .eq("email", parsed.data.email)
-    .maybeSingle();
-
-  let customerId = existingCustomer?.id as string | undefined;
-  const isNewCustomer = !customerId;
-
-  if (!customerId) {
-    const { data: newCustomer, error } = await supabase
-      .from("customers")
-      .insert({
-        merchant_id: merchant.id,
-        first_name: parsed.data.firstName,
-        last_name: parsed.data.lastName,
-        email: parsed.data.email,
-        phone: parsed.data.phone || null,
-        marketing_consent: parsed.data.marketingConsent,
-        marketing_consent_at: parsed.data.marketingConsent
-          ? new Date().toISOString()
-          : null,
-      })
-      .select("id")
-      .single();
-    if (error) {
-      return { error: error.message };
-    }
-    customerId = newCustomer.id;
+  const enrolled = await findOrCreateCard(supabase, {
+    merchantId: merchant.id,
+    programId: program.id,
+    firstName: parsed.data.firstName,
+    lastName: parsed.data.lastName,
+    email: parsed.data.email,
+    phone: parsed.data.phone,
+    marketingConsent: parsed.data.marketingConsent,
+  });
+  if (enrolled.error !== null) {
+    return { error: enrolled.error };
   }
-
-  const { data: existingCard } = await supabase
-    .from("loyalty_cards")
-    .select("id")
-    .eq("customer_id", customerId)
-    .eq("loyalty_program_id", program.id)
-    .maybeSingle();
-
-  let cardId = existingCard?.id as string | undefined;
-
-  if (!cardId) {
-    const { data: newCard, error } = await supabase
-      .from("loyalty_cards")
-      .insert({
-        customer_id: customerId,
-        loyalty_program_id: program.id,
-      })
-      .select("id")
-      .single();
-    if (error) {
-      return { error: error.message };
-    }
-    cardId = newCard.id;
-  }
+  const { cardId, isNewCustomer } = enrolled;
 
   if (isNewCustomer && merchant.send_welcome_email) {
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";

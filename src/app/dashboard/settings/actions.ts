@@ -2,6 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { generateIntegrationKey } from "@/lib/integrations/key";
 import {
   businessNameSchema,
   type BusinessNameInput,
@@ -64,5 +66,61 @@ export async function changePassword(
     return { error: error.message };
   }
 
+  return { error: null };
+}
+
+// Génère (ou remplace) la clé qui relie Qtime à ce commerce. La clé complète
+// n'est renvoyée qu'ici, une seule fois : seule son empreinte est conservée.
+export async function createIntegrationKey(): Promise<{
+  error: string | null;
+  key?: string;
+}> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return { error: "Vous devez être connecté." };
+  }
+
+  const { key, hash, hint } = generateIntegrationKey();
+  const { error } = await createAdminClient()
+    .from("merchants")
+    .update({
+      integration_key_hash: hash,
+      integration_key_hint: hint,
+      integration_key_created_at: new Date().toISOString(),
+    })
+    .eq("owner_id", user.id);
+  if (error) {
+    return { error: "Impossible de créer la clé. Réessayez." };
+  }
+
+  revalidatePath("/dashboard/settings");
+  return { error: null, key };
+}
+
+export async function revokeIntegrationKey(): Promise<{ error: string | null }> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return { error: "Vous devez être connecté." };
+  }
+
+  const { error } = await createAdminClient()
+    .from("merchants")
+    .update({
+      integration_key_hash: null,
+      integration_key_hint: null,
+      integration_key_created_at: null,
+    })
+    .eq("owner_id", user.id);
+  if (error) {
+    return { error: "Impossible de supprimer la clé. Réessayez." };
+  }
+
+  revalidatePath("/dashboard/settings");
   return { error: null };
 }

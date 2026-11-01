@@ -1,6 +1,11 @@
 import "server-only";
-import { COMMANDE_URL } from "@/lib/offers";
 import { createAdminClient } from "@/lib/supabase/admin";
+
+// Adresse interne de l'application de commande. Les visiteurs ne la voient
+// jamais : le site unique (www) leur sert ses pages sous ses propres adresses.
+export const COMMANDE_BACKEND_URL = (
+  process.env.COMMANDE_BACKEND_URL ?? "https://commande.keepmecard.fr"
+).replace(/\/$/, "");
 
 // Statuts Stripe pour lesquels la page de commande reste en ligne : mêmes
 // règles que l'accès au tableau de bord (un prélèvement refusé laisse quelques
@@ -31,7 +36,7 @@ export async function pushSubscriptionToOrders(
       .maybeSingle();
     if (!data?.integration_key_hint) return;
 
-    const response = await fetch(`${COMMANDE_URL}/api/integrations/subscription`, {
+    const response = await fetch(`${COMMANDE_BACKEND_URL}/api/integrations/subscription`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${secret}` },
       body: JSON.stringify({ merchantId, status: ordersStatusFor(status) }),

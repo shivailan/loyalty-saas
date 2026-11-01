@@ -30,10 +30,6 @@ export const TIER_LABEL: Record<Tier, string> = {
   business: "Business",
 };
 
-// L'application de commande vit sur un sous-domaine du même site.
-export const COMMANDE_URL =
-  process.env.NEXT_PUBLIC_COMMANDE_URL ?? "https://commande.keepmecard.fr";
-
 export const PRICE_CENTS = {
   commande: 6999,
   complet: { essentiel: 7999, business: 8999 },

@@ -7,7 +7,7 @@ import { iconMap } from "@/lib/icons";
 import { lockedFeatures } from "@/lib/billing/access";
 import { LOCKED_MESSAGE } from "@/lib/features";
 import { Lock } from "lucide-react";
-import { COMMANDE_URL, includesCommande, parseOffer } from "@/lib/offers";
+import { includesCommande, parseOffer } from "@/lib/offers";
 import { createHandoffToken } from "@/lib/integrations/handoff";
 import {
   OnboardingChecklist,
@@ -144,7 +144,7 @@ export default async function DashboardPage() {
                 Elle sera reliée automatiquement à votre carte de fidélité.
               </p>
               <a
-                href={`${COMMANDE_URL}/inscription?token=${encodeURIComponent(handoffToken)}`}
+                href={`/inscription?token=${encodeURIComponent(handoffToken)}`}
                 className="mt-3 inline-block rounded-full bg-yellow-400 px-5 py-2.5 text-sm font-semibold text-neutral-900 hover:bg-yellow-300"
               >
                 Créer ma page de commande

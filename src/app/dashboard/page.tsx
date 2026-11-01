@@ -7,6 +7,8 @@ import { iconMap } from "@/lib/icons";
 import { lockedFeatures } from "@/lib/billing/access";
 import { LOCKED_MESSAGE } from "@/lib/features";
 import { Lock } from "lucide-react";
+import { COMMANDE_URL, includesCommande, parseOffer } from "@/lib/offers";
+import { createHandoffToken } from "@/lib/integrations/handoff";
 import {
   OnboardingChecklist,
   type OnboardingStep,
@@ -25,7 +27,7 @@ export default async function DashboardPage() {
   const { data: merchant } = await supabase
     .from("merchants")
     .select(
-      "id, name, slug, logo_url, primary_color, poster_downloaded_at, billing_exempt, subscription_plan",
+      "id, name, slug, logo_url, primary_color, poster_downloaded_at, billing_exempt, subscription_plan, offer, integration_key_hint",
     )
     .single();
 
@@ -106,6 +108,15 @@ export default async function DashboardPage() {
   const onboardingDone = steps.every((step) => step.done);
   const locked = merchant ? lockedFeatures(merchant) : [];
 
+  // Offre avec prise de commande : proposer de créer la page de commande, déjà
+  // reliée à la fidélité (la clé de liaison est posée automatiquement).
+  const wantsCommande = merchant ? includesCommande(parseOffer(merchant.offer)) : false;
+  const commandeLinked = Boolean(merchant?.integration_key_hint);
+  const handoffToken =
+    merchant && wantsCommande && !commandeLinked && user.email
+      ? createHandoffToken(merchant.id, user.email)
+      : null;
+
   return (
     <div>
       <h1 className="text-2xl font-bold text-neutral-900">
@@ -114,6 +125,39 @@ export default async function DashboardPage() {
       <p className="mt-1 text-sm text-neutral-600">
         Connecté en tant que {user.email}
       </p>
+
+      {wantsCommande && (
+        <div className="mt-8 rounded-2xl border border-yellow-300 bg-yellow-50 p-5">
+          <h2 className="font-semibold text-neutral-900">
+            KeepMe Commande : votre page de commande à emporter
+          </h2>
+          {commandeLinked ? (
+            <p className="mt-1 text-sm text-neutral-600">
+              Votre page de commande est créée et reliée à votre carte de
+              fidélité : chaque commande retirée ajoute un passage à vos
+              clients qui l&apos;ont demandé.
+            </p>
+          ) : handoffToken ? (
+            <>
+              <p className="mt-1 text-sm text-neutral-600">
+                Créez votre page en quelques minutes (SIRET, couleurs, carte).
+                Elle sera reliée automatiquement à votre carte de fidélité.
+              </p>
+              <a
+                href={`${COMMANDE_URL}/inscription?token=${encodeURIComponent(handoffToken)}`}
+                className="mt-3 inline-block rounded-full bg-yellow-400 px-5 py-2.5 text-sm font-semibold text-neutral-900 hover:bg-yellow-300"
+              >
+                Créer ma page de commande
+              </a>
+            </>
+          ) : (
+            <p className="mt-1 text-sm text-neutral-600">
+              La création de la page de commande n&apos;est pas disponible pour
+              le moment. Contactez-nous.
+            </p>
+          )}
+        </div>
+      )}
 
       {!onboardingDone && (
         <div className="mt-8">

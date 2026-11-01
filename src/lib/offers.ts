@@ -6,6 +6,25 @@ import { plans, type PlanId } from "@/lib/plans";
 // fonctionnalité ne puisse jamais différer entre les écrans. Prix en centimes.
 export type Tier = PlanId;
 
+// Ce que le restaurateur a choisi à l'inscription.
+export type Offer = "commande" | "fidelite" | "complet";
+
+export const OFFER_LABEL: Record<Offer, string> = {
+  commande: "KeepMe Commande",
+  fidelite: "KeepMe Fidélité",
+  complet: "KeepMe Complet",
+};
+
+export function parseOffer(value: string | string[] | undefined): Offer {
+  const raw = Array.isArray(value) ? value[0] : value;
+  return raw === "commande" || raw === "complet" ? raw : "fidelite";
+}
+
+// L'offre inclut-elle la prise de commande ?
+export function includesCommande(offer: Offer): boolean {
+  return offer === "commande" || offer === "complet";
+}
+
 export const TIER_LABEL: Record<Tier, string> = {
   essentiel: "Essentiel",
   business: "Business",

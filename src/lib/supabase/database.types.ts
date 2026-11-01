@@ -253,6 +253,7 @@ export type Database = {
           integration_key_hint: string | null;
           is_suspended: boolean;
           logo_url: string | null;
+          offer: string;
           name: string;
           owner_id: string;
           poster_downloaded_at: string | null;
@@ -276,6 +277,7 @@ export type Database = {
           integration_key_hint?: string | null;
           is_suspended?: boolean;
           logo_url?: string | null;
+          offer?: string;
           name: string;
           owner_id: string;
           poster_downloaded_at?: string | null;
@@ -299,6 +301,7 @@ export type Database = {
           integration_key_hint?: string | null;
           is_suspended?: boolean;
           logo_url?: string | null;
+          offer?: string;
           name?: string;
           owner_id?: string;
           poster_downloaded_at?: string | null;

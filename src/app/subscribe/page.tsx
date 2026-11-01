@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Check, X } from "lucide-react";
+import { Check } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { isBillingEnabled, trialDays } from "@/lib/billing/config";
 import { hasPaidAccess } from "@/lib/billing/access";
-import { plans, sellablePlans } from "@/lib/plans";
+import { plans } from "@/lib/plans";
+import { choiceInfo, choicesForOffer, parseOffer } from "@/lib/offers";
 import { startCheckout } from "./actions";
 import { SubscribeButton } from "./SubscribeButton";
 import { CheckoutShell } from "./CheckoutShell";
@@ -24,7 +25,9 @@ export default async function SubscribePage({
 
   const { data: merchant } = await supabase
     .from("merchants")
-    .select("name, billing_exempt, subscription_status, stripe_subscription_id")
+    .select(
+      "name, offer, billing_exempt, subscription_status, stripe_subscription_id",
+    )
     .eq("owner_id", user.id)
     .single();
   if (!merchant) redirect("/login");
@@ -32,8 +35,14 @@ export default async function SubscribePage({
 
   // Même règle que lors du paiement : pas de second essai gratuit.
   const days = merchant.stripe_subscription_id ? 0 : trialDays();
-  const sellable = sellablePlans;
-  const upcoming = plans.find((plan) => plan.comingSoon);
+  const offer = parseOffer(merchant.offer);
+  const sellable = choicesForOffer(offer).map((choice) => ({
+    choice,
+    ...choiceInfo(choice),
+  }));
+  // L'offre Premium n'est annoncée que pour la fidélité.
+  const upcoming =
+    offer === "commande" ? undefined : plans.find((plan) => plan.comingSoon);
   const wasSubscribed = ["canceled", "unpaid", "incomplete_expired"].includes(
     merchant.subscription_status,
   );
@@ -81,10 +90,12 @@ export default async function SubscribePage({
         )}
 
         <CheckoutShell key={error ?? "ok"}>
-          <div className="mt-10 grid items-stretch gap-4 sm:grid-cols-2">
+          <div
+            className={`mt-10 grid items-stretch gap-4 ${sellable.length > 1 ? "sm:grid-cols-2" : "mx-auto max-w-md"}`}
+          >
             {sellable.map((plan) => (
               <div
-                key={plan.id}
+                key={plan.choice}
                 className={`relative flex flex-col rounded-2xl border p-6 ${
                   plan.highlighted
                     ? "border-yellow-400 bg-neutral-900 text-white shadow-xl ring-2 ring-yellow-400 sm:-my-2 sm:py-8"
@@ -120,32 +131,21 @@ export default async function SubscribePage({
                 <ul className="mt-4 flex flex-1 flex-col gap-2 text-sm">
                   {plan.features.map((feature) => (
                     <li
-                      key={feature.label}
+                      key={feature}
                       className={`flex gap-2 ${
-                        feature.excluded
-                          ? "text-neutral-400 line-through"
-                          : plan.highlighted
-                            ? "text-neutral-100"
-                            : "text-neutral-700"
+                        plan.highlighted ? "text-neutral-100" : "text-neutral-700"
                       }`}
                     >
-                      {feature.excluded ? (
-                        <X
-                          className="mt-0.5 h-4 w-4 shrink-0"
-                          aria-hidden="true"
-                        />
-                      ) : (
-                        <Check
-                          className={`mt-0.5 h-4 w-4 shrink-0 ${plan.highlighted ? "text-yellow-400" : "text-yellow-600"}`}
-                          aria-hidden="true"
-                        />
-                      )}
-                      {feature.label}
+                      <Check
+                        className={`mt-0.5 h-4 w-4 shrink-0 ${plan.highlighted ? "text-yellow-400" : "text-yellow-600"}`}
+                        aria-hidden="true"
+                      />
+                      {feature}
                     </li>
                   ))}
                 </ul>
                 <form
-                  action={startCheckout.bind(null, plan.id)}
+                  action={startCheckout.bind(null, plan.choice)}
                   className="mt-6"
                 >
                   <SubscribeButton

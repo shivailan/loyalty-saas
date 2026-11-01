@@ -3,6 +3,7 @@ import { Hero } from "@/components/landing/Hero";
 import { CardShowcase } from "@/components/landing/CardShowcase";
 import { HowItWorks } from "@/components/landing/HowItWorks";
 import { Features } from "@/components/landing/Features";
+import { CommandeSection } from "@/components/landing/CommandeSection";
 import { Pricing } from "@/components/landing/Pricing";
 import { Footer } from "@/components/landing/Footer";
 import { ScrollProgressBar } from "@/components/landing/ScrollProgressBar";
@@ -18,6 +19,7 @@ export default function Home() {
         <CardShowcase />
         <HowItWorks />
         <Features />
+        <CommandeSection />
         <Pricing />
       </main>
       <Footer />

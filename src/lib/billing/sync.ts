@@ -1,7 +1,8 @@
 import "server-only";
 import type Stripe from "stripe";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { planForPriceId } from "./config";
+import { billingForPriceId } from "./config";
+import { pushSubscriptionToOrders } from "@/lib/integrations/orders-sync";
 
 // Recopie l'état d'un abonnement Stripe dans la base. Appelé par le webhook
 // et au retour du paiement : idempotent, on peut donc l'appeler plusieurs
@@ -16,11 +17,15 @@ export async function syncSubscription(
       : subscription.customer.id;
   const item = subscription.items.data[0];
 
+  const billing = billingForPriceId(item?.price.id);
+
   const update = {
     stripe_customer_id: customerId,
     stripe_subscription_id: subscription.id,
     subscription_status: subscription.status,
-    subscription_plan: planForPriceId(item?.price.id),
+    subscription_plan: billing?.tier ?? null,
+    // L'offre suit ce qui est réellement payé (prix inconnu : on ne touche pas).
+    ...(billing ? { offer: billing.offer } : {}),
     subscription_period_end: item
       ? new Date(item.current_period_end * 1000).toISOString()
       : null,
@@ -34,7 +39,10 @@ export async function syncSubscription(
     .eq("stripe_customer_id", customerId)
     .select("id");
   if (byCustomer.error) throw new Error(byCustomer.error.message);
-  if (byCustomer.data.length > 0) return;
+  if (byCustomer.data.length > 0) {
+    await pushSubscriptionToOrders(byCustomer.data[0].id, subscription.status);
+    return;
+  }
 
   const merchantId = subscription.metadata?.merchant_id;
   if (!merchantId) {
@@ -49,4 +57,5 @@ export async function syncSubscription(
     .update(update)
     .eq("id", merchantId);
   if (byMetadata.error) throw new Error(byMetadata.error.message);
+  await pushSubscriptionToOrders(merchantId, subscription.status);
 }

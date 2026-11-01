@@ -20,6 +20,9 @@ export function Header() {
           <a className="transition-colors hover:text-neutral-900" href="#fonctionnalites">
             Fonctionnalités
           </a>
+          <a className="transition-colors hover:text-neutral-900" href="#commande">
+            Commande
+          </a>
           <a className="transition-colors hover:text-neutral-900" href="#tarifs">
             Tarifs
           </a>

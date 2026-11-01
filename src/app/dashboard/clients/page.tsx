@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { DeleteCustomerButton } from "./DeleteCustomerButton";
 import { LockedExportButton } from "./LockedExportButton";
 import { hasFeature } from "@/lib/billing/access";
-
+import { parseOffer } from "@/lib/offers";
 export default async function ClientsPage() {
   const supabase = await createClient();
   const {
@@ -34,7 +34,7 @@ export default async function ClientsPage() {
 
   const { data: merchant } = await supabase
     .from("merchants")
-    .select("billing_exempt, subscription_plan")
+    .select("billing_exempt, subscription_plan, offer")
     .eq("owner_id", user.id)
     .single();
   const canExport = merchant ? hasFeature("customerExport", merchant) : false;
@@ -61,7 +61,10 @@ export default async function ClientsPage() {
               Télécharger (Excel)
             </a>
           ) : (
-            <LockedExportButton canUpgrade={canUpgrade} />
+            <LockedExportButton
+              canUpgrade={canUpgrade}
+              offer={parseOffer(merchant?.offer)}
+            />
           ))}
       </div>
 

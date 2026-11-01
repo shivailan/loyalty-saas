@@ -254,6 +254,7 @@ export type Database = {
           is_suspended: boolean;
           logo_url: string | null;
           name: string;
+          offer: string;
           owner_id: string;
           poster_downloaded_at: string | null;
           primary_color: string;
@@ -277,6 +278,7 @@ export type Database = {
           is_suspended?: boolean;
           logo_url?: string | null;
           name: string;
+          offer?: string;
           owner_id: string;
           poster_downloaded_at?: string | null;
           primary_color?: string;
@@ -300,6 +302,7 @@ export type Database = {
           is_suspended?: boolean;
           logo_url?: string | null;
           name?: string;
+          offer?: string;
           owner_id?: string;
           poster_downloaded_at?: string | null;
           primary_color?: string;

@@ -1,5 +1,5 @@
 import "server-only";
-import type { PlanId } from "@/lib/plans";
+import { choiceParts, type Choice, type Offer, type Tier } from "@/lib/offers";
 
 // Tant que Stripe n'est pas configuré (clé absente), AUCUN accès n'est
 // bloqué : on ne verrouille jamais des commerçants sans leur offrir un moyen
@@ -15,17 +15,38 @@ export function trialDays(): number {
 }
 
 // Identifiant Stripe du prix mensuel de chaque formule (variables d'environnement).
-export function priceIdForPlan(plan: PlanId): string | null {
-  const value =
-    plan === "essentiel"
-      ? process.env.STRIPE_PRICE_ESSENTIEL
-      : process.env.STRIPE_PRICE_BUSINESS;
-  return value || null;
+function priceEnv(choice: Choice): string | undefined {
+  switch (choice) {
+    case "fidelite:essentiel":
+      return process.env.STRIPE_PRICE_ESSENTIEL;
+    case "fidelite:business":
+      return process.env.STRIPE_PRICE_BUSINESS;
+    case "commande":
+      return process.env.STRIPE_PRICE_COMMANDE;
+    case "complet:essentiel":
+      return process.env.STRIPE_PRICE_COMPLET_ESSENTIEL;
+    case "complet:business":
+      return process.env.STRIPE_PRICE_COMPLET_BUSINESS;
+  }
 }
 
-export function planForPriceId(priceId: string | undefined): PlanId | null {
+export function priceIdForChoice(choice: Choice): string | null {
+  return priceEnv(choice) || null;
+}
+
+const ALL_CHOICES: Choice[] = [
+  "fidelite:essentiel",
+  "fidelite:business",
+  "commande",
+  "complet:essentiel",
+  "complet:business",
+];
+
+// Retrouve l'offre et le niveau d'après le prix Stripe d'un abonnement.
+export function billingForPriceId(
+  priceId: string | undefined,
+): { choice: Choice; offer: Offer; tier: Tier | null } | null {
   if (!priceId) return null;
-  if (priceId === process.env.STRIPE_PRICE_ESSENTIEL) return "essentiel";
-  if (priceId === process.env.STRIPE_PRICE_BUSINESS) return "business";
-  return null;
+  const choice = ALL_CHOICES.find((c) => priceEnv(c) === priceId);
+  return choice ? { choice, ...choiceParts(choice) } : null;
 }

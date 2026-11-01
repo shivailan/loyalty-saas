@@ -2,8 +2,8 @@ import "server-only";
 import type Stripe from "stripe";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendTrialEndingEmail } from "@/lib/email/send";
-import { plans } from "@/lib/plans";
-import { planForPriceId } from "./config";
+import { choiceInfo } from "@/lib/offers";
+import { billingForPriceId } from "./config";
 
 // Prévient le commerçant, quelques jours avant, que son essai gratuit se
 // termine et que le premier paiement va être prélevé.
@@ -30,8 +30,8 @@ export async function sendTrialEnding(
   const email = owner.user?.email;
   if (!email) return;
 
-  const planId = planForPriceId(subscription.items.data[0]?.price.id);
-  const plan = plans.find((p) => p.id === planId);
+  const billing = billingForPriceId(subscription.items.data[0]?.price.id);
+  const plan = billing ? choiceInfo(billing.choice) : null;
   const base = process.env.NEXT_PUBLIC_SITE_URL || "https://www.keepmecard.fr";
 
   await sendTrialEndingEmail({

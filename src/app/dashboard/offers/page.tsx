@@ -6,7 +6,7 @@ import { hasFeature } from "@/lib/billing/access";
 import { upgradeToBusiness } from "@/app/subscribe/actions";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
-import { businessPrice } from "@/lib/plans";
+import { businessUpgradePrice, parseOffer } from "@/lib/offers";
 
 const COOLDOWN_MS = 24 * 60 * 60 * 1000;
 
@@ -39,7 +39,7 @@ export default async function OffersPage() {
 
   const { data: merchant } = await supabase
     .from("merchants")
-    .select("id, name, billing_exempt, subscription_plan")
+    .select("id, name, billing_exempt, subscription_plan, offer")
     .eq("owner_id", user.id)
     .single();
   if (!merchant) {
@@ -65,7 +65,7 @@ export default async function OffersPage() {
           </p>
           <form action={upgradeToBusiness} className="mt-5">
             <Button type="submit">
-              Passer à Business · {businessPrice} €/mois
+              Passer à Business · {businessUpgradePrice(parseOffer(merchant.offer))} €/mois
             </Button>
           </form>
           <p className="mt-3 text-xs text-neutral-400">

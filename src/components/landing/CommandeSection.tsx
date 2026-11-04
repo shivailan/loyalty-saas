@@ -22,9 +22,9 @@ const points = [
   },
   {
     icon: Link2,
-    title: "Relié à la fidélité",
+    title: "Fidélité en option",
     description:
-      "Chaque commande retirée ajoute un passage sur la carte du client. Sans scan, sans effort.",
+      "Ajoutez KeepMe Fidélité : chaque commande retirée ajoute un passage sur la carte du client, sans scan.",
   },
 ];
 
@@ -34,14 +34,15 @@ export function CommandeSection() {
       <div className="px-6 lg:px-20">
         <Reveal className="mx-auto max-w-2xl text-center">
           <p className="text-sm font-semibold uppercase tracking-wide text-yellow-400">
-            Nouveau · KeepMe Commande
+            KeepMe Commande
           </p>
           <h2 className="mt-3 font-heading text-4xl font-semibold tracking-tight md:text-5xl">
-            Fini le téléphone qui sonne à l&apos;heure de pointe
+            Vos commandes à emporter, sans commission
           </h2>
           <p className="mt-5 text-lg text-neutral-300">
-            Restaurateurs : prenez vos commandes à emporter en ligne, gagnez du
-            temps en cuisine et fidélisez vos clients au même endroit.
+            Vos clients commandent depuis leur téléphone, vous recevez tout en
+            cuisine : plus de commandes prises au téléphone à l&apos;heure de
+            pointe, plus d&apos;erreurs, plus de temps gagné.
           </p>
         </Reveal>
 

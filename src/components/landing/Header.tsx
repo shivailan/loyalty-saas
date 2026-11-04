@@ -14,14 +14,11 @@ export function Header() {
         </Link>
 
         <nav className="hidden items-center gap-9 text-[13px] font-medium text-neutral-500 md:flex">
-          <a className="transition-colors hover:text-neutral-900" href="#comment-ca-marche">
-            Comment ça marche
-          </a>
-          <a className="transition-colors hover:text-neutral-900" href="#fonctionnalites">
-            Fonctionnalités
-          </a>
           <a className="transition-colors hover:text-neutral-900" href="#commande">
             Commande
+          </a>
+          <a className="transition-colors hover:text-neutral-900" href="#fidelite">
+            Fidélité
           </a>
           <a className="transition-colors hover:text-neutral-900" href="#tarifs">
             Tarifs
@@ -36,10 +33,10 @@ export function Header() {
             Se connecter
           </Link>
           <Link
-            href="/signup"
+            href="#tarifs"
             className="rounded-full bg-yellow-400 px-4 py-2 text-[13px] font-semibold text-neutral-900 transition-transform hover:scale-[1.03] hover:bg-yellow-300 active:scale-[0.98]"
           >
-            Essayer gratuitement
+            Voir les offres
           </Link>
         </div>
       </div>

@@ -3,9 +3,9 @@ import "./globals.css";
 import { NavigationProgress } from "@/components/ui/NavigationProgress";
 
 export const metadata: Metadata = {
-  title: "KeepMe — Cartes de fidélité digitales",
+  title: "KeepMe — Commande à emporter et cartes de fidélité pour restaurateurs",
   description:
-    "Remplacez vos cartes de fidélité papier par une carte digitale : QR code, scan en boutique, statistiques en temps réel.",
+    "Prenez vos commandes à emporter en ligne, sans commission, et fidélisez vos clients avec une carte digitale dans Apple Wallet et Google Wallet.",
 };
 
 export default function RootLayout({

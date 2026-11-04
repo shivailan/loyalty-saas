@@ -16,10 +16,10 @@ export default function Home() {
       <Header />
       <main className="flex-1">
         <Hero />
+        <CommandeSection />
         <CardShowcase />
         <HowItWorks />
         <Features />
-        <CommandeSection />
         <Pricing />
       </main>
       <Footer />

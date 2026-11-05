@@ -44,14 +44,25 @@ async function currentMerchant() {
   return { user, merchant };
 }
 
-// Crée (une seule fois) le client Stripe du commerçant et le mémorise.
+// Retrouve (ou crée) le client Stripe du commerçant et le mémorise.
 async function ensureStripeCustomer(
   merchant: { id: string; name: string; stripe_customer_id: string | null },
   email: string | undefined,
 ): Promise<string> {
-  if (merchant.stripe_customer_id) return merchant.stripe_customer_id;
+  const stripe = getStripe();
 
-  const customer = await getStripe().customers.create({
+  // Un client créé dans l'autre mode de Stripe (réel ou test) n'existe pas dans
+  // le mode courant : on vérifie qu'il est bien connu, sinon on en recrée un.
+  if (merchant.stripe_customer_id) {
+    try {
+      const existing = await stripe.customers.retrieve(merchant.stripe_customer_id);
+      if (!existing.deleted) return merchant.stripe_customer_id;
+    } catch (error) {
+      if ((error as { code?: string }).code !== "resource_missing") throw error;
+    }
+  }
+
+  const customer = await stripe.customers.create({
     email,
     name: merchant.name.trim(),
     metadata: { merchant_id: merchant.id },
@@ -59,8 +70,7 @@ async function ensureStripeCustomer(
   const { error } = await createAdminClient()
     .from("merchants")
     .update({ stripe_customer_id: customer.id })
-    .eq("id", merchant.id)
-    .is("stripe_customer_id", null);
+    .eq("id", merchant.id);
   if (error) throw new Error(error.message);
   return customer.id;
 }

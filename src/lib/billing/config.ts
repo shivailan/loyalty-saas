@@ -1,11 +1,12 @@
 import "server-only";
 import { choiceParts, type Choice, type Offer, type Tier } from "@/lib/offers";
+import { stripeEnv } from "./env";
 
 // Tant que Stripe n'est pas configuré (clé absente), AUCUN accès n'est
 // bloqué : on ne verrouille jamais des commerçants sans leur offrir un moyen
 // de payer.
 export function isBillingEnabled(): boolean {
-  return Boolean(process.env.STRIPE_SECRET_KEY);
+  return Boolean(stripeEnv("STRIPE_SECRET_KEY"));
 }
 
 // Durée de l'essai gratuit offert à l'abonnement (0 = pas d'essai).
@@ -18,15 +19,15 @@ export function trialDays(): number {
 function priceEnv(choice: Choice): string | undefined {
   switch (choice) {
     case "fidelite:essentiel":
-      return process.env.STRIPE_PRICE_ESSENTIEL;
+      return stripeEnv("STRIPE_PRICE_ESSENTIEL");
     case "fidelite:business":
-      return process.env.STRIPE_PRICE_BUSINESS;
+      return stripeEnv("STRIPE_PRICE_BUSINESS");
     case "commande":
-      return process.env.STRIPE_PRICE_COMMANDE;
+      return stripeEnv("STRIPE_PRICE_COMMANDE");
     case "complet:essentiel":
-      return process.env.STRIPE_PRICE_COMPLET_ESSENTIEL;
+      return stripeEnv("STRIPE_PRICE_COMPLET_ESSENTIEL");
     case "complet:business":
-      return process.env.STRIPE_PRICE_COMPLET_BUSINESS;
+      return stripeEnv("STRIPE_PRICE_COMPLET_BUSINESS");
   }
 }
 

@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { Check } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { isBillingEnabled, trialDays } from "@/lib/billing/config";
+import { isStripeTestMode } from "@/lib/billing/env";
 import { hasPaidAccess } from "@/lib/billing/access";
 import { plans } from "@/lib/plans";
 import { choiceInfo, choicesForOffer, parseOffer } from "@/lib/offers";
@@ -68,6 +69,13 @@ export default async function SubscribePage({
             </button>
           </form>
         </div>
+
+        {isStripeTestMode() && (
+          <p className="mt-6 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-900">
+            <strong>Mode test Stripe :</strong> aucun paiement réel. Utilisez la
+            carte 4242 4242 4242 4242, une date future et un CVC quelconque.
+          </p>
+        )}
 
         <h1 className="mt-10 text-2xl font-bold text-neutral-900">
           {wasSubscribed

@@ -1,5 +1,6 @@
 import type Stripe from "stripe";
 import { getStripe } from "@/lib/billing/stripe";
+import { stripeEnv } from "@/lib/billing/env";
 import { syncSubscription } from "@/lib/billing/sync";
 import { sendTrialEnding } from "@/lib/billing/trial-reminder";
 
@@ -9,7 +10,7 @@ export const runtime = "nodejs";
 // réussi ou refusé, résiliation…). La signature prouve que l'appel vient
 // bien de Stripe.
 export async function POST(request: Request) {
-  const secret = process.env.STRIPE_WEBHOOK_SECRET;
+  const secret = stripeEnv("STRIPE_WEBHOOK_SECRET");
   const signature = request.headers.get("stripe-signature");
   if (!secret || !signature) {
     return new Response("Not configured", { status: 400 });

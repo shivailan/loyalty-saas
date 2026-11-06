@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { hasPaidAccess } from "@/lib/billing/access";
+import { hasLoyalty, hasPaidAccess } from "@/lib/billing/access";
 import { buildPoster } from "@/lib/poster/build-poster";
 
 export const runtime = "nodejs";
@@ -17,11 +17,11 @@ export async function GET(request: Request) {
   const { data: merchant } = await supabase
     .from("merchants")
     .select(
-      "id, name, slug, logo_url, primary_color, secondary_color, billing_exempt, subscription_status",
+      "id, name, slug, logo_url, primary_color, secondary_color, billing_exempt, subscription_status, offer",
     )
     .eq("owner_id", user.id)
     .single();
-  if (!merchant || !hasPaidAccess(merchant)) {
+  if (!merchant || !hasPaidAccess(merchant) || !hasLoyalty(merchant)) {
     return new Response("Forbidden", { status: 403 });
   }
 

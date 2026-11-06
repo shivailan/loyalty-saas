@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { scanSchema } from "@/lib/validations/scan";
 import { sendRewardEmail } from "@/lib/email/send";
 import { notifyWalletUpdate } from "@/lib/wallet/notify";
-import { hasPaidAccess } from "@/lib/billing/access";
+import { hasLoyalty, hasPaidAccess } from "@/lib/billing/access";
 
 // Délai minimum entre deux passages d'une même carte (anti double scan) et
 // durée pendant laquelle le dernier passage peut être annulé.
@@ -41,10 +41,10 @@ export async function addVisit(cardIdInput: string): Promise<AddVisitResult> {
 
   const { data: billing } = await supabase
     .from("merchants")
-    .select("billing_exempt, subscription_status")
+    .select("billing_exempt, subscription_status, offer")
     .eq("owner_id", user.id)
     .single();
-  if (!billing || !hasPaidAccess(billing)) {
+  if (!billing || !hasPaidAccess(billing) || !hasLoyalty(billing)) {
     return { error: "Votre abonnement n'est pas actif." };
   }
 

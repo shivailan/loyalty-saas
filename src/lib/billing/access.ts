@@ -1,6 +1,7 @@
 import "server-only";
 import { isBillingEnabled } from "./config";
 import { BUSINESS_FEATURES, type FeatureKey } from "@/lib/features";
+import { includesLoyalty, parseOffer } from "@/lib/offers";
 
 // past_due = un prélèvement a échoué mais Stripe réessaie pendant plusieurs
 // jours : on laisse l'accès (avec un avertissement) plutôt que de bloquer un
@@ -11,6 +12,7 @@ export type BillingFields = {
   billing_exempt: boolean;
   subscription_status: string;
   is_suspended: boolean;
+  offer: string | null;
 };
 
 export function hasPaidAccess(
@@ -23,10 +25,22 @@ export function hasPaidAccess(
   );
 }
 
-// Un commerce « ouvert » : non suspendu et abonnement en règle. Utilisé pour
-// décider si ses clients peuvent encore s'inscrire.
+// La carte de fidélité fait-elle partie de la formule ? Fidélité et Complet,
+// oui ; Commande seule, non. Les comptes offerts, et l'absence de paiement
+// configuré, ouvrent tout.
+export function hasLoyalty(merchant: {
+  billing_exempt: boolean;
+  offer: string | null;
+}): boolean {
+  if (!isBillingEnabled()) return true;
+  return merchant.billing_exempt || includesLoyalty(parseOffer(merchant.offer ?? undefined));
+}
+
+// Un commerce « ouvert » à la fidélité : non suspendu, abonnement en règle et
+// carte de fidélité dans sa formule. Utilisé pour décider si ses clients
+// peuvent s'inscrire et cumuler des passages.
 export function isMerchantOpen(merchant: BillingFields): boolean {
-  return !merchant.is_suspended && hasPaidAccess(merchant);
+  return !merchant.is_suspended && hasPaidAccess(merchant) && hasLoyalty(merchant);
 }
 
 // Les options Business (offres en notification, export Excel) ne sont ouvertes

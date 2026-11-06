@@ -2,9 +2,9 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { Card } from "@/components/ui/Card";
-import { navGroups } from "./nav-items";
+import { navGroupsFor } from "./nav-items";
 import { iconMap } from "@/lib/icons";
-import { lockedFeatures } from "@/lib/billing/access";
+import { hasLoyalty, lockedFeatures } from "@/lib/billing/access";
 import { LOCKED_MESSAGE } from "@/lib/features";
 import { Lock } from "lucide-react";
 import { includesCommande, parseOffer } from "@/lib/offers";
@@ -107,6 +107,8 @@ export default async function DashboardPage() {
   ];
   const onboardingDone = steps.every((step) => step.done);
   const locked = merchant ? lockedFeatures(merchant) : [];
+  const loyalty = merchant ? hasLoyalty(merchant) : true;
+  const navGroups = navGroupsFor(loyalty);
 
   // Offre avec prise de commande : proposer de créer la page de commande, déjà
   // reliée à la fidélité (la clé de liaison est posée automatiquement).
@@ -133,9 +135,9 @@ export default async function DashboardPage() {
           </h2>
           {commandeLinked ? (
             <p className="mt-1 text-sm text-neutral-600">
-              Votre page de commande est créée et reliée à votre carte de
-              fidélité : chaque commande retirée ajoute un passage à vos
-              clients qui l&apos;ont demandé.
+              {loyalty
+                ? "Votre page de commande est créée et reliée à votre carte de fidélité : chaque commande retirée ajoute un passage à vos clients qui l'ont demandé."
+                : "Votre page de commande est créée. Gérez vos commandes, votre carte et vos horaires depuis son espace."}
             </p>
           ) : handoffToken ? (
             <>
@@ -159,7 +161,27 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      {!onboardingDone && (
+      {!loyalty && (
+        <div className="mt-8 rounded-2xl border border-neutral-200 bg-white p-5">
+          <h2 className="font-semibold text-neutral-900">
+            La carte de fidélité n&apos;est pas dans votre formule
+          </h2>
+          <p className="mt-1 text-sm text-neutral-600">
+            KeepMe Commande ne comprend pas la carte de fidélité. Pour offrir un
+            passage à vos clients à chaque commande retirée, passez à KeepMe
+            Complet : écrivez-nous à{" "}
+            <a
+              href="mailto:contact@keepmecard.fr"
+              className="font-medium underline"
+            >
+              contact@keepmecard.fr
+            </a>
+            .
+          </p>
+        </div>
+      )}
+
+      {loyalty && !onboardingDone && (
         <div className="mt-8">
           <OnboardingChecklist steps={steps} />
         </div>

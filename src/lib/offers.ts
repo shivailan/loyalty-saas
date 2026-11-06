@@ -25,6 +25,11 @@ export function includesCommande(offer: Offer): boolean {
   return offer === "commande" || offer === "complet";
 }
 
+// L'offre inclut-elle la carte de fidélité ?
+export function includesLoyalty(offer: Offer): boolean {
+  return offer === "fidelite" || offer === "complet";
+}
+
 export const TIER_LABEL: Record<Tier, string> = {
   essentiel: "Essentiel",
   business: "Business",

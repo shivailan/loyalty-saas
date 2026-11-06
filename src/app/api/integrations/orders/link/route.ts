@@ -1,3 +1,4 @@
+import { hasLoyalty } from "@/lib/billing/access";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { ordersStatusFor } from "@/lib/integrations/orders-sync";
 import { generateIntegrationKey } from "@/lib/integrations/key";
@@ -54,5 +55,7 @@ export async function POST(request: Request) {
   const status = merchant.billing_exempt
     ? "active"
     : ordersStatusFor(merchant.subscription_status);
-  return Response.json({ key, status });
+  // loyalty : la carte de fidélité est-elle dans la formule ? Sinon l'application
+  // de commande ne range pas la clé et n'affiche pas la case fidélité.
+  return Response.json({ key, status, loyalty: hasLoyalty(merchant) });
 }

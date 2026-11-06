@@ -3,8 +3,8 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { logout } from "./actions";
 import { SidebarNav, MobileNav } from "@/components/ui/SidebarNav";
-import { navGroups } from "./nav-items";
-import { hasPaidAccess, lockedFeatures } from "@/lib/billing/access";
+import { navGroupsFor } from "./nav-items";
+import { hasLoyalty, hasPaidAccess, lockedFeatures } from "@/lib/billing/access";
 
 // Jours restants avant la fin de l'essai gratuit (hors du composant : lire
 // l'heure courante n'est pas permis pendant le rendu).
@@ -33,7 +33,7 @@ export default async function DashboardLayout({
   const { data: merchant } = await supabase
     .from("merchants")
     .select(
-      "is_suspended, billing_exempt, subscription_status, subscription_plan, subscription_period_end",
+      "is_suspended, billing_exempt, offer, subscription_status, subscription_plan, subscription_period_end",
     )
     .single();
 
@@ -69,6 +69,8 @@ export default async function DashboardLayout({
 
   // Options Business : affichées avec un cadenas tant que la formule ne les inclut pas.
   const locked = merchant ? lockedFeatures(merchant) : [];
+  // KeepMe Commande seul : pas de pages de fidélité dans le menu.
+  const navGroups = navGroupsFor(merchant ? hasLoyalty(merchant) : true);
 
   return (
     <div className="min-h-screen bg-neutral-50 md:flex">

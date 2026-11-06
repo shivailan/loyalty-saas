@@ -16,7 +16,7 @@ export default async function JoinPage({
   const { data: merchant } = await supabase
     .from("merchants")
     .select(
-      "id, name, is_suspended, logo_url, billing_exempt, subscription_status",
+      "id, name, is_suspended, logo_url, billing_exempt, subscription_status, offer",
     )
     .eq("slug", slug)
     .maybeSingle();

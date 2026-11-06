@@ -42,7 +42,7 @@ export async function joinLoyaltyProgram(
   const { data: merchant } = await supabase
     .from("merchants")
     .select(
-      "id, name, send_welcome_email, is_suspended, billing_exempt, subscription_status",
+      "id, name, send_welcome_email, is_suspended, billing_exempt, subscription_status, offer",
     )
     .eq("slug", slug)
     .maybeSingle();

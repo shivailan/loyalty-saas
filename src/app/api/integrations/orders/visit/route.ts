@@ -3,7 +3,7 @@ import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { hashIntegrationKey } from "@/lib/integrations/key";
 import { findOrCreateCard } from "@/lib/loyalty/enroll";
-import { isMerchantOpen } from "@/lib/billing/access";
+import { hasLoyalty, isMerchantOpen } from "@/lib/billing/access";
 import { allowAction } from "@/lib/rate-limit";
 import { notifyWalletUpdate } from "@/lib/wallet/notify";
 import { sendRewardEmail, sendWelcomeEmail } from "@/lib/email/send";
@@ -36,12 +36,15 @@ export async function POST(request: Request) {
   const { data: merchant } = await supabase
     .from("merchants")
     .select(
-      "id, name, send_welcome_email, send_reward_email, is_suspended, billing_exempt, subscription_status",
+      "id, name, send_welcome_email, send_reward_email, is_suspended, billing_exempt, subscription_status, offer",
     )
     .eq("integration_key_hash", hashIntegrationKey(key))
     .maybeSingle();
   if (!merchant) return json({ error: "unauthorized" }, 401);
 
+  // La fidélité n'est pas dans la formule Commande seule : on le dit clairement
+  // à l'application de commande, qui n'a alors rien à réessayer.
+  if (!hasLoyalty(merchant)) return json({ error: "not_eligible" }, 403);
   if (!isMerchantOpen(merchant)) return json({ error: "inactive" }, 403);
 
   const parsed = bodySchema.safeParse(await request.json().catch(() => null));

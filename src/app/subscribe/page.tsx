@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Check } from "lucide-react";
@@ -17,6 +18,11 @@ import { startCheckout } from "./actions";
 import { SubscribeButton } from "./SubscribeButton";
 import { CheckoutShell } from "./CheckoutShell";
 import { logout } from "@/app/dashboard/actions";
+
+export const metadata: Metadata = {
+  title: "Choisir ma formule — KeepMe",
+  robots: { index: false, follow: false },
+};
 
 export default async function SubscribePage({
   searchParams,

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
@@ -15,6 +16,11 @@ function trialDaysLeft(periodEnd: string | null): number | null {
   );
   return days >= 0 ? days : null;
 }
+
+export const metadata: Metadata = {
+  title: "Espace commerçant — KeepMe",
+  robots: { index: false, follow: false },
+};
 
 export default async function DashboardLayout({
   children,

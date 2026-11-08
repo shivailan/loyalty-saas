@@ -6,7 +6,13 @@ import { isBillingEnabled, trialDays } from "@/lib/billing/config";
 import { isStripeTestMode } from "@/lib/billing/env";
 import { hasPaidAccess } from "@/lib/billing/access";
 import { plans } from "@/lib/plans";
-import { choiceInfo, choicesForOffer, parseOffer } from "@/lib/offers";
+import {
+  choiceInfo,
+  choiceParts,
+  choicesForOffer,
+  parseOffer,
+  parseTier,
+} from "@/lib/offers";
 import { startCheckout } from "./actions";
 import { SubscribeButton } from "./SubscribeButton";
 import { CheckoutShell } from "./CheckoutShell";
@@ -15,9 +21,9 @@ import { logout } from "@/app/dashboard/actions";
 export default async function SubscribePage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; niveaux?: string }>;
 }) {
-  const { error } = await searchParams;
+  const { error, niveaux } = await searchParams;
   const supabase = await createClient();
   const {
     data: { user },
@@ -37,16 +43,23 @@ export default async function SubscribePage({
   // Même règle que lors du paiement : pas de second essai gratuit.
   const days = merchant.stripe_subscription_id ? 0 : trialDays();
   const offer = parseOffer(merchant.offer);
-  const sellable = choicesForOffer(offer).map((choice) => ({
-    choice,
-    ...choiceInfo(choice),
-  }));
-  // L'offre Premium n'est annoncée que pour la fidélité.
-  const upcoming =
-    offer === "commande" ? undefined : plans.find((plan) => plan.comingSoon);
   const wasSubscribed = ["canceled", "unpaid", "incomplete_expired"].includes(
     merchant.subscription_status,
   );
+  // Niveau déjà choisi sur l'accueil : on ne propose que lui, avec un lien
+  // pour voir l'autre. Sans niveau connu (ou pour reprendre un abonnement),
+  // on propose les deux.
+  const chosenTier = parseTier(user.user_metadata?.tier);
+  const showAll = niveaux === "tous" || wasSubscribed || !chosenTier;
+  const sellable = choicesForOffer(offer)
+    .filter((choice) => showAll || choiceParts(choice).tier === chosenTier)
+    .map((choice) => ({ choice, ...choiceInfo(choice) }));
+  // L'offre Premium n'est annoncée que pour la fidélité, et seulement quand
+  // on montre tous les niveaux.
+  const upcoming =
+    offer === "commande" || !showAll
+      ? undefined
+      : plans.find((plan) => plan.comingSoon);
 
   return (
     <div className="min-h-screen bg-neutral-50 px-6 py-12">
@@ -168,6 +181,17 @@ export default async function SubscribePage({
               </div>
             ))}
           </div>
+
+          {!showAll && (
+            <p className="mt-4 text-center text-sm text-neutral-600">
+              <Link
+                href="/subscribe?niveaux=tous"
+                className="font-medium underline hover:text-neutral-900"
+              >
+                Changer de niveau
+              </Link>
+            </p>
+          )}
 
           {upcoming && (
             <div className="mt-4 rounded-2xl border border-dashed border-neutral-300 bg-white/60 p-6">

@@ -2,11 +2,12 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { signupSchema, type SignupInput } from "@/lib/validations/auth";
-import { parseOffer, type Offer } from "@/lib/offers";
+import { parseOffer, parseTier, type Offer, type Tier } from "@/lib/offers";
 
 export async function signup(
   input: SignupInput,
   offer: Offer = "fidelite",
+  tier: Tier | null = null,
 ): Promise<{ error: string | null }> {
   const parsed = signupSchema.safeParse(input);
   if (!parsed.success) {
@@ -23,6 +24,8 @@ export async function signup(
       data: {
         business_name: parsed.data.businessName,
         offer: parseOffer(offer),
+        // Niveau choisi sur l'accueil : la page de paiement ne propose que lui.
+        ...(parseOffer(offer) !== "commande" && parseTier(tier) ? { tier: parseTier(tier) } : {}),
         terms_accepted_at: new Date().toISOString(),
       },
       emailRedirectTo: `${siteUrl}/login`,

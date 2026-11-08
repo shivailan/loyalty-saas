@@ -6,12 +6,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { signupSchema, type SignupInput } from "@/lib/validations/auth";
 import { signup } from "./actions";
-import { OFFER_LABEL, type Offer } from "@/lib/offers";
+import { OFFER_LABEL, TIER_LABEL, type Offer, type Tier } from "@/lib/offers";
 import { AuthShell } from "@/components/ui/AuthShell";
 import { Button } from "@/components/ui/Button";
 import { inputClass, labelClass, errorClass } from "@/lib/ui";
 
-export default function SignupForm({ offer }: { offer: Offer }) {
+export default function SignupForm({
+  offer,
+  tier,
+}: {
+  offer: Offer;
+  tier: Tier | null;
+}) {
   const [serverError, setServerError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const {
@@ -25,7 +31,7 @@ export default function SignupForm({ offer }: { offer: Offer }) {
 
   async function onSubmit(data: SignupInput) {
     setServerError(null);
-    const result = await signup(data, offer);
+    const result = await signup(data, offer, tier);
     if (result.error) {
       setServerError(result.error);
     } else {
@@ -61,7 +67,11 @@ export default function SignupForm({ offer }: { offer: Offer }) {
         Créer votre compte commerçant
       </h1>
       <p className="mt-1 text-sm text-neutral-500">
-        Offre choisie : <strong>{OFFER_LABEL[offer]}</strong>
+        Offre choisie :{" "}
+        <strong>
+          {OFFER_LABEL[offer]}
+          {tier && ` ${TIER_LABEL[tier]}`}
+        </strong>
       </p>
       <form
         onSubmit={handleSubmit(onSubmit)}

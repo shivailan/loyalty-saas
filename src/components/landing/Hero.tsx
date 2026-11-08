@@ -1,13 +1,159 @@
-import { ArrowRight, ChefHat, Gift, Percent, Smartphone } from "lucide-react";
+import { ArrowRight, Check, Percent, Smartphone } from "lucide-react";
 import Link from "next/link";
-import { HeroTicket } from "./HeroTicket";
 import {
-  FloatingCard,
-  Reveal,
-  RevealGroup,
-  RevealItem,
-  TiltCard,
-} from "./Motion";
+  PRICE_CENTS,
+  fidelityCents,
+  formatPrice,
+  savingCents,
+} from "@/lib/offers";
+import { Reveal, RevealGroup, RevealItem } from "./Motion";
+
+// Aperçu de KeepMe Order : le ticket qui arrive en cuisine.
+function OrderPreview() {
+  return (
+    <div className="flex items-center justify-between gap-4 rounded-2xl bg-white p-4 text-neutral-900 shadow-lg">
+      <div>
+        <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-neutral-400">
+          Commande
+        </p>
+        <p className="font-heading text-3xl font-semibold leading-none">027</p>
+        <p className="mt-1 text-xs text-neutral-500">Retrait vers 12h35</p>
+      </div>
+      <ul className="hidden text-xs text-neutral-600 sm:block">
+        <li>1× Tacos XL</li>
+        <li>1× Frites</li>
+        <li>1× Boisson</li>
+      </ul>
+      <span className="flex items-center gap-1 rounded-full bg-yellow-400 px-3 py-1.5 text-xs font-semibold">
+        <Check className="h-3 w-3" aria-hidden="true" />
+        Prête
+      </span>
+    </div>
+  );
+}
+
+// Aperçu de KeepMe Card : la carte de fidélité dans le téléphone du client.
+function CardPreview() {
+  return (
+    <div className="rounded-2xl bg-yellow-400 p-4 text-neutral-900 shadow-lg">
+      <div className="flex items-center justify-between">
+        <p className="font-heading text-sm font-semibold">Chez Karim</p>
+        <p className="text-xs font-semibold">6 / 8 passages</p>
+      </div>
+      <div className="mt-3 flex gap-1.5" aria-hidden="true">
+        {Array.from({ length: 8 }, (_, i) => (
+          <span
+            key={i}
+            className={`h-5 flex-1 rounded-full ${
+              i < 6 ? "bg-neutral-900" : "bg-neutral-900/15"
+            }`}
+          />
+        ))}
+      </div>
+      <p className="mt-3 text-xs">Récompense : un tacos offert</p>
+    </div>
+  );
+}
+
+type ProductProps = {
+  dark?: boolean;
+  name: string;
+  kind: string;
+  title: string;
+  description: string;
+  points: string[];
+  price: string;
+  preview: React.ReactNode;
+  signup: string;
+  learnMore: string;
+};
+
+function Product({
+  dark = false,
+  name,
+  kind,
+  title,
+  description,
+  points,
+  price,
+  preview,
+  signup,
+  learnMore,
+}: ProductProps) {
+  return (
+    <div
+      className={`flex h-full flex-col rounded-3xl p-7 text-left sm:p-8 ${
+        dark
+          ? "bg-neutral-900 text-white shadow-2xl"
+          : "border border-neutral-200 bg-white text-neutral-900 shadow-xl"
+      }`}
+    >
+      <p
+        className={`text-xs font-semibold uppercase tracking-[0.2em] ${
+          dark ? "text-yellow-400" : "text-yellow-600"
+        }`}
+      >
+        {name} · {kind}
+      </p>
+      <h2 className="mt-3 font-heading text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
+        {title}
+      </h2>
+      <p
+        className={`mt-3 text-[15px] leading-relaxed ${
+          dark ? "text-neutral-300" : "text-neutral-500"
+        }`}
+      >
+        {description}
+      </p>
+
+      <div className="mt-6">{preview}</div>
+
+      <ul className="mt-6 space-y-2.5">
+        {points.map((point) => (
+          <li
+            key={point}
+            className={`flex items-start gap-2.5 text-sm ${
+              dark ? "text-neutral-100" : "text-neutral-700"
+            }`}
+          >
+            <Check
+              className={`mt-0.5 h-4 w-4 shrink-0 ${
+                dark ? "text-yellow-400" : "text-yellow-600"
+              }`}
+              aria-hidden="true"
+            />
+            {point}
+          </li>
+        ))}
+      </ul>
+
+      <div className="mt-auto pt-8">
+        <p className={`text-sm ${dark ? "text-neutral-400" : "text-neutral-500"}`}>
+          À partir de{" "}
+          <span className="font-heading text-2xl font-semibold">
+            {price} €
+          </span>{" "}
+          / mois
+        </p>
+        <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3">
+          <Link
+            href={signup}
+            className="rounded-full bg-yellow-400 px-6 py-3 text-sm font-semibold text-neutral-900 transition-transform hover:scale-[1.03] hover:bg-yellow-300 active:scale-[0.98]"
+          >
+            Choisir {name}
+          </Link>
+          <a
+            href={learnMore}
+            className="group flex items-center gap-1.5 text-sm font-semibold"
+          >
+            En savoir plus
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function Hero() {
   return (
@@ -25,118 +171,106 @@ export function Hero() {
         className="pointer-events-none absolute -bottom-32 -left-32 h-[26rem] w-[26rem] rounded-full bg-[radial-gradient(circle,rgba(23,23,23,0.06),transparent_70%)] blur-3xl"
       />
 
-      <div
-        className="pointer-events-none absolute -left-6 hidden lg:block"
-        style={{ bottom: "6rem" }}
-      >
-        <FloatingCard>
-          <div className="flex items-center gap-2.5 rounded-full border border-neutral-200 bg-white py-2.5 pl-2.5 pr-4 shadow-lg">
-            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-yellow-400/15 text-yellow-600">
-              <Percent className="h-4 w-4" />
-            </span>
-            <span className="text-sm font-medium text-neutral-700">
-              0 % de commission
-            </span>
-          </div>
-        </FloatingCard>
-      </div>
-      <div
-        className="pointer-events-none absolute -right-6 hidden lg:block"
-        style={{ bottom: "10rem" }}
-      >
-        <FloatingCard>
-          <div className="flex items-center gap-2.5 rounded-full border border-neutral-200 bg-white py-2.5 pl-2.5 pr-4 shadow-lg">
-            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-yellow-400/15 text-yellow-600">
-              <Smartphone className="h-4 w-4" />
-            </span>
-            <span className="text-sm font-medium text-neutral-700">
-              Sans application pour le client
-            </span>
-          </div>
-        </FloatingCard>
-      </div>
-      <div
-        className="pointer-events-none absolute -left-10 hidden lg:block"
-        style={{ top: "9rem" }}
-      >
-        <FloatingCard>
-          <div className="flex items-center gap-2.5 rounded-full border border-neutral-200 bg-white py-2.5 pl-2.5 pr-4 shadow-lg">
-            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-yellow-400/15 text-yellow-600">
-              <ChefHat className="h-4 w-4" />
-            </span>
-            <span className="text-sm font-medium text-neutral-700">
-              Écran cuisine en direct
-            </span>
-          </div>
-        </FloatingCard>
-      </div>
-      <div
-        className="pointer-events-none absolute -right-10 hidden lg:block"
-        style={{ top: "15rem" }}
-      >
-        <FloatingCard>
-          <div className="flex items-center gap-2.5 rounded-full border border-neutral-200 bg-white py-2.5 pl-2.5 pr-4 shadow-lg">
-            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-yellow-400/15 text-yellow-600">
-              <Gift className="h-4 w-4" />
-            </span>
-            <span className="text-sm font-medium text-neutral-700">
-              Fidélité en option
-            </span>
-          </div>
-        </FloatingCard>
-      </div>
-
-      <div className="flex flex-col items-center px-6 pt-16 text-center sm:pt-10">
+      <div className="relative flex flex-col items-center px-6 pt-12 text-center sm:pt-20">
         <RevealGroup className="flex flex-col items-center">
           <RevealItem>
             <span className="text-xs font-semibold uppercase tracking-[0.2em] text-neutral-400">
-              Pour les restaurateurs · Commande à emporter
+              Pour les restaurateurs
             </span>
           </RevealItem>
           <RevealItem>
-            <h1 className="mx-auto mt-6 max-w-4xl font-heading text-5xl font-semibold leading-[1.02] tracking-tight text-neutral-900 sm:text-6xl lg:text-7xl">
-              Vos commandes à emporter arrivent toutes seules
+            <h1 className="mx-auto mt-6 max-w-4xl font-heading text-4xl font-semibold leading-[1.05] tracking-tight text-neutral-900 sm:text-6xl lg:text-7xl">
+              Gagnez du temps en cuisine.{" "}
+              <span className="text-yellow-500">Fidélisez vos clients.</span>
             </h1>
           </RevealItem>
           <RevealItem>
-            <p className="mx-auto mt-7 max-w-xl text-xl leading-relaxed text-neutral-500">
-              Une page de commande à votre nom, un écran en cuisine et zéro
-              commission : vos clients commandent sans application et restent
-              les vôtres. En option, une carte de fidélité digitale qui les
-              fait revenir.
+            <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-neutral-500 sm:mt-7 sm:text-xl">
+              KeepMe réunit deux outils simples pour les restaurants : la
+              commande à emporter avec <strong>KeepMe Order</strong>, et la
+              carte de fidélité avec <strong>KeepMe Card</strong>. Sans
+              commission, et sans application pour vos clients.
             </p>
-          </RevealItem>
-          <RevealItem className="mt-9 flex items-center justify-center gap-8">
-            <Link
-              href="#tarifs"
-              className="rounded-full bg-yellow-400 px-8 py-4 text-sm font-semibold text-neutral-900 transition-transform hover:scale-[1.03] hover:bg-yellow-300 active:scale-[0.98]"
-            >
-              Voir les offres
-            </Link>
-            <a
-              href="#commande"
-              className="group flex items-center gap-1.5 text-sm font-semibold text-neutral-900"
-            >
-              Découvrir KeepMe Commande
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </a>
           </RevealItem>
         </RevealGroup>
       </div>
 
-      <div className="relative mt-12 flex justify-center pb-16 sm:mt-16">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute left-1/2 top-10 h-[30rem] w-[30rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(250,204,21,0.35),transparent_70%)] blur-3xl sm:h-[38rem] sm:w-[38rem]"
-        />
-        <Reveal delay={0.2} className="relative">
-          <TiltCard className="[transform-style:preserve-3d]">
-            <FloatingCard>
-              <HeroTicket />
-            </FloatingCard>
-          </TiltCard>
+      <div className="relative mx-auto mt-10 grid max-w-6xl gap-6 px-6 sm:mt-14 md:grid-cols-2">
+        <Reveal className="h-full">
+          <Product
+            dark
+            name="KeepMe Order"
+            kind="Commande à emporter"
+            title="Gagnez un temps énorme"
+            description="Vos clients commandent sur votre page, la commande s'affiche sur l'écran de votre cuisine. Fini le téléphone qui sonne en plein coup de feu."
+            points={[
+              "Une page de commande à votre nom et vos couleurs",
+              "Écran cuisine en direct, ticket imprimé tout seul",
+              "0 % de commission, vos clients restent à vous",
+            ]}
+            price={formatPrice(PRICE_CENTS.commande)}
+            preview={<OrderPreview />}
+            signup="/signup?offre=commande"
+            learnMore="#commande"
+          />
+        </Reveal>
+        <Reveal delay={0.1} className="h-full">
+          <Product
+            name="KeepMe Card"
+            kind="Carte de fidélité"
+            title="Vos clients reviennent"
+            description="Une carte de fidélité digitale dans Apple Wallet ou Google Wallet. Ils cumulent des passages, vous les récompensez. Rien à installer."
+            points={[
+              "Une carte à vos couleurs dans le téléphone du client",
+              "Inscription en 20 secondes avec un QR code en caisse",
+              "Statistiques en temps réel et e-mails automatiques",
+            ]}
+            price={formatPrice(fidelityCents("essentiel"))}
+            preview={<CardPreview />}
+            signup="/signup?offre=fidelite"
+            learnMore="#fidelite"
+          />
         </Reveal>
       </div>
+
+      <Reveal delay={0.15} className="relative mx-auto mt-6 max-w-6xl px-6 pb-16">
+        <div className="flex flex-col items-center gap-4 rounded-3xl border border-yellow-300 bg-yellow-50 px-7 py-6 text-center md:flex-row md:justify-between md:text-left">
+          <div>
+            <p className="font-heading text-xl font-semibold text-neutral-900">
+              Les deux ensemble : KeepMe Complet
+            </p>
+            <p className="mt-1 text-sm text-neutral-600">
+              Chaque commande retirée ajoute un passage sur la carte du client,
+              sans scan. À partir de{" "}
+              {formatPrice(PRICE_CENTS.complet.essentiel)} € / mois, soit{" "}
+              {formatPrice(savingCents("essentiel"))} € d&apos;économie.
+            </p>
+          </div>
+          <Link
+            href="#tarifs"
+            className="shrink-0 rounded-full bg-neutral-900 px-6 py-3 text-sm font-semibold text-white transition-transform hover:scale-[1.03] hover:bg-neutral-700 active:scale-[0.98]"
+          >
+            Voir les offres
+          </Link>
+        </div>
+        <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-sm text-neutral-500">
+          <li className="flex items-center gap-2">
+            <Percent className="h-4 w-4 text-yellow-600" aria-hidden="true" />
+            0 % de commission
+          </li>
+          <li className="flex items-center gap-2">
+            <Smartphone
+              className="h-4 w-4 text-yellow-600"
+              aria-hidden="true"
+            />
+            Sans application pour le client
+          </li>
+          <li className="flex items-center gap-2">
+            <Check className="h-4 w-4 text-yellow-600" aria-hidden="true" />
+            Sans engagement
+          </li>
+        </ul>
+      </Reveal>
     </section>
   );
 }

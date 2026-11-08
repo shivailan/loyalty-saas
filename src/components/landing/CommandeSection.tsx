@@ -24,7 +24,7 @@ const points = [
     icon: Link2,
     title: "Fidélité en option",
     description:
-      "Ajoutez KeepMe Fidélité : chaque commande retirée ajoute un passage sur la carte du client, sans scan.",
+      "Ajoutez KeepMe Card : chaque commande retirée ajoute un passage sur la carte du client, sans scan.",
   },
 ];
 
@@ -34,7 +34,7 @@ export function CommandeSection() {
       <div className="px-6 lg:px-20">
         <Reveal className="mx-auto max-w-2xl text-center">
           <p className="text-sm font-semibold uppercase tracking-wide text-yellow-400">
-            KeepMe Commande
+            KeepMe Order
           </p>
           <h2 className="mt-3 font-heading text-4xl font-semibold tracking-tight md:text-5xl">
             Vos commandes à emporter, sans commission

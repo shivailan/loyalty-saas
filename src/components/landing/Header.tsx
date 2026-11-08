@@ -15,10 +15,10 @@ export function Header() {
 
         <nav className="hidden items-center gap-9 text-[13px] font-medium text-neutral-500 md:flex">
           <a className="transition-colors hover:text-neutral-900" href="#commande">
-            Commande
+            Order
           </a>
           <a className="transition-colors hover:text-neutral-900" href="#fidelite">
-            Fidélité
+            Card
           </a>
           <a className="transition-colors hover:text-neutral-900" href="#tarifs">
             Tarifs

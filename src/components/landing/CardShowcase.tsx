@@ -6,7 +6,7 @@ export function CardShowcase() {
     <section id="fidelite" className="bg-background py-28">
       <Reveal className="mx-auto max-w-2xl px-6 text-center">
         <p className="text-sm font-semibold uppercase tracking-wide text-yellow-600">
-          KeepMe Fidélité · en option ou seule
+          KeepMe Card · en option ou seule
         </p>
         <h2 className="mt-3 font-heading text-3xl font-semibold tracking-tight text-neutral-900 md:text-4xl">
           Faites revenir vos clients avec une carte dans leur téléphone

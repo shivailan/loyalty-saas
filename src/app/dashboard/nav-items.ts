@@ -100,7 +100,7 @@ export const navGroups: NavGroup[] = [
 ];
 
 // Le menu d'un commerçant : sans la carte de fidélité dans sa formule
-// (KeepMe Commande seul), les pages de fidélité disparaissent.
+// (KeepMe Order seul), les pages de fidélité disparaissent.
 export function navGroupsFor(hasLoyalty: boolean): NavGroup[] {
   if (hasLoyalty) return navGroups;
   return navGroups

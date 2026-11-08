@@ -10,8 +10,8 @@ export type Tier = PlanId;
 export type Offer = "commande" | "fidelite" | "complet";
 
 export const OFFER_LABEL: Record<Offer, string> = {
-  commande: "KeepMe Commande",
-  fidelite: "KeepMe Fidélité",
+  commande: "KeepMe Order",
+  fidelite: "KeepMe Card",
   complet: "KeepMe Complet",
 };
 
@@ -87,8 +87,8 @@ export function fidelityFeatures(tier: Tier): string[] {
 
 export function completFeatures(tier: Tier): string[] {
   return [
-    "Tout KeepMe Commande",
-    `Tout KeepMe Fidélité ${TIER_LABEL[tier]}`,
+    "Tout KeepMe Order",
+    `Tout KeepMe Card ${TIER_LABEL[tier]}`,
     "Un passage ajouté automatiquement sur la carte du client à chaque commande retirée, sans scan",
     "Le client reçoit sa carte par e-mail dès sa première commande",
   ];
@@ -140,7 +140,7 @@ export function choiceInfo(choice: Choice): {
   const price = formatPrice(choiceCents(choice));
   if (offer === "commande") {
     return {
-      name: "KeepMe Commande",
+      name: "KeepMe Order",
       description: "Vos commandes à emporter, sans commission et sans file d'attente.",
       price,
       features: COMMANDE_FEATURES,
@@ -158,7 +158,7 @@ export function choiceInfo(choice: Choice): {
   }
   const plan = plans.find((p) => p.id === tier);
   return {
-    name: `KeepMe Fidélité ${TIER_LABEL[tier!]}`,
+    name: `KeepMe Card ${TIER_LABEL[tier!]}`,
     description: plan?.description ?? "",
     price,
     features: fidelityFeatures(tier!),

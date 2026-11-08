@@ -61,6 +61,39 @@ export default async function DashboardLayout({
     );
   }
 
+  // Compte sans fiche commerce (supprimée à la main, ou création ratée) : on
+  // le dit au lieu d'ouvrir un espace vide et entièrement débloqué.
+  if (!merchant) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-neutral-50 px-6">
+        <div className="max-w-sm rounded-2xl border border-neutral-200 bg-white p-6 text-center shadow-sm">
+          <h1 className="text-lg font-semibold text-neutral-900">
+            Compte non rattaché à un établissement
+          </h1>
+          <p className="mt-2 text-sm text-neutral-600">
+            Votre connexion fonctionne, mais aucun établissement n&apos;est
+            associé à ce compte. Écrivez-nous à{" "}
+            <a
+              href="mailto:contact@keepmecard.fr"
+              className="font-medium underline"
+            >
+              contact@keepmecard.fr
+            </a>{" "}
+            ou créez un nouveau compte.
+          </p>
+          <form action={logout} className="mt-4">
+            <button
+              type="submit"
+              className="text-sm font-medium text-neutral-600 underline hover:text-neutral-900"
+            >
+              Se déconnecter
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
   // Abonnement requis pour accéder à l'espace (inactif tant que Stripe n'est
   // pas configuré, voir lib/billing/config).
   if (merchant && !hasPaidAccess(merchant)) {

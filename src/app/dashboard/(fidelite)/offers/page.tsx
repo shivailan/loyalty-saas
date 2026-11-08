@@ -4,7 +4,7 @@ import { getOfferAudience } from "@/lib/wallet/offers";
 import { OfferForm } from "./OfferForm";
 import { hasFeature } from "@/lib/billing/access";
 import { upgradeToBusiness } from "@/app/subscribe/actions";
-import { Button } from "@/components/ui/Button";
+import { UpgradeToBusinessButton } from "@/app/dashboard/UpgradeToBusinessButton";
 import { Card } from "@/components/ui/Card";
 import { businessUpgradePrice, parseOffer } from "@/lib/offers";
 
@@ -39,7 +39,9 @@ export default async function OffersPage() {
 
   const { data: merchant } = await supabase
     .from("merchants")
-    .select("id, name, billing_exempt, subscription_plan, offer")
+    .select(
+      "id, name, billing_exempt, subscription_plan, offer, subscription_status",
+    )
     .eq("owner_id", user.id)
     .single();
   if (!merchant) {
@@ -64,12 +66,15 @@ export default async function OffersPage() {
             Cette option n&apos;est pas incluse dans la formule Essentiel.
           </p>
           <form action={upgradeToBusiness} className="mt-5">
-            <Button type="submit">
-              Passer à Business · {businessUpgradePrice(parseOffer(merchant.offer))} €/mois
-            </Button>
+            <UpgradeToBusinessButton
+              price={businessUpgradePrice(parseOffer(merchant.offer))}
+              trialing={merchant.subscription_status === "trialing"}
+            />
           </form>
           <p className="mt-3 text-xs text-neutral-400">
-            La différence est facturée au prorata. Sans engagement.
+            {merchant.subscription_status === "trialing"
+              ? "Pendant l'essai gratuit, rien n'est prélevé : Business est facturé à la fin de l'essai. Sans engagement."
+              : "La différence est facturée au prorata. Sans engagement."}
           </p>
         </Card>
       </div>

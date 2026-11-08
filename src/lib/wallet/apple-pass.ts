@@ -52,12 +52,8 @@ export async function buildApplePass(
   pass.type = "storeCard";
 
   // Apple impose la taille du champ principal : pas de label dessous (il
-  // chevauchait le gros chiffre), l'unité est rappelée en haut à droite.
-  pass.headerFields.push({
-    key: "unit",
-    label: "",
-    value: "Passages",
-  });
+  // chevauchait le gros chiffre). Pas de champ d'en-tête non plus : il
+  // chevauchait le nom de l'enseigne quand celui-ci est long.
   pass.primaryFields.push({
     key: "stamps",
     label: "",

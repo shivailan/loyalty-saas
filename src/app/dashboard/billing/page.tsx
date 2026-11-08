@@ -8,6 +8,7 @@ import {
   parseOffer,
 } from "@/lib/offers";
 import { openBillingPortal, upgradeToBusiness } from "@/app/subscribe/actions";
+import { UpgradeToBusinessButton } from "../UpgradeToBusinessButton";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 
@@ -117,9 +118,10 @@ export default async function BillingPage({
             )}
             {offer !== "commande" && merchant.subscription_plan === "essentiel" && (
               <form action={upgradeToBusiness} className="mt-5">
-                <Button type="submit">
-                  Passer à Business · {businessUpgradePrice(offer)} €/mois
-                </Button>
+                <UpgradeToBusinessButton
+                  price={businessUpgradePrice(offer)}
+                  trialing={merchant.subscription_status === "trialing"}
+                />
               </form>
             )}
             {merchant.stripe_customer_id && (

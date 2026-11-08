@@ -136,8 +136,12 @@ export function Hero() {
           </RevealItem>
           <RevealItem>
             <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-neutral-500 sm:text-lg">
-              Deux outils simples pour les restaurateurs, sans commission et
-              sans application pour vos clients.
+              La solution pour{" "}
+              <strong className="font-semibold text-neutral-900">
+                augmenter votre chiffre d&apos;affaires
+              </strong>{" "}
+              : plus de commandes, des clients qui reviennent. Sans commission
+              et sans application pour vos clients.
             </p>
           </RevealItem>
         </RevealGroup>

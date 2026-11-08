@@ -135,10 +135,13 @@ export function Offers() {
 
   return (
     <div>
+      <p className="text-center text-sm text-neutral-500">
+        Niveau pour KeepMe Card et KeepMe Complet
+      </p>
       <div
-        className="mx-auto flex w-fit items-center gap-1 rounded-full border border-neutral-200 bg-white p-1"
+        className="mx-auto mt-3 flex w-fit items-center gap-1 rounded-full border border-neutral-200 bg-white p-1"
         role="group"
-        aria-label="Niveau de KeepMe Card"
+        aria-label="Niveau pour KeepMe Card et KeepMe Complet"
       >
         {TIERS.map((t) => (
           <button
@@ -152,7 +155,7 @@ export function Offers() {
                 : "text-neutral-500 hover:text-neutral-900"
             }`}
           >
-            Card {TIER_LABEL[t]}
+            {TIER_LABEL[t]}
           </button>
         ))}
       </div>

@@ -6,7 +6,8 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 // ne peut pas être fabriqué sans le secret.
 const TTL_SECONDS = 60 * 60;
 
-export type HandoffPayload = { m: string; e: string; exp: number };
+// l : la carte de fidélité fait partie de la formule (absent des anciens liens).
+export type HandoffPayload = { m: string; e: string; exp: number; l?: boolean };
 
 function secret(): string | null {
   const value = process.env.HANDOFF_SECRET;
@@ -17,13 +18,18 @@ function sign(body: string, key: string): string {
   return createHmac("sha256", key).update(body).digest("base64url");
 }
 
-export function createHandoffToken(merchantId: string, email: string): string | null {
+export function createHandoffToken(
+  merchantId: string,
+  email: string,
+  loyalty: boolean,
+): string | null {
   const key = secret();
   if (!key) return null;
   const payload: HandoffPayload = {
     m: merchantId,
     e: email,
     exp: Math.floor(Date.now() / 1000) + TTL_SECONDS,
+    l: loyalty,
   };
   const body = Buffer.from(JSON.stringify(payload)).toString("base64url");
   return `${body}.${sign(body, key)}`;

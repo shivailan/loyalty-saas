@@ -1,6 +1,8 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { Card } from "@/components/ui/Card";
+import { hasLoyalty } from "@/lib/billing/access";
 import { BusinessNameForm } from "./BusinessNameForm";
 import { ChangePasswordForm } from "./ChangePasswordForm";
 import { QtimeLinkForm } from "./QtimeLinkForm";
@@ -16,7 +18,9 @@ export default async function SettingsPage() {
 
   const { data: merchant } = await supabase
     .from("merchants")
-    .select("name, integration_key_hint, integration_key_created_at")
+    .select(
+      "name, offer, billing_exempt, integration_key_hint, integration_key_created_at",
+    )
     .single();
   if (!merchant) {
     redirect("/login");
@@ -24,7 +28,13 @@ export default async function SettingsPage() {
 
   return (
     <div className="max-w-md">
-      <h1 className="text-2xl font-bold text-neutral-900">
+      <Link
+        href="/dashboard"
+        className="text-sm font-medium text-neutral-600 underline hover:text-neutral-900"
+      >
+        ← Retour au tableau de bord
+      </Link>
+      <h1 className="mt-4 text-2xl font-bold text-neutral-900">
         Paramètres du compte
       </h1>
       <p className="mt-1 text-sm text-neutral-600">
@@ -40,17 +50,19 @@ export default async function SettingsPage() {
         </div>
       </Card>
 
-      <Card className="mt-6">
-        <h2 className="text-sm font-medium text-neutral-700">
-          Liaison avec Qtime
-        </h2>
-        <div className="mt-3">
-          <QtimeLinkForm
-            hint={merchant.integration_key_hint}
-            createdAt={merchant.integration_key_created_at}
-          />
-        </div>
-      </Card>
+      {hasLoyalty(merchant) && (
+        <Card className="mt-6">
+          <h2 className="text-sm font-medium text-neutral-700">
+            Liaison avec Qtime
+          </h2>
+          <div className="mt-3">
+            <QtimeLinkForm
+              hint={merchant.integration_key_hint}
+              createdAt={merchant.integration_key_created_at}
+            />
+          </div>
+        </Card>
+      )}
 
       <Card className="mt-6">
         <h2 className="text-sm font-medium text-neutral-700">Mot de passe</h2>

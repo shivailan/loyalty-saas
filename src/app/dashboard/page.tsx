@@ -9,6 +9,7 @@ import { LOCKED_MESSAGE } from "@/lib/features";
 import { Lock } from "lucide-react";
 import { includesCommande, parseOffer } from "@/lib/offers";
 import { createHandoffToken } from "@/lib/integrations/handoff";
+import { fetchOrdersSlug } from "@/lib/integrations/orders-page";
 import {
   OnboardingChecklist,
   type OnboardingStep,
@@ -116,7 +117,12 @@ export default async function DashboardPage() {
   const commandeLinked = Boolean(merchant?.integration_key_hint);
   const handoffToken =
     merchant && wantsCommande && !commandeLinked && user.email
-      ? createHandoffToken(merchant.id, user.email)
+      ? createHandoffToken(merchant.id, user.email, loyalty)
+      : null;
+  // Page déjà créée : on retrouve son adresse pour proposer d'y aller.
+  const ordersSlug =
+    merchant && wantsCommande && commandeLinked
+      ? await fetchOrdersSlug(merchant.id)
       : null;
 
   return (
@@ -134,16 +140,36 @@ export default async function DashboardPage() {
             KeepMe Commande : votre page de commande à emporter
           </h2>
           {commandeLinked ? (
-            <p className="mt-1 text-sm text-neutral-600">
-              {loyalty
-                ? "Votre page de commande est créée et reliée à votre carte de fidélité : chaque commande retirée ajoute un passage à vos clients qui l'ont demandé."
-                : "Votre page de commande est créée. Gérez vos commandes, votre carte et vos horaires depuis son espace."}
-            </p>
+            <>
+              <p className="mt-1 text-sm text-neutral-600">
+                {loyalty
+                  ? "Votre page de commande est créée et reliée à votre carte de fidélité : chaque commande retirée ajoute un passage à vos clients qui l'ont demandé."
+                  : "Votre page de commande est créée. Gérez vos commandes, votre carte et vos horaires depuis son espace."}
+              </p>
+              {ordersSlug && (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <a
+                    href={`/r/${ordersSlug}/admin`}
+                    className="rounded-full bg-yellow-400 px-5 py-2.5 text-sm font-semibold text-neutral-900 hover:bg-yellow-300"
+                  >
+                    Gérer mes commandes
+                  </a>
+                  <a
+                    href={`/r/${ordersSlug}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="rounded-full border border-neutral-300 bg-white px-5 py-2.5 text-sm font-semibold text-neutral-900 hover:bg-neutral-50"
+                  >
+                    Voir ma page de commande
+                  </a>
+                </div>
+              )}
+            </>
           ) : handoffToken ? (
             <>
               <p className="mt-1 text-sm text-neutral-600">
                 Créez votre page en quelques minutes (SIRET, couleurs, carte).
-                Elle sera reliée automatiquement à votre carte de fidélité.
+                {loyalty && " Elle sera reliée automatiquement à votre carte de fidélité."}
               </p>
               <a
                 href={`/inscription?token=${encodeURIComponent(handoffToken)}`}

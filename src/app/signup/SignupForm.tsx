@@ -41,7 +41,9 @@ export default function SignupForm({ offer }: { offer: Offer }) {
         </h1>
         <p className="mt-2 text-sm text-neutral-600">
           Un email de confirmation vous a été envoyé. Cliquez sur le lien
-          qu&apos;il contient pour activer votre compte, puis connectez-vous.
+          qu&apos;il contient : vous arriverez directement sur le choix de votre
+          formule, avec l&apos;essai gratuit au démarrage. Votre espace s&apos;ouvre
+          une fois la formule validée.
         </p>
         <Link
           className="mt-4 inline-block font-medium text-neutral-900 underline"

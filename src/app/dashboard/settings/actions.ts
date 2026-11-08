@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { generateIntegrationKey } from "@/lib/integrations/key";
+import { hasLoyalty } from "@/lib/billing/access";
 import {
   businessNameSchema,
   type BusinessNameInput,
@@ -81,6 +82,16 @@ export async function createIntegrationKey(): Promise<{
   } = await supabase.auth.getUser();
   if (!user) {
     return { error: "Vous devez être connecté." };
+  }
+
+  // La liaison sert à la carte de fidélité : pas dans la formule, pas de clé.
+  const { data: merchant } = await supabase
+    .from("merchants")
+    .select("offer, billing_exempt")
+    .eq("owner_id", user.id)
+    .single();
+  if (!merchant || !hasLoyalty(merchant)) {
+    return { error: "La carte de fidélité n'est pas dans votre formule." };
   }
 
   const { key, hash, hint } = generateIntegrationKey();

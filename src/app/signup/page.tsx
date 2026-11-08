@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import { parseOffer, parseTier } from "@/lib/offers";
 import SignupForm from "./SignupForm";
+
+export const metadata: Metadata = {
+  title: "Créer mon compte — KeepMe",
+  robots: { index: false, follow: false },
+};
 
 export default async function SignupPage({
   searchParams,

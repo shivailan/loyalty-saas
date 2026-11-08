@@ -1,9 +1,15 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { JoinForm } from "./JoinForm";
 import { Card } from "@/components/ui/Card";
 import { isMerchantOpen } from "@/lib/billing/access";
+
+export const metadata: Metadata = {
+  title: "Rejoindre le programme de fidélité — KeepMe",
+  robots: { index: false, follow: false },
+};
 
 export default async function JoinPage({
   params,

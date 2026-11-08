@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { CardQrCode } from "./CardQrCode";
@@ -7,6 +8,11 @@ import { isAppleWalletConfigured } from "@/lib/wallet/config";
 import { isGoogleWalletConfigured } from "@/lib/wallet/google/config";
 import { Card } from "@/components/ui/Card";
 import { cardColors } from "@/lib/card-colors";
+
+export const metadata: Metadata = {
+  title: "Ma carte de fidélité — KeepMe",
+  robots: { index: false, follow: false },
+};
 
 export default async function CardPage({
   params,

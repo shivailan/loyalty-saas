@@ -1,8 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { requireAdmin } from "@/lib/auth/require-admin";
 import { logout } from "@/app/dashboard/actions";
 import { SidebarNav, MobileNav } from "@/components/ui/SidebarNav";
 import { navGroups } from "./nav-items";
+
+export const metadata: Metadata = {
+  title: "Administration — KeepMe",
+  robots: { index: false, follow: false },
+};
 
 export default async function AdminLayout({
   children,

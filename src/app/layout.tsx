@@ -1,11 +1,26 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { NavigationProgress } from "@/components/ui/NavigationProgress";
+import { SITE_DESCRIPTION, SITE_TITLE, SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "KeepMe — Commande à emporter et cartes de fidélité pour restaurateurs",
-  description:
-    "Prenez vos commandes à emporter en ligne, sans commission, et fidélisez vos clients avec une carte digitale dans Apple Wallet et Google Wallet.",
+  metadataBase: new URL(SITE_URL),
+  title: SITE_TITLE,
+  description: SITE_DESCRIPTION,
+  applicationName: "KeepMe",
+  openGraph: {
+    type: "website",
+    siteName: "KeepMe",
+    locale: "fr_FR",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    url: "/",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+  },
 };
 
 export default function RootLayout({

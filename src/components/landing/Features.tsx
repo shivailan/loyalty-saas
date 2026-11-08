@@ -30,13 +30,13 @@ const features = [
 
 export function Features() {
   return (
-    <section id="fonctionnalites" className="bg-background py-32">
+    <section id="fonctionnalites" className="bg-neutral-900 py-32 text-white">
       <div className="px-6 lg:px-20">
         <Reveal className="mx-auto max-w-2xl text-center">
-          <h2 className="font-heading text-4xl font-semibold tracking-tight text-neutral-900 md:text-5xl">
+          <h2 className="font-heading text-4xl font-semibold tracking-tight md:text-5xl">
             Tout ce qu&apos;il faut, rien de superflu
           </h2>
-          <p className="mt-5 text-lg text-neutral-500">
+          <p className="mt-5 text-lg text-neutral-300">
             Un tableau de bord pensé pour un commerçant, pas pour un
             développeur.
           </p>
@@ -48,15 +48,15 @@ export function Features() {
             return (
               <RevealItem
                 key={feature.title}
-                className="group rounded-3xl border border-neutral-200 bg-neutral-50 p-8 transition-colors duration-300 hover:border-neutral-300"
+                className="group rounded-3xl border border-white/10 bg-white/5 p-8 transition-colors duration-300 hover:border-white/25"
               >
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-neutral-900 transition-transform duration-300 group-hover:-translate-y-1">
-                  <Icon className="h-5 w-5 text-white" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-yellow-400 transition-transform duration-300 group-hover:-translate-y-1">
+                  <Icon className="h-5 w-5 text-neutral-900" />
                 </div>
-                <h3 className="mt-6 font-heading text-xl font-semibold tracking-tight text-neutral-900">
+                <h3 className="mt-6 font-heading text-xl font-semibold tracking-tight">
                   {feature.title}
                 </h3>
-                <p className="mt-2 text-[15px] leading-relaxed text-neutral-500">
+                <p className="mt-2 text-[15px] leading-relaxed text-neutral-300">
                   {feature.description}
                 </p>
               </RevealItem>

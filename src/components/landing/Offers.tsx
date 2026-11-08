@@ -135,10 +135,13 @@ export function Offers() {
 
   return (
     <div>
+      <p className="text-center text-sm text-neutral-500">
+        Niveau pour KeepMe Card et KeepMe Complet
+      </p>
       <div
-        className="mx-auto flex w-fit items-center gap-1 rounded-full border border-neutral-200 bg-white p-1"
+        className="mx-auto mt-3 flex w-fit items-center gap-1 rounded-full border border-neutral-200 bg-white p-1"
         role="group"
-        aria-label="Niveau de fidélité"
+        aria-label="Niveau pour KeepMe Card et KeepMe Complet"
       >
         {TIERS.map((t) => (
           <button
@@ -152,19 +155,27 @@ export function Offers() {
                 : "text-neutral-500 hover:text-neutral-900"
             }`}
           >
-            Fidélité {TIER_LABEL[t]}
+            {TIER_LABEL[t]}
           </button>
         ))}
       </div>
 
       <div className="mx-auto mt-14 grid max-w-6xl items-stretch gap-5 lg:grid-cols-3">
         <OfferCard
-          eyebrow="KeepMe Commande"
+          eyebrow="KeepMe Order"
           price={formatPrice(PRICE_CENTS.commande)}
           blurb="Vos commandes à emporter, sans commission et sans file d'attente."
           features={COMMANDE_FEATURES}
           note="Options à la demande : paiement en ligne, accès aux données clients."
-          cta={{ label: "Choisir Commande", href: "/signup?offre=commande" }}
+          cta={{ label: "Choisir Order", href: "/signup?offre=commande" }}
+        />
+        <OfferCard
+          eyebrow={`KeepMe Card ${TIER_LABEL[tier]}`}
+          price={formatPrice(fidelityCents(tier))}
+          blurb="Une carte de fidélité digitale dans le téléphone de vos clients."
+          features={fidelityFeatures(tier)}
+          note="14 jours d'essai gratuit."
+          cta={{ label: "Choisir Card", href: `/signup?offre=fidelite&niveau=${tier}` }}
         />
         <OfferCard
           highlighted
@@ -175,14 +186,6 @@ export function Offers() {
           blurb="Commandes et fidélité qui travaillent ensemble : chaque commande retirée fidélise."
           features={completFeatures(tier)}
           cta={{ label: "Choisir Complet", href: `/signup?offre=complet&niveau=${tier}` }}
-        />
-        <OfferCard
-          eyebrow={`KeepMe Fidélité ${TIER_LABEL[tier]}`}
-          price={formatPrice(fidelityCents(tier))}
-          blurb="Une carte de fidélité digitale dans le téléphone de vos clients."
-          features={fidelityFeatures(tier)}
-          note="14 jours d'essai gratuit."
-          cta={{ label: "Choisir Fidélité", href: `/signup?offre=fidelite&niveau=${tier}` }}
         />
       </div>
     </div>

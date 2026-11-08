@@ -137,7 +137,7 @@ export default async function DashboardPage() {
       {wantsCommande && (
         <div className="mt-8 rounded-2xl border border-yellow-300 bg-yellow-50 p-5">
           <h2 className="font-semibold text-neutral-900">
-            KeepMe Commande : votre page de commande à emporter
+            KeepMe Order : votre page de commande à emporter
           </h2>
           {commandeLinked ? (
             <>
@@ -193,7 +193,7 @@ export default async function DashboardPage() {
             La carte de fidélité n&apos;est pas dans votre formule
           </h2>
           <p className="mt-1 text-sm text-neutral-600">
-            KeepMe Commande ne comprend pas la carte de fidélité. Pour offrir un
+            KeepMe Order ne comprend pas la carte de fidélité. Pour offrir un
             passage à vos clients à chaque commande retirée, passez à KeepMe
             Complet : écrivez-nous à{" "}
             <a

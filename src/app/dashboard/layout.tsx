@@ -102,7 +102,7 @@ export default async function DashboardLayout({
 
   // Options Business : affichées avec un cadenas tant que la formule ne les inclut pas.
   const locked = merchant ? lockedFeatures(merchant) : [];
-  // KeepMe Commande seul : pas de pages de fidélité dans le menu.
+  // KeepMe Order seul : pas de pages de fidélité dans le menu.
   const navGroups = navGroupsFor(merchant ? hasLoyalty(merchant) : true);
 
   return (

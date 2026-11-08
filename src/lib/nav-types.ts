@@ -19,7 +19,7 @@ export type NavItem = {
   label: string;
   description: string;
   icon: IconName;
-  // Page de la carte de fidélité : absente de la formule KeepMe Commande.
+  // Page de la carte de fidélité : absente de la formule KeepMe Order.
   loyalty?: boolean;
   // Option réservée à la formule Business (cadenas si elle n'est pas incluse).
   feature?: FeatureKey;

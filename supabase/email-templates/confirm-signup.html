@@ -7,13 +7,13 @@
 
     <h1 style="font-size: 22px; color: #171717; margin: 0 0 12px;">Bienvenue sur KeepMe !</h1>
     <p style="font-size: 14px; color: #525252; line-height: 1.6; margin: 0;">
-      Merci d'avoir créé votre compte. Vous êtes à quelques minutes d'offrir à vos clients une carte de fidélité digitale, directement sur leur téléphone.
+      {{ if eq .Data.offer "commande" }}Merci d'avoir créé votre compte. Vous êtes à quelques minutes de lancer la prise de commande à emporter de votre restaurant, sans commission.{{ else if eq .Data.offer "complet" }}Merci d'avoir créé votre compte. Vous êtes à quelques minutes de lancer la prise de commande à emporter de votre restaurant et d'offrir à vos clients une carte de fidélité digitale, directement sur leur téléphone.{{ else }}Merci d'avoir créé votre compte. Vous êtes à quelques minutes d'offrir à vos clients une carte de fidélité digitale, directement sur leur téléphone.{{ end }}
     </p>
 
     <p style="font-size: 14px; color: #525252; line-height: 1.6; margin: 16px 0 0;">
       Pour commencer, confirmez votre adresse email :
     </p>
-    <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=signup&next=/dashboard"
+    <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=signup&next=/subscribe"
        style="display: inline-block; margin-top: 16px; background: #facc15; color: #171717; font-weight: 600; font-size: 15px; padding: 14px 24px; border-radius: 10px; text-decoration: none;">
       Confirmer mon adresse email
     </a>
@@ -21,10 +21,16 @@
     <div style="margin-top: 28px; padding: 16px; background: #fafafa; border-radius: 12px;">
       <p style="font-size: 13px; font-weight: 600; color: #171717; margin: 0 0 8px;">Et ensuite ?</p>
       <p style="font-size: 13px; color: #525252; line-height: 1.7; margin: 0;">
-        1. Choisissez votre formule (essai gratuit au démarrage)<br />
+        {{ if eq .Data.offer "commande" }}1. Validez votre formule (essai gratuit au démarrage)<br />
+        2. Créez votre page de commande en quelques minutes (SIRET, couleurs, carte)<br />
+        3. Affichez le QR code en caisse<br />
+        4. Vos clients commandent chez vous, sans commission{{ else if eq .Data.offer "complet" }}1. Validez votre formule (essai gratuit au démarrage)<br />
+        2. Créez votre page de commande, déjà reliée à votre carte de fidélité<br />
+        3. Ajoutez votre logo et vos couleurs<br />
+        4. Affichez votre QR code en caisse : vos clients commandent et cumulent leurs passages{{ else }}1. Validez votre formule (essai gratuit au démarrage)<br />
         2. Ajoutez votre logo et vos couleurs<br />
         3. Affichez votre QR code en caisse<br />
-        4. Vos clients s'inscrivent en 20 secondes
+        4. Vos clients s'inscrivent en 20 secondes{{ end }}
       </p>
     </div>
 

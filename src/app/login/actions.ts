@@ -3,6 +3,8 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { loginSchema, type LoginInput } from "@/lib/validations/auth";
+import { isBillingEnabled } from "@/lib/billing/config";
+import { hasPaidAccess } from "@/lib/billing/access";
 
 export async function login(
   input: LoginInput,
@@ -27,5 +29,18 @@ export async function login(
     .eq("user_id", data.user.id)
     .maybeSingle();
 
-  redirect(adminRow ? "/admin" : "/dashboard");
+  if (adminRow) redirect("/admin");
+
+  // Compte pas encore payé : on va droit au choix de la formule, sans passer
+  // par l'espace commerçant.
+  if (isBillingEnabled()) {
+    const { data: merchant } = await supabase
+      .from("merchants")
+      .select("billing_exempt, subscription_status")
+      .eq("owner_id", data.user.id)
+      .maybeSingle();
+    if (merchant && !hasPaidAccess(merchant)) redirect("/subscribe");
+  }
+
+  redirect("/dashboard");
 }

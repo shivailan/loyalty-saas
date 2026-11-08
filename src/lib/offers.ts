@@ -20,6 +20,12 @@ export function parseOffer(value: string | string[] | undefined): Offer {
   return raw === "commande" || raw === "complet" ? raw : "fidelite";
 }
 
+// Niveau choisi sur l'accueil (« niveau=business » dans le lien d'inscription).
+export function parseTier(value: string | string[] | undefined | null): Tier | null {
+  const raw = Array.isArray(value) ? value[0] : value;
+  return raw === "essentiel" || raw === "business" ? raw : null;
+}
+
 // L'offre inclut-elle la prise de commande ?
 export function includesCommande(offer: Offer): boolean {
   return offer === "commande" || offer === "complet";

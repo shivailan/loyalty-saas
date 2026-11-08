@@ -37,7 +37,8 @@ export default async function SubscribePage({
     )
     .eq("owner_id", user.id)
     .single();
-  if (!merchant) redirect("/login");
+  // Sans fiche commerce, l'espace explique la situation (pas de renvoi à la connexion).
+  if (!merchant) redirect("/dashboard");
   if (!isBillingEnabled() || hasPaidAccess(merchant)) redirect("/dashboard");
 
   // Même règle que lors du paiement : pas de second essai gratuit.

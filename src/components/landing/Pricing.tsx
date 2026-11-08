@@ -8,7 +8,7 @@ export function Pricing() {
       <div className="px-6 lg:px-20">
         <Reveal className="mx-auto max-w-2xl text-center">
           <h2 className="font-heading text-4xl font-semibold tracking-tight text-neutral-900 md:text-5xl">
-            Commandes, fidélité, ou les deux
+            Order, Card, ou les deux
           </h2>
           <p className="mt-4 text-lg text-neutral-500">
             Un abonnement mensuel fixe, sans commission, sans limite de clients

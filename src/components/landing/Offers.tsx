@@ -167,6 +167,14 @@ export function Offers() {
           cta={{ label: "Choisir Order", href: "/signup?offre=commande" }}
         />
         <OfferCard
+          eyebrow={`KeepMe Card ${TIER_LABEL[tier]}`}
+          price={formatPrice(fidelityCents(tier))}
+          blurb="Une carte de fidélité digitale dans le téléphone de vos clients."
+          features={fidelityFeatures(tier)}
+          note="14 jours d'essai gratuit."
+          cta={{ label: "Choisir Card", href: `/signup?offre=fidelite&niveau=${tier}` }}
+        />
+        <OfferCard
           highlighted
           badge={`Économisez ${formatPrice(savingCents(tier))} € par mois`}
           eyebrow="KeepMe Complet"
@@ -175,14 +183,6 @@ export function Offers() {
           blurb="Commandes et fidélité qui travaillent ensemble : chaque commande retirée fidélise."
           features={completFeatures(tier)}
           cta={{ label: "Choisir Complet", href: `/signup?offre=complet&niveau=${tier}` }}
-        />
-        <OfferCard
-          eyebrow={`KeepMe Card ${TIER_LABEL[tier]}`}
-          price={formatPrice(fidelityCents(tier))}
-          blurb="Une carte de fidélité digitale dans le téléphone de vos clients."
-          features={fidelityFeatures(tier)}
-          note="14 jours d'essai gratuit."
-          cta={{ label: "Choisir Card", href: `/signup?offre=fidelite&niveau=${tier}` }}
         />
       </div>
     </div>

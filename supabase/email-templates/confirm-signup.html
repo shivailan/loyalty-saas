@@ -7,7 +7,7 @@
 
     <h1 style="font-size: 22px; color: #171717; margin: 0 0 12px;">Bienvenue sur KeepMe !</h1>
     <p style="font-size: 14px; color: #525252; line-height: 1.6; margin: 0;">
-      {{ if eq .Data.offer "commande" }}Merci d'avoir créé votre compte. Vous êtes à quelques minutes de lancer la prise de commande à emporter de votre restaurant, sans commission.{{ else if eq .Data.offer "complet" }}Merci d'avoir créé votre compte. Vous êtes à quelques minutes de lancer la prise de commande à emporter de votre restaurant et d'offrir à vos clients une carte de fidélité digitale, directement sur leur téléphone.{{ else }}Merci d'avoir créé votre compte. Vous êtes à quelques minutes d'offrir à vos clients une carte de fidélité digitale, directement sur leur téléphone.{{ end }}
+      Merci d'avoir créé votre compte. Votre espace KeepMe est presque prêt : il ne reste qu'à confirmer votre adresse email.
     </p>
 
     <p style="font-size: 14px; color: #525252; line-height: 1.6; margin: 16px 0 0;">
@@ -21,16 +21,9 @@
     <div style="margin-top: 28px; padding: 16px; background: #fafafa; border-radius: 12px;">
       <p style="font-size: 13px; font-weight: 600; color: #171717; margin: 0 0 8px;">Et ensuite ?</p>
       <p style="font-size: 13px; color: #525252; line-height: 1.7; margin: 0;">
-        {{ if eq .Data.offer "commande" }}1. Validez votre formule (essai gratuit au démarrage)<br />
-        2. Créez votre page de commande en quelques minutes (SIRET, couleurs, carte)<br />
-        3. Affichez le QR code en caisse<br />
-        4. Vos clients commandent chez vous, sans commission{{ else if eq .Data.offer "complet" }}1. Validez votre formule (essai gratuit au démarrage)<br />
-        2. Créez votre page de commande, déjà reliée à votre carte de fidélité<br />
-        3. Ajoutez votre logo et vos couleurs<br />
-        4. Affichez votre QR code en caisse : vos clients commandent et cumulent leurs passages{{ else }}1. Validez votre formule (essai gratuit au démarrage)<br />
-        2. Ajoutez votre logo et vos couleurs<br />
-        3. Affichez votre QR code en caisse<br />
-        4. Vos clients s'inscrivent en 20 secondes{{ end }}
+        1. Choisissez votre formule (essai gratuit au démarrage)<br />
+        2. Configurez votre espace : logo, couleurs, carte<br />
+        3. Partagez-le avec vos clients
       </p>
     </div>
 

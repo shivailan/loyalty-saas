@@ -36,12 +36,28 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
-  const { data: merchant } = await supabase
+  const { data: merchant, error: merchantError } = await supabase
     .from("merchants")
     .select(
       "is_suspended, billing_exempt, offer, subscription_status, subscription_plan, subscription_period_end",
     )
     .single();
+
+  // Commerce introuvable : on garde la raison dans les journaux du serveur
+  // (jamais de clé ni de mot de passe), pour comprendre pourquoi.
+  if (!merchant) {
+    const { count } = await supabase
+      .from("merchants")
+      .select("id", { count: "exact", head: true });
+    console.error("dashboard: commerce introuvable", {
+      userId: user.id,
+      lignesVisibles: count,
+      code: merchantError?.code,
+      message: merchantError?.message,
+      details: merchantError?.details,
+      hint: merchantError?.hint,
+    });
+  }
 
   if (merchant?.is_suspended) {
     return (

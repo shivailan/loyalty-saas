@@ -65,8 +65,8 @@ export default function Home() {
       <Header />
       <main className="flex-1">
         <Hero />
-        <CommandeSection />
-        <CardShowcase />
+        <CommandeSection moreHref="/commande-a-emporter" />
+        <CardShowcase moreHref="/carte-de-fidelite" />
         <HowItWorks />
         <Features />
         <Pricing />

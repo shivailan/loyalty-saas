@@ -8,6 +8,12 @@ export function Footer() {
       <div className="flex flex-col items-center justify-between gap-4 px-6 text-sm text-neutral-400 sm:flex-row lg:px-12">
         <p>© {currentYear()} KeepMe</p>
         <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2">
+          <Link href="/commande-a-emporter" className="hover:text-neutral-900">
+            KeepMe Order
+          </Link>
+          <Link href="/carte-de-fidelite" className="hover:text-neutral-900">
+            KeepMe Card
+          </Link>
           <Link href="/mentions-legales" className="hover:text-neutral-900">
             Mentions légales
           </Link>

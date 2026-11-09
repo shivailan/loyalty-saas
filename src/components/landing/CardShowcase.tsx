@@ -1,7 +1,8 @@
+import Link from "next/link";
 import { Reveal } from "./Motion";
 import { CardMarquee } from "./CardMarquee";
 
-export function CardShowcase() {
+export function CardShowcase({ moreHref }: { moreHref?: string }) {
   return (
     <section id="fidelite" className="bg-background py-28">
       <Reveal className="mx-auto max-w-2xl px-6 text-center">
@@ -15,6 +16,14 @@ export function CardShowcase() {
           Une carte de fidélité digitale à vos couleurs, rangée dans Apple
           Wallet ou Google Wallet, sans application ni carte papier.
         </p>
+        {moreHref && (
+          <Link
+            href={moreHref}
+            className="mt-6 inline-block text-sm font-semibold text-neutral-900 underline underline-offset-4 hover:text-neutral-600"
+          >
+            Découvrir KeepMe Card →
+          </Link>
+        )}
       </Reveal>
 
       <div className="mt-12">

@@ -11,10 +11,12 @@ import {
 import { requestPasswordReset } from "./actions";
 import { AuthShell } from "@/components/ui/AuthShell";
 import { Button } from "@/components/ui/Button";
+import { useCaptcha } from "@/components/ui/Turnstile";
 import { inputClass, labelClass, errorClass, successClass } from "@/lib/ui";
 
 export default function ForgotPasswordPage() {
   const [submitted, setSubmitted] = useState(false);
+  const captcha = useCaptcha();
   const {
     register,
     handleSubmit,
@@ -24,7 +26,7 @@ export default function ForgotPasswordPage() {
   });
 
   async function onSubmit(data: ForgotPasswordInput) {
-    await requestPasswordReset(data);
+    await requestPasswordReset(data, captcha.token ?? undefined);
     setSubmitted(true);
   }
 
@@ -54,8 +56,7 @@ export default function ForgotPasswordPage() {
         Mot de passe oublié
       </h1>
       <p className="mt-2 text-sm text-neutral-600">
-        Entrez votre email, nous vous envoyons un lien pour le
-        réinitialiser.
+        Entrez votre email, nous vous envoyons un lien pour le réinitialiser.
       </p>
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -73,7 +74,12 @@ export default function ForgotPasswordPage() {
           />
           {errors.email && <p className={errorClass}>{errors.email.message}</p>}
         </div>
-        <Button type="submit" disabled={isSubmitting} className="mt-2">
+        {captcha.widget}
+        <Button
+          type="submit"
+          disabled={isSubmitting || !captcha.ready}
+          className="mt-2"
+        >
           {isSubmitting ? "Envoi..." : "Envoyer le lien"}
         </Button>
       </form>

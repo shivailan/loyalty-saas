@@ -9,6 +9,7 @@ import { loginSchema, type LoginInput } from "@/lib/validations/auth";
 import { login } from "./actions";
 import { AuthShell } from "@/components/ui/AuthShell";
 import { Button } from "@/components/ui/Button";
+import { useCaptcha } from "@/components/ui/Turnstile";
 import { inputClass, labelClass, errorClass } from "@/lib/ui";
 
 export default function LoginPage() {
@@ -22,6 +23,7 @@ export default function LoginPage() {
 function LoginForm() {
   const invalidLink = useSearchParams().get("error") === "link";
   const [serverError, setServerError] = useState<string | null>(null);
+  const captcha = useCaptcha();
   const {
     register,
     handleSubmit,
@@ -30,9 +32,10 @@ function LoginForm() {
 
   async function onSubmit(data: LoginInput) {
     setServerError(null);
-    const result = await login(data);
+    const result = await login(data, captcha.token ?? undefined);
     if (result?.error) {
       setServerError(result.error);
+      captcha.reset();
     }
   }
 
@@ -81,8 +84,13 @@ function LoginForm() {
             Mot de passe oublié ?
           </Link>
         </div>
+        {captcha.widget}
         {serverError && <p className={errorClass}>{serverError}</p>}
-        <Button type="submit" disabled={isSubmitting} className="mt-2">
+        <Button
+          type="submit"
+          disabled={isSubmitting || !captcha.ready}
+          className="mt-2"
+        >
           {isSubmitting ? "Connexion..." : "Se connecter"}
         </Button>
       </form>

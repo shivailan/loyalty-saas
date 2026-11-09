@@ -14,8 +14,10 @@ export default function CguPage() {
         <p>
           Les présentes conditions encadrent l’utilisation du service{" "}
           {legal.productName}, proposé par {legal.publisherName} (
-          {legal.publisherStatus}), qui permet à un commerçant de créer et gérer
-          un programme de fidélité digital pour ses clients. Les conditions
+          {legal.publisherStatus}), qui permet à un commerçant, selon sa formule, de
+          recevoir des commandes à emporter (KeepMe Order) et/ou de créer et
+          gérer un programme de fidélité digital (KeepMe Card) pour ses
+          clients. Les conditions
           tarifaires sont précisées dans les{" "}
           <Link href="/cgv" className="underline">
             conditions générales de vente
@@ -48,6 +50,12 @@ export default function CguPage() {
             Proposer des récompenses licites et honorer celles qu’il annonce.
           </li>
           <li>
+            Pour KeepMe Order : afficher des prix et des informations exacts
+            (dont l’information sur les allergènes), préparer et remettre les
+            commandes qu’il accepte, honorer les créneaux de retrait annoncés et
+            respecter la réglementation applicable à son activité.
+          </li>
+          <li>
             Ne pas utiliser le service pour des contenus illicites ou à des fins
             frauduleuses.
           </li>
@@ -57,7 +65,8 @@ export default function CguPage() {
       <LegalSection title="4. Données personnelles et sous-traitance">
         <p>
           Le commerçant est responsable du traitement des données de ses
-          clients. {legal.productName} agit en qualité de sous-traitant au sens
+          clients (titulaires d’une carte de fidélité ou clients qui passent
+          commande). {legal.productName} agit en qualité de sous-traitant au sens
           du règlement général sur la protection des données et s’engage à :
         </p>
         <ul className="list-disc pl-5">

@@ -3,7 +3,7 @@
 // Identité, SIRET et adresse vérifiés dans le registre public SIRENE.
 export const legal = {
   productName: "KeepMe",
-  lastUpdated: "13 octobre 2026",
+  lastUpdated: "9 novembre 2026",
   publisherName: "Hari Ilanchejian",
   tradeName: "ORACOM",
   publisherStatus: "entrepreneur individuel en micro-entreprise",

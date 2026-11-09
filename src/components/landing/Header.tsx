@@ -29,7 +29,7 @@ export function Header() {
           </Link>
           <a
             className="transition-colors hover:text-neutral-900"
-            href="#tarifs"
+            href="/tarifs"
           >
             Tarifs
           </a>
@@ -43,7 +43,7 @@ export function Header() {
             Se connecter
           </Link>
           <Link
-            href="#tarifs"
+            href="/tarifs"
             className="rounded-full bg-yellow-400 px-4 py-2 text-[13px] font-semibold text-neutral-900 transition-transform hover:scale-[1.03] hover:bg-yellow-300 active:scale-[0.98]"
           >
             Voir les offres

@@ -9,6 +9,7 @@ import { signup } from "./actions";
 import { OFFER_LABEL, TIER_LABEL, type Offer, type Tier } from "@/lib/offers";
 import { AuthShell } from "@/components/ui/AuthShell";
 import { Button } from "@/components/ui/Button";
+import { useCaptcha } from "@/components/ui/Turnstile";
 import { inputClass, labelClass, errorClass } from "@/lib/ui";
 
 export default function SignupForm({
@@ -19,6 +20,7 @@ export default function SignupForm({
   tier: Tier | null;
 }) {
   const [serverError, setServerError] = useState<string | null>(null);
+  const captcha = useCaptcha();
   const [submitted, setSubmitted] = useState(false);
   const {
     register,
@@ -31,9 +33,10 @@ export default function SignupForm({
 
   async function onSubmit(data: SignupInput) {
     setServerError(null);
-    const result = await signup(data, offer, tier);
+    const result = await signup(data, offer, tier, captcha.token ?? undefined);
     if (result.error) {
       setServerError(result.error);
+      captcha.reset();
     } else {
       setSubmitted(true);
     }
@@ -48,8 +51,8 @@ export default function SignupForm({
         <p className="mt-2 text-sm text-neutral-600">
           Un email de confirmation vous a été envoyé. Cliquez sur le lien
           qu&apos;il contient : vous arriverez directement sur le choix de votre
-          formule, avec l&apos;essai gratuit au démarrage. Votre espace s&apos;ouvre
-          une fois la formule validée.
+          formule, avec l&apos;essai gratuit au démarrage. Votre espace
+          s&apos;ouvre une fois la formule validée.
         </p>
         <Link
           className="mt-4 inline-block font-medium text-neutral-900 underline"
@@ -147,8 +150,13 @@ export default function SignupForm({
             <p className={errorClass}>{errors.acceptTerms.message}</p>
           )}
         </div>
+        {captcha.widget}
         {serverError && <p className={errorClass}>{serverError}</p>}
-        <Button type="submit" disabled={isSubmitting} className="mt-2">
+        <Button
+          type="submit"
+          disabled={isSubmitting || !captcha.ready}
+          className="mt-2"
+        >
           {isSubmitting ? "Création..." : "Créer mon compte"}
         </Button>
       </form>

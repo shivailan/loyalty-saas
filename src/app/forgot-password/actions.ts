@@ -8,6 +8,7 @@ import {
 
 export async function requestPasswordReset(
   input: ForgotPasswordInput,
+  captchaToken?: string,
 ): Promise<{ error: string | null }> {
   const parsed = forgotPasswordSchema.safeParse(input);
   if (!parsed.success) {
@@ -21,6 +22,7 @@ export async function requestPasswordReset(
   // est toujours le même, que l'email existe ou non (anti-énumération).
   await supabase.auth.resetPasswordForEmail(parsed.data.email, {
     redirectTo: `${siteUrl}/auth/callback?next=/reset-password`,
+    captchaToken,
   });
 
   return { error: null };

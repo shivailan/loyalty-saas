@@ -2,14 +2,16 @@ import Link from "next/link";
 import { Reveal } from "./Motion";
 import { Offers } from "./Offers";
 
-export function Pricing() {
+export function Pricing({ asPage = false }: { asPage?: boolean }) {
+  const Heading = asPage ? "h1" : "h2";
+
   return (
     <section id="tarifs" className="bg-neutral-50 py-28">
       <div className="px-6 lg:px-20">
         <Reveal className="mx-auto max-w-2xl text-center">
-          <h2 className="font-heading text-4xl font-semibold tracking-tight text-neutral-900 md:text-5xl">
+          <Heading className="font-heading text-4xl font-semibold tracking-tight text-neutral-900 md:text-5xl">
             Order, Card, ou les deux
-          </h2>
+          </Heading>
           <p className="mt-4 text-lg text-neutral-500">
             Un abonnement mensuel fixe, sans commission, sans limite de clients
             ni de commandes.

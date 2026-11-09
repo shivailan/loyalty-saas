@@ -7,7 +7,7 @@ import { Menu, X } from "lucide-react";
 const links = [
   { href: "/commande-a-emporter", label: "Order" },
   { href: "/carte-de-fidelite", label: "Card" },
-  { href: "#tarifs", label: "Tarifs" },
+  { href: "/tarifs", label: "Tarifs" },
 ];
 
 // Menu des petits écrans : un bouton « burger » qui déplie les liens du haut de

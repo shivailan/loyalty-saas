@@ -106,7 +106,7 @@ export default function CommandeAEmporterPage() {
               </Link>{" "}
               ou{" "}
               <Link
-                href="/#tarifs"
+                href="/tarifs"
                 className="font-semibold text-neutral-900 underline underline-offset-4"
               >
                 comparez les trois offres

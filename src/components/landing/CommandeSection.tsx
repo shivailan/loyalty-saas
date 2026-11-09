@@ -1,4 +1,5 @@
 import { ChefHat, Link2, QrCode, Smartphone } from "lucide-react";
+import Link from "next/link";
 import { Reveal, RevealGroup, RevealItem } from "./Motion";
 
 const points = [
@@ -28,7 +29,7 @@ const points = [
   },
 ];
 
-export function CommandeSection() {
+export function CommandeSection({ moreHref }: { moreHref?: string }) {
   return (
     <section id="commande" className="bg-neutral-900 py-28 text-white">
       <div className="px-6 lg:px-20">
@@ -44,6 +45,14 @@ export function CommandeSection() {
             cuisine : plus de commandes prises au téléphone à l&apos;heure de
             pointe, plus d&apos;erreurs, plus de temps gagné.
           </p>
+          {moreHref && (
+            <Link
+              href={moreHref}
+              className="mt-6 inline-block text-sm font-semibold text-yellow-400 underline underline-offset-4 hover:text-yellow-300"
+            >
+              Découvrir KeepMe Order →
+            </Link>
+          )}
         </Reveal>
 
         <RevealGroup className="mx-auto mt-16 grid max-w-5xl gap-5 sm:grid-cols-2">

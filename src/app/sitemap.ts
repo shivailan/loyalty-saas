@@ -5,6 +5,16 @@ import { SITE_URL } from "@/lib/site";
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     { url: `${SITE_URL}/`, changeFrequency: "weekly", priority: 1 },
+    {
+      url: `${SITE_URL}/commande-a-emporter`,
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
+      url: `${SITE_URL}/carte-de-fidelite`,
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
     { url: `${SITE_URL}/cgv`, changeFrequency: "yearly", priority: 0.3 },
     { url: `${SITE_URL}/cgu`, changeFrequency: "yearly", priority: 0.3 },
     {

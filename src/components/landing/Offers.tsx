@@ -30,7 +30,7 @@ type CardProps = {
   cta: { label: string; href: string; external?: boolean };
 };
 
-function OfferCard({
+export function OfferCard({
   eyebrow,
   price,
   strike,

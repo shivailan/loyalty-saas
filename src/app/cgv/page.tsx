@@ -3,6 +3,16 @@ import Link from "next/link";
 import { LegalPage, LegalSection } from "@/components/legal/LegalPage";
 import { legal } from "@/lib/legal";
 import { sellablePlans } from "@/lib/plans";
+import {
+  COMMANDE_FEATURES,
+  PRICE_CENTS,
+  TIER_LABEL,
+  completFeatures,
+  formatPrice,
+  type Tier,
+} from "@/lib/offers";
+
+const TIERS: Tier[] = ["essentiel", "business"];
 
 export const metadata: Metadata = {
   title: "Conditions générales de vente — KeepMe",
@@ -14,11 +24,16 @@ export default function CgvPage() {
       <LegalSection title="1. Objet et champ d’application">
         <p>
           Les présentes conditions générales de vente (« CGV ») régissent
-          l’abonnement au service {legal.productName}, un service en ligne de
-          cartes de fidélité digitales, proposé par {legal.publisherName},{" "}
+          l’abonnement au service {legal.productName}, un service en ligne
+          destiné aux restaurateurs et aux commerçants, proposé par{" "}
+          {legal.publisherName},{" "}
           {legal.publisherStatus} (nom commercial : {legal.tradeName}), SIRET{" "}
           {legal.siret}, {legal.address} (le « Prestataire »), à ses clients
-          professionnels (le « Client »).
+          professionnels (le « Client »). Le service comprend deux produits,
+          utilisables séparément ou ensemble : <strong>KeepMe Order</strong>{" "}
+          (prise de commande à emporter) et <strong>KeepMe Card</strong>{" "}
+          (cartes de fidélité digitales). L’offre <strong>KeepMe Complet</strong>{" "}
+          réunit les deux.
         </p>
         <p>
           Elles complètent les{" "}
@@ -36,10 +51,16 @@ export default function CgvPage() {
       <LegalSection title="2. Les offres">
         <p>Le Prestataire propose actuellement les offres suivantes :</p>
         <ul className="list-disc pl-5">
+          <li>
+            <strong>
+              KeepMe Order : {formatPrice(PRICE_CENTS.commande)} € par mois.
+            </strong>{" "}
+            {COMMANDE_FEATURES.join(" ; ")}.
+          </li>
           {sellablePlans.map((plan) => (
             <li key={plan.name}>
               <strong>
-                {plan.name} : {plan.price} € par mois.
+                KeepMe Card {plan.name} : {plan.price} € par mois.
               </strong>{" "}
               {plan.features
                 .filter((feature) => !feature.excluded)
@@ -48,7 +69,21 @@ export default function CgvPage() {
               .
             </li>
           ))}
+          {TIERS.map((tier) => (
+            <li key={tier}>
+              <strong>
+                KeepMe Complet {TIER_LABEL[tier]} :{" "}
+                {formatPrice(PRICE_CENTS.complet[tier])} € par mois.
+              </strong>{" "}
+              {completFeatures(tier).join(" ; ")}.
+            </li>
+          ))}
         </ul>
+        <p>
+          Des options (par exemple le paiement en ligne des commandes ou l’accès
+          aux données clients) peuvent être proposées à la demande. Elles ne
+          font pas partie de l’abonnement et sont convenues séparément.
+        </p>
         <p>
           Une offre « Premium » est annoncée sur le site (notification de
           proximité, notifications push illimitées, carte de fidélité
@@ -95,10 +130,13 @@ export default function CgvPage() {
         <p>
           L’abonnement est mensuel et sans engagement de durée. Il se renouvelle
           automatiquement chaque mois, jusqu’à sa résiliation. Le Client peut
-          passer à une formule supérieure à tout moment depuis son espace : la
-          différence de prix est facturée au prorata de la période restante. Le
-          retour à une formule inférieure se fait sur demande par email et prend
-          effet à la prochaine échéance.
+          passer du niveau Essentiel au niveau Business à tout moment depuis son
+          espace : la différence de prix est facturée au prorata de la période
+          restante (pendant l’essai gratuit, ce changement modifie simplement la
+          formule facturée à la fin de l’essai). Le passage d’une offre à une
+          autre (par exemple de KeepMe Order ou de KeepMe Card vers KeepMe
+          Complet) et le retour à une formule inférieure se font sur demande par
+          email et prennent effet à la prochaine échéance.
         </p>
       </LegalSection>
 
@@ -132,7 +170,10 @@ export default function CgvPage() {
           maintenu et le Client est invité à mettre à jour son moyen de
           paiement. Si le paiement n’est pas régularisé à l’issue de ces
           tentatives, le Prestataire peut suspendre l’accès au service jusqu’à
-          régularisation.
+          régularisation. La page de commande de KeepMe Order n’est accessible
+          au public que pendant la durée de l’abonnement (essai gratuit compris)
+          et pendant ces tentatives de paiement : elle est mise hors ligne à la
+          fin de l’abonnement ou en cas de suspension.
         </p>
       </LegalSection>
 
@@ -144,7 +185,8 @@ export default function CgvPage() {
           période mensuelle en cours (ou de l’essai gratuit, auquel cas aucun
           prélèvement n’est effectué) ; aucun prélèvement n’est effectué
           ensuite. La période déjà payée n’est pas remboursée, sous réserve de
-          l’article 9.
+          l’article 9. La résiliation de KeepMe Complet met fin à KeepMe Order et
+          à KeepMe Card en même temps.
         </p>
         <p>
           Le Prestataire peut résilier l’abonnement en cas de manquement du
@@ -166,7 +208,9 @@ export default function CgvPage() {
           n’est tenu qu’à une obligation de moyens. Des interruptions peuvent
           survenir (maintenance, panne d’un prestataire technique, force
           majeure). Le support est assuré par email ou, pour l’offre Business,
-          également par WhatsApp, sans délai de réponse garanti.
+          également par WhatsApp, sans délai de réponse garanti. Le Client reste
+          responsable de son équipement (écran, imprimante, connexion internet)
+          et de la préparation des commandes qu’il reçoit.
         </p>
       </LegalSection>
 
@@ -203,7 +247,9 @@ export default function CgvPage() {
           Le Client est responsable du traitement des données de ses propres
           clients ; le Prestataire intervient comme sous-traitant, dans les
           conditions décrites à l’article 4 des conditions d’utilisation et dans
-          la politique de confidentialité.
+          la politique de confidentialité. Cela vaut pour les données des
+          clients d’un programme de fidélité comme pour celles des clients qui
+          passent commande.
         </p>
       </LegalSection>
 
@@ -214,6 +260,13 @@ export default function CgvPage() {
           au cours des 12 mois précédant le fait générateur. Le Prestataire
           n’est pas responsable des récompenses promises par le Client à ses
           propres clients ni de l’utilisation que le Client fait du service.
+        </p>
+        <p>
+          Le Prestataire n’est pas partie aux ventes conclues entre le Client et
+          ses propres clients (prix, disponibilité et qualité des produits,
+          information sur les allergènes, remboursements) : le Client en reste
+          seul responsable. Le Prestataire ne perçoit aucune commission sur ces
+          ventes.
         </p>
       </LegalSection>
 

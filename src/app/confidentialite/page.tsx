@@ -12,13 +12,14 @@ export default function ConfidentialitePage() {
       <LegalSection title="Qui est responsable de vos données ?">
         <p>
           {legal.productName} est un service qui permet à des commerces de
-          proposer une carte de fidélité digitale à leurs clients. Deux
+          prendre des commandes à emporter (KeepMe Order) et de proposer une
+          carte de fidélité digitale à leurs clients (KeepMe Card). Deux
           situations sont à distinguer :
         </p>
         <ul className="list-disc pl-5">
           <li>
             <strong>Si vous êtes client d’un commerce</strong> et que vous avez
-            créé une carte de fidélité : ce commerce est responsable du
+            créé une carte de fidélité ou passé une commande : ce commerce est responsable du
             traitement de vos données. {legal.productName} intervient comme
             prestataire technique (sous-traitant) et ne les utilise pas pour son
             propre compte.
@@ -40,16 +41,27 @@ export default function ConfidentialitePage() {
             obtenues, et votre choix concernant la réception d’offres.
           </li>
           <li>
+            <strong>Client qui passe une commande :</strong> nom ou prénom,
+            numéro de téléphone et adresse email (facultatifs), contenu et
+            montant de la commande, créneau de retrait, éventuelle remarque, et
+            votre choix concernant le fait d’être recontacté ou de cumuler des
+            passages sur une carte de fidélité.
+          </li>
+          <li>
             <strong>Commerçant :</strong> adresse email, nom de l’établissement,
-            mot de passe (conservé sous forme chiffrée), logo et couleur de la
-            carte.
+            mot de passe (conservé sous forme chiffrée), logo et couleurs, et,
+            pour KeepMe Order, numéro SIRET, adresse de l’établissement,
+            téléphone, code d’accès de l’équipe (conservé sous forme chiffrée),
+            carte et prix.
           </li>
           <li>
             <strong>Tous les visiteurs :</strong> pour limiter le spam et les
             abus sur les pages publiques, une empreinte non réversible de votre
             adresse IP (et, pour la récupération de carte, de votre email) est
             conservée au maximum 24 heures. Elle ne permet pas de vous
-            identifier.
+            identifier. Les formulaires d’inscription, de connexion et de
+            réinitialisation du mot de passe utilisent en outre une
+            vérification anti-robot fournie par Cloudflare (voir ci-dessous).
           </li>
         </ul>
       </LegalSection>
@@ -59,6 +71,12 @@ export default function ConfidentialitePage() {
           <li>
             Créer et gérer votre carte de fidélité, comptabiliser vos passages
             et vous remettre vos récompenses.
+          </li>
+          <li>
+            Enregistrer votre commande, la transmettre au commerce et, si vous
+            avez donné votre email, vous prévenir quand elle est prête. Si vous
+            l’avez demandé en commandant, chaque commande retirée ajoute un
+            passage à votre carte de fidélité.
           </li>
           <li>
             Vous envoyer des messages liés au service : confirmation de création
@@ -84,10 +102,18 @@ export default function ConfidentialitePage() {
         </p>
         <ul className="list-disc pl-5">
           <li>
-            Supabase : base de données et authentification des commerçants.
+            Supabase : bases de données (comptes, cartes de fidélité, commandes),
+            authentification des commerçants et stockage des images.
+          </li>
+          <li>
+            Cloudflare : vérification anti-robot (Turnstile) sur les formulaires
+            d’inscription, de connexion et de mot de passe oublié.
           </li>
           <li>Vercel : hébergement du site.</li>
-          <li>Resend : envoi des emails.</li>
+          <li>
+            Resend : envoi des emails (confirmations, cartes de fidélité,
+            commande prête).
+          </li>
           <li>
             Apple (Apple Wallet) et Google (Google Wallet) : uniquement si le
             client choisit d’ajouter sa carte à son portefeuille numérique. Le
@@ -96,7 +122,8 @@ export default function ConfidentialitePage() {
             Google pour afficher et mettre à jour la carte.
           </li>
           <li>
-            Stripe : paiement des abonnements des commerçants.{" "}
+            Stripe : paiement des abonnements des commerçants et, lorsque le
+            commerçant active cette option, paiement en ligne des commandes.{" "}
             {legal.productName} ne reçoit ni ne conserve les données de carte
             bancaire.
           </li>
@@ -112,8 +139,9 @@ export default function ConfidentialitePage() {
 
       <LegalSection title="Combien de temps sont-elles conservées ?">
         <p>
-          Les données d’un client sont conservées tant que sa carte de fidélité
-          est utilisée, puis supprimées sur demande auprès du commerce ou de{" "}
+          Les données d’un client (carte de fidélité ou commandes) sont
+          conservées tant que le commerce utilise le service, puis supprimées
+          sur demande auprès du commerce ou de{" "}
           {legal.productName}. Les données d’un commerçant sont conservées
           pendant la durée du compte, puis supprimées à sa clôture.
         </p>
@@ -139,6 +167,9 @@ export default function ConfidentialitePage() {
           Le site utilise uniquement des cookies techniques strictement
           nécessaires, par exemple pour maintenir la connexion d’un commerçant.
           Il n’utilise aucun traceur publicitaire ni outil de mesure d’audience.
+          La vérification anti-robot de Cloudflare est un dispositif de
+          sécurité : elle peut déposer ou lire des éléments techniques
+          nécessaires à son fonctionnement.
         </p>
       </LegalSection>
     </LegalPage>

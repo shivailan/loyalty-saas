@@ -9,7 +9,7 @@ import { LOCKED_MESSAGE } from "@/lib/features";
 import { Lock } from "lucide-react";
 import { includesCommande, parseOffer } from "@/lib/offers";
 import { createHandoffToken } from "@/lib/integrations/handoff";
-import { fetchOrdersSlug } from "@/lib/integrations/orders-page";
+import { fetchOrdersPage } from "@/lib/integrations/orders-page";
 import {
   OnboardingChecklist,
   type OnboardingStep,
@@ -114,15 +114,20 @@ export default async function DashboardPage() {
   // Offre avec prise de commande : proposer de créer la page de commande, déjà
   // reliée à la fidélité (la clé de liaison est posée automatiquement).
   const wantsCommande = merchant ? includesCommande(parseOffer(merchant.offer)) : false;
-  const commandeLinked = Boolean(merchant?.integration_key_hint);
+  // Page déjà créée : on retrouve son adresse pour proposer d'y aller. Si
+  // l'application de commande ne la connaît plus (page supprimée), on repart
+  // comme au premier jour : proposer d'en créer une.
+  const ordersPage =
+    merchant && wantsCommande && merchant.integration_key_hint
+      ? await fetchOrdersPage(merchant.id)
+      : null;
+  const ordersSlug = ordersPage?.status === "found" ? ordersPage.slug : null;
+  const ordersLookupFailed = ordersPage?.status === "error";
+  const commandeLinked =
+    Boolean(merchant?.integration_key_hint) && ordersPage?.status !== "missing";
   const handoffToken =
     merchant && wantsCommande && !commandeLinked && user.email
       ? createHandoffToken(merchant.id, user.email, loyalty)
-      : null;
-  // Page déjà créée : on retrouve son adresse pour proposer d'y aller.
-  const ordersSlug =
-    merchant && wantsCommande && commandeLinked
-      ? await fetchOrdersSlug(merchant.id)
       : null;
 
   return (
@@ -146,6 +151,14 @@ export default async function DashboardPage() {
                   ? "Votre page de commande est créée et reliée à votre carte de fidélité : chaque commande retirée ajoute un passage à vos clients qui l'ont demandé."
                   : "Votre page de commande est créée. Gérez vos commandes, votre carte et vos horaires depuis son espace."}
               </p>
+              {ordersLookupFailed && (
+                <p className="mt-3 text-sm text-neutral-700">
+                  Impossible de retrouver l&apos;adresse de votre page pour le moment.{" "}
+                  <a href="/dashboard" className="font-semibold underline underline-offset-4">
+                    Réessayer
+                  </a>
+                </p>
+              )}
               {ordersSlug && (
                 <div className="mt-3 flex flex-wrap gap-2">
                   <a

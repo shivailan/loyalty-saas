@@ -356,7 +356,7 @@ export function Offers() {
           need="Je veux les deux"
           name="KeepMe Complet : le full package"
           badge={`Économisez ${formatPrice(savingCents("essentiel"))} € par mois`}
-          description="Commandes et fidélité qui travaillent ensemble : chaque commande retirée ajoute un passage sur la carte du client."
+          description="Commandes et fidélité dans un seul abonnement, moins cher que les deux séparés."
           features={completFeatures("essentiel")}
           options={tiers.map((tier) => ({
             label: TIER_LABEL[tier],

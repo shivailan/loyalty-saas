@@ -59,9 +59,9 @@ export function QtimeLinkForm({
   return (
     <div className="flex flex-col gap-3">
       <p className="text-sm text-neutral-600">
-        Si vous utilisez Qtime pour les commandes à emporter, chaque commande
-        retirée peut ajouter automatiquement un passage sur la carte de
-        fidélité du client (s&apos;il l&apos;a demandé en commandant).
+        Le passage automatique des commandes en ligne est en pause : pour
+        l&apos;instant, les passages s&apos;ajoutent en scannant la carte du
+        client au comptoir.
       </p>
 
       {key ? (

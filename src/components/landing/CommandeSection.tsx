@@ -25,7 +25,7 @@ const points = [
     icon: Link2,
     title: "Fidélité en option",
     description:
-      "Ajoutez KeepMe Card : chaque commande retirée ajoute un passage sur la carte du client, sans scan.",
+      "Ajoutez KeepMe Card : une carte de fidélité dans le téléphone de vos clients, avec les passages ajoutés en scannant leur carte au comptoir.",
   },
 ];
 

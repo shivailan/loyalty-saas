@@ -89,8 +89,8 @@ export function completFeatures(tier: Tier): string[] {
   return [
     "Tout KeepMe Order",
     `Tout KeepMe Card ${TIER_LABEL[tier]}`,
-    "Un passage ajouté automatiquement sur la carte du client à chaque commande retirée, sans scan",
-    "Le client reçoit sa carte par e-mail dès sa première commande",
+    "Un seul abonnement, un seul tableau de bord",
+    "Les passages s'ajoutent en scannant la carte du client, au comptoir",
   ];
 }
 
@@ -150,7 +150,7 @@ export function choiceInfo(choice: Choice): {
   if (offer === "complet") {
     return {
       name: `KeepMe Complet ${TIER_LABEL[tier!]}`,
-      description: "Commandes et fidélité qui travaillent ensemble.",
+      description: "Commandes et fidélité dans un seul abonnement.",
       price,
       features: completFeatures(tier!),
       highlighted: tier === "business",

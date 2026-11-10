@@ -174,8 +174,8 @@ export function Hero() {
       <Reveal delay={0.15} className="relative px-6 pb-14 pt-8">
         <p className="text-center text-sm text-neutral-500">
           Les deux ensemble avec{" "}
-          <strong className="text-neutral-900">KeepMe Complet</strong> : chaque
-          commande ajoute un passage à la carte du client.{" "}
+          <strong className="text-neutral-900">KeepMe Complet</strong> : un seul
+          abonnement, moins cher que les deux séparés.{" "}
           <Link
             href="#tarifs"
             className="font-semibold text-neutral-900 underline underline-offset-4 hover:text-neutral-600"

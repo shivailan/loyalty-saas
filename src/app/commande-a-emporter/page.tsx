@@ -42,7 +42,7 @@ const faq: FaqItem[] = [
   {
     question: "Puis-je ajouter une carte de fidélité ?",
     answer:
-      "Oui, avec KeepMe Complet : chaque commande retirée ajoute automatiquement un passage sur la carte de fidélité du client, sans scan.",
+      "Oui, avec KeepMe Complet : commande à emporter et carte de fidélité dans un seul abonnement, moins cher que les deux séparés. Les passages s'ajoutent en scannant la carte du client au comptoir.",
   },
   {
     question: "Y a-t-il un engagement ?",

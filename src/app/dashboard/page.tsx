@@ -148,7 +148,7 @@ export default async function DashboardPage() {
             <>
               <p className="mt-1 text-sm text-neutral-600">
                 {loyalty
-                  ? "Votre page de commande est créée et reliée à votre carte de fidélité : chaque commande retirée ajoute un passage à vos clients qui l'ont demandé."
+                  ? "Votre page de commande est créée. Les passages de fidélité s'ajoutent pour l'instant au comptoir, en scannant la carte de vos clients."
                   : "Votre page de commande est créée. Gérez vos commandes, votre carte et vos horaires depuis son espace."}
               </p>
               {ordersLookupFailed && (
@@ -182,7 +182,6 @@ export default async function DashboardPage() {
             <>
               <p className="mt-1 text-sm text-neutral-600">
                 Créez votre page en quelques minutes (SIRET, couleurs, carte).
-                {loyalty && " Elle sera reliée automatiquement à votre carte de fidélité."}
               </p>
               <a
                 href={`/inscription?token=${encodeURIComponent(handoffToken)}`}
@@ -206,9 +205,8 @@ export default async function DashboardPage() {
             La carte de fidélité n&apos;est pas dans votre formule
           </h2>
           <p className="mt-1 text-sm text-neutral-600">
-            KeepMe Order ne comprend pas la carte de fidélité. Pour offrir un
-            passage à vos clients à chaque commande retirée, passez à KeepMe
-            Complet : écrivez-nous à{" "}
+            KeepMe Order ne comprend pas la carte de fidélité. Pour proposer une
+            carte de fidélité à vos clients, passez à KeepMe Complet : écrivez-nous à{" "}
             <a
               href="mailto:contact@keepmecard.fr"
               className="font-medium underline"

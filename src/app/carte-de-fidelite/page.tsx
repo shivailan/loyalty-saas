@@ -49,7 +49,7 @@ const faq: FaqItem[] = [
   {
     question: "Puis-je la combiner avec la commande à emporter ?",
     answer:
-      "Oui, avec KeepMe Complet : chaque commande retirée ajoute automatiquement un passage sur la carte du client, sans scan.",
+      "Oui, avec KeepMe Complet : carte de fidélité et commande à emporter dans un seul abonnement, moins cher que les deux séparés. Les passages s'ajoutent en scannant la carte du client au comptoir.",
   },
   {
     question: "Y a-t-il un engagement ?",

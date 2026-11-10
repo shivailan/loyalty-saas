@@ -74,9 +74,7 @@ export default function ConfidentialitePage() {
           </li>
           <li>
             Enregistrer votre commande, la transmettre au commerce et, si vous
-            avez donné votre email, vous prévenir quand elle est prête. Si vous
-            l’avez demandé en commandant, chaque commande retirée ajoute un
-            passage à votre carte de fidélité.
+            avez donné votre email, vous prévenir quand elle est prête.
           </li>
           <li>
             Vous envoyer des messages liés au service : confirmation de création

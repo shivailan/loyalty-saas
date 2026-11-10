@@ -27,6 +27,14 @@ body {
 
 html {
   scroll-behavior: smooth;
+  /* Sur iPhone, un élément qui dépasse (décors floutés, bandeau défilant)
+     rend la page déplaçable sur le côté : on coupe tout débordement latéral
+     sans créer de zone de défilement (le menu collant continue de marcher). */
+  overflow-x: clip;
+}
+
+body {
+  overflow-x: clip;
 }
 
 @media (prefers-reduced-motion: reduce) {

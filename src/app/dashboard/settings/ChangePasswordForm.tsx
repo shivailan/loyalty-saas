@@ -10,6 +10,7 @@ import {
 import { changePassword } from "./actions";
 import { Button } from "@/components/ui/Button";
 import { inputClass, labelClass, errorClass, successClass } from "@/lib/ui";
+import { PasswordInput } from "@/components/ui/PasswordInput";
 
 export function ChangePasswordForm() {
   const [serverError, setServerError] = useState<string | null>(null);
@@ -41,9 +42,8 @@ export function ChangePasswordForm() {
         <label className={labelClass} htmlFor="password">
           Nouveau mot de passe
         </label>
-        <input
+        <PasswordInput
           id="password"
-          type="password"
           className={`mt-1 ${inputClass}`}
           {...register("password")}
         />
@@ -55,9 +55,8 @@ export function ChangePasswordForm() {
         <label className={labelClass} htmlFor="confirmPassword">
           Confirmez le mot de passe
         </label>
-        <input
+        <PasswordInput
           id="confirmPassword"
-          type="password"
           className={`mt-1 ${inputClass}`}
           {...register("confirmPassword")}
         />

@@ -12,6 +12,7 @@ import { updatePassword } from "./actions";
 import { AuthShell } from "@/components/ui/AuthShell";
 import { Button } from "@/components/ui/Button";
 import { inputClass, labelClass, errorClass, successClass } from "@/lib/ui";
+import { PasswordInput } from "@/components/ui/PasswordInput";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
@@ -49,9 +50,8 @@ export default function ResetPasswordPage() {
           <label className={labelClass} htmlFor="password">
             Nouveau mot de passe
           </label>
-          <input
+          <PasswordInput
             id="password"
-            type="password"
             className={`mt-1 ${inputClass}`}
             {...register("password")}
           />
@@ -63,9 +63,8 @@ export default function ResetPasswordPage() {
           <label className={labelClass} htmlFor="confirmPassword">
             Confirmez le mot de passe
           </label>
-          <input
+          <PasswordInput
             id="confirmPassword"
-            type="password"
             className={`mt-1 ${inputClass}`}
             {...register("confirmPassword")}
           />

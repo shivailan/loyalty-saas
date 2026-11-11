@@ -11,6 +11,7 @@ import { AuthShell } from "@/components/ui/AuthShell";
 import { Button } from "@/components/ui/Button";
 import { useCaptcha } from "@/components/ui/Turnstile";
 import { inputClass, labelClass, errorClass } from "@/lib/ui";
+import { PasswordInput } from "@/components/ui/PasswordInput";
 
 export default function SignupForm({
   offer,
@@ -109,9 +110,8 @@ export default function SignupForm({
           <label className={labelClass} htmlFor="password">
             Mot de passe
           </label>
-          <input
+          <PasswordInput
             id="password"
-            type="password"
             className={`mt-1 ${inputClass}`}
             {...register("password")}
           />
